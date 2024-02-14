@@ -1,6 +1,6 @@
 // uncomment when used 
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.Limelight;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.CameraConstants;
+import frc.robot.constants.CameraConstants;
 
 public class CameraController extends SubsystemBase {
     private PhotonCamera cam;
