@@ -86,7 +86,7 @@ public class CameraController extends SubsystemBase {
         return photonPoseEstimator.update();
     }
 
-    public static double getDistanceToTarget() {
+    public double getDistanceToTarget() {
         return PhotonUtils.calculateDistanceToTargetMeters(0, 0, 0, 0);
     }
 

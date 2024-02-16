@@ -7,11 +7,17 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IndexerController;
+import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.Limelight.CameraController;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -26,11 +32,18 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public AprilTagFieldLayout aprilTagFieldLayout;
   public CameraController fCam = new CameraController(CameraConstants.fCamName);
-  public CameraController bCam = new CameraController(CameraConstants.bCamName);
+  //public CameraController bCam = new CameraController(CameraConstants.bCamName);
+
+  public static final ShooterController shooter = new ShooterController();
+  public static final IndexerController indexer = new IndexerController();
+
+  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController Controller1 =
+      new CommandXboxController(0);
+  private final CommandXboxController Controller2 = 
+      new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -49,12 +62,12 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    new Trigger(Controller2.y()).whileTrue(new ShooterCommand(fCam.getDistanceToTarget(), fCam.getYaw()));
+    new Trigger(Controller2.pov(0)).onTrue(new)
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    //Controller1.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
