@@ -8,8 +8,10 @@ public class IntakeController extends SubsystemBase {
     CANSparkMax feedMotor, artMotor1, artMotor2;
 
     public IntakeController(){
+        /*
         feedMotor = new CANSparkMax(0, null);
         artMotor1 = new CANSparkMax(0, null);
         artMotor2 = new CANSparkMax(0, null);
+        */
     }
 }
