@@ -5,11 +5,11 @@ public final class DeviceIDs {
     public static final byte INTAKE_FEED = 10; 
 
     //TODO: make these exist in hardware and double check others
-    //public static final byte FEEDER = 
+    public static final byte FEEDER = 12;
     //public static final byte CLIMBER = 
 
-    public static final byte SHOOTER_ROTATE_LEFT = 5;
-    public static final byte SHOOTER_ROTATE_RIGHT = 6;
+    public static final byte SHOOTER_ARTICULATE_LEFT = 5;
+    public static final byte SHOOTER_ARTICULATE_RIGHT = 6;
 
     public static final byte SHOOTER_FLYWHEEL_LEFT = 8;
     public static final byte SHOOTER_FLYWHEEL_RIGHT = 9;
