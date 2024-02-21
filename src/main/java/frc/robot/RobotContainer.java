@@ -7,10 +7,12 @@ package frc.robot;
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
+import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.Limelight.CameraController;
 
@@ -39,6 +41,7 @@ public class RobotContainer {
 
   public static final ShooterController shooter = new ShooterController();
   public static final IndexerController indexer = new IndexerController();
+  public static final IntakeController intake = new IntakeController();
   
   public Pigeon2 gyro = new Pigeon2(0);
 
@@ -71,6 +74,8 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     //Controller1.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+    new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
   }
 
   /**
