@@ -13,6 +13,9 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.Limelight.CameraController;
+
+import com.ctre.phoenix6.hardware.Pigeon2;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -31,13 +34,13 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public AprilTagFieldLayout aprilTagFieldLayout;
-  public CameraController fCam = new CameraController(CameraConstants.fCamName);
+  //public CameraController fCam = new CameraController(CameraConstants.fCamName);
   //public CameraController bCam = new CameraController(CameraConstants.bCamName);
 
   public static final ShooterController shooter = new ShooterController();
   public static final IndexerController indexer = new IndexerController();
-
   
+  public Pigeon2 gyro = new Pigeon2(0);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController Controller1 =
@@ -62,7 +65,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(Controller2.y()).whileTrue(new ShooterCommand(fCam.getDistanceToTarget(), fCam.getYaw()));
+    //new Trigger(Controller2.y()).whileTrue(new ShooterCommand(fCam.getDistanceToTarget(), fCam.getYaw()));
     //new Trigger(Controller2.pov(0)).onTrue(new);
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
