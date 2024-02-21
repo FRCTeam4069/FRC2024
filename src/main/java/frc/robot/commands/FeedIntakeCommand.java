@@ -5,7 +5,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeController;
 
 public class FeedIntakeCommand extends Command{
-    private  IntakeController intake = RobotContainer.intake;
+    private IntakeController intake = RobotContainer.intake;
 
     public FeedIntakeCommand(){
         addRequirements(RobotContainer.intake);

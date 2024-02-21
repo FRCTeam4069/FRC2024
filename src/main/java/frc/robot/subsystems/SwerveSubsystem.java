@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -48,6 +49,8 @@ public class SwerveSubsystem extends SubsystemBase
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
   public        double      maximumSpeed = Units.feetToMeters(23.0);
+
+  //private static SwerveSubsystem INSTANCE = null;
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -83,7 +86,9 @@ public class SwerveSubsystem extends SubsystemBase
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
     swerveDrive.setCosineCompensator(!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
-    setupPathPlanner();
+    //setupPathPlanner();
+    swerveDrive.setMotorIdleMode(true);
+
   }
 
   /**
@@ -96,6 +101,17 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
   }
+
+  /* 
+  public static SwerveSubsystem getInstance() {
+    if (INSTANCE == null)
+    {
+      INSTANCE = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+    }
+    return INSTANCE;
+  }
+  */
+
 
   /**
    * Setup AutoBuilder for PathPlanner.
@@ -518,4 +534,14 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
+
+  public double[] getEncoderValues() {
+    double values[] = {0, 0, 0, 0};
+    for (int i=0; i<3; ++i) {
+      values[i] = swerveDrive.getModules()[i].getAbsolutePosition();
+    }
+
+    return values;
+  }
+
 }
