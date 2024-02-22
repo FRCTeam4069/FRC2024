@@ -8,9 +8,21 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import static edu.wpi.first.units.MutableMeasure.mutable;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 
 public class ShooterController extends SubsystemBase {
@@ -20,14 +32,31 @@ public class ShooterController extends SubsystemBase {
     final VelocityVoltage v = new VelocityVoltage(0);
     Slot0Configs config = new Slot0Configs();
 
+    private final MutableMeasure<Voltage> appliedVoltage = mutable(Volts.of(0));
+    private final MutableMeasure<Angle> angle = mutable(Rotations.of(0));
+    private final MutableMeasure<Velocity<Angle>> velo = mutable(RotationsPerSecond.of(0));
+
+    SysIdRoutine routine = new SysIdRoutine(new SysIdRoutine.Config(), 
+    new SysIdRoutine.Mechanism(
+        (Measure<Voltage> volts) -> {
+            talon2.setVoltage(volts.in(Volts));
+        },
+        (SysIdRoutineLog log) ->{
+            log.motor("talon2").voltage(appliedVoltage.mut_replace(talon2.get() * RobotController.getBatteryVoltage(), Volts))
+            .angularPosition(angle.mut_replace(talon2.getPosition().getValueAsDouble(), Rotations))
+            .angularVelocity(velo.mut_replace(talon2.getVelocity().getValueAsDouble(), RotationsPerSecond));
+        }, this)
+        );
+        
+
     public ShooterController(){
-        talon1 = new TalonFX(Constants.SHOOTER_1_ID);
-        talon2 = new TalonFX(Constants.SHOOTER_2_ID);
+        talon1 = new TalonFX(8);
+        talon2 = new TalonFX(9);
 
         talon1.setInverted(true);
 
         var slot0Configs = new Slot0Configs();
-        slot0Configs.kV = 0.11811;
+        slot0Configs.kV = 0.12273;
         slot0Configs.kP = 0.11;
         slot0Configs.kI = 0.48;
         slot0Configs.kD = 0.01;
@@ -56,6 +85,13 @@ public class ShooterController extends SubsystemBase {
         v.Slot = 0;
         talon1.setControl(v.withVelocity(leftSpeed));
         talon2.setControl(v.withVelocity(rightSpeed));
+    }
+
+    public Command sysIDQuasistatic(SysIdRoutine.Direction d){
+        return routine.quasistatic(d);
+    }
+    public Command sysIdDynamic(SysIdRoutine.Direction d){
+        return routine.dynamic(d);
     }
    
 }

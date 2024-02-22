@@ -20,6 +20,7 @@ import frc.robot.subsystems.Limelight.CameraController;
 
 import java.io.File;
 
+import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
@@ -49,7 +50,7 @@ public class RobotContainer {
   //public static final IndexerController indexer = new IndexerController();
   //public static final IntakeController intake = new IntakeController();
 
-  public static final ShooterController shooter = null;
+  public static final ShooterController shooter = new ShooterController();
   public static final IndexerController indexer = null;
   public static final IntakeController intake = null;
   
@@ -60,7 +61,7 @@ public class RobotContainer {
   
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController Controller1 =
+  public static final CommandXboxController Controller1 =
       new CommandXboxController(0);
   private final CommandXboxController Controller2 = 
       new CommandXboxController(1);
@@ -68,11 +69,11 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    drive.setDefaultCommand(new FieldCentricDrive(
-      drive, 
-      () -> Controller1.getLeftY(),
-      () -> Controller1.getLeftX(),
-      () -> Controller1.getRightX()));
+    // drive.setDefaultCommand(new FieldCentricDrive(
+    //   drive, 
+    //   () -> Controller1.getLeftY(),
+    //   () -> Controller1.getLeftX(),
+    //   () -> Controller1.getRightX()));
     
     // Configure the trigger bindings
     configureBindings();
@@ -88,6 +89,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    Controller1.a().whileTrue(new ShooterCommand(0, 0));
+  }
+    
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     //new Trigger(Controller2.y()).whileTrue(new ShooterCommand(fCam.getDistanceToTarget(), fCam.getYaw()));
     //new Trigger(Controller2.pov(0)).onTrue(new);
@@ -97,7 +101,7 @@ public class RobotContainer {
     //Controller1.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
     //new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
-  }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
