@@ -73,6 +73,7 @@ public class RobotContainer {
       () -> Controller1.getLeftY(),
       () -> Controller1.getLeftX(),
       () -> Controller1.getRightX()));
+    
     // Configure the trigger bindings
     configureBindings();
   }
