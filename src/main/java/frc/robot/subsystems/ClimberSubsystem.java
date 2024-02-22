@@ -5,14 +5,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import frc.robot.Constants;
+
 public class ClimberSubsystem extends SubsystemBase {
     CANSparkMax climber;
 
+    // need to tune these !!!
     private static double pK = 0.1;
     private static double pG = 0.1;
 
     public ClimberSubsystem() {
-        climber = new CANSparkMax(Constants.CLIMBER, MotorType.kBrushless);
+        // climber = new CANSparkMax(Constants.CLIMBER, MotorType.kBrushless);
     }
 
     public void raiseClimber() {
@@ -20,12 +23,13 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public int positionDifference() {
-        // need to do something about this
+        // need to do something about this      !!!!
+        return 0;
     }
 
     // a.k.a raise robot
     public void pullUp() {
         // may need to change this later
-        climber.set(-pG + -pK * positionDifference);
+        climber.set(-pG + -pK * positionDifference());
     }
 }
