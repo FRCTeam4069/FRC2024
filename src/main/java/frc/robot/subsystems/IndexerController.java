@@ -29,6 +29,9 @@ public class IndexerController extends SubsystemBase {
     public void feedShooter(){
         m1.set(0.7);
     }
+    public void stop(){
+        m1.stopMotor();
+    }
 
     public double getPhotoReading(){
         return pes.getValue();

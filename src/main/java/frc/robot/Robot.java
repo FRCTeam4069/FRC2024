@@ -4,9 +4,15 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
+
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.FieldCentricDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,6 +34,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    
+
   }
 
   /**
@@ -82,7 +90,16 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    //double values[] = m_robotContainer.drive.getEncoderValues();
+    //SmartDashboard.putNumberArray("modules", values);
+
+    //SmartDashboard.putNumber("1", values[1]);
+    //SmartDashboard.putNumber("2", values[2]);
+    //SmartDashboard.putNumber("3", values[3]);
+    
+
+  }
 
   @Override
   public void testInit() {
@@ -92,7 +109,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    RobotContainer.Controller1.a().and(RobotContainer.Controller1.rightBumper()).whileTrue(RobotContainer.shooter.sysIDQuasistatic(edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction.kReverse));
+    RobotContainer.Controller1.b().and(RobotContainer.Controller1.rightBumper()).whileTrue(RobotContainer.shooter.sysIDQuasistatic(edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction.kReverse));
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override

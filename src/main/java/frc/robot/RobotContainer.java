@@ -4,22 +4,32 @@
 
 package frc.robot;
 
+import frc.robot.commands.ArticIntakeCommand;
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FeedIntakeCommand;
+import frc.robot.commands.FieldCentricDrive;
+import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.ArticIntakeCommand.positions;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.ShooterController;
+import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Limelight.CameraController;
 import frc.robot.subsystems.ClimberSubsystem;
 
+import java.io.File;
+
+import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,21 +50,36 @@ public class RobotContainer {
   //public CameraController fCam = new CameraController(CameraConstants.fCamName);
   //public CameraController bCam = new CameraController(CameraConstants.bCamName);
 
+  //public static final ShooterController shooter = new ShooterController();
+  //public static final IndexerController indexer = new IndexerController();
+  //public static final IntakeController intake = new IntakeController();
+
   public static final ShooterController shooter = new ShooterController();
-  public static final IndexerController indexer = new IndexerController();
-  public static final IntakeController intake = new IntakeController();
   public static final ClimberSubsystem climber = new ClimberSubsystem();
+  public static final IndexerController indexer = null;
+  public static final IntakeController intake = null;
   
-  public Pigeon2 gyro = new Pigeon2(0);
+  public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+
+  //private final SwerveSubsystem drive = SwerveSubsystem.getInstance();
+  
+  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController Controller1 =
+  public static final CommandXboxController Controller1 =
       new CommandXboxController(0);
   private final CommandXboxController Controller2 = 
       new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
+    // drive.setDefaultCommand(new FieldCentricDrive(
+    //   drive, 
+    //   () -> Controller1.getLeftY(),
+    //   () -> Controller1.getLeftX(),
+    //   () -> Controller1.getRightX()));
+    
     // Configure the trigger bindings
     configureBindings();
   }
@@ -69,6 +94,19 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    new Trigger(Controller2.y()).whileTrue(new ShooterCommand(0, 0));
+
+
+    new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
+    new Trigger(Controller2.rightBumper()).whileTrue(new IndexerCommand(indexer.getPhotoReading() < 30, 
+                                                                        shooter.isShooting(), 
+                                                                        shooter.atSpeed()));
+                                                                        
+    new Trigger(Controller2.pov(0)).onTrue(new ArticIntakeCommand(positions.UPPER));
+    new Trigger(Controller2.pov(180)).onTrue(new ArticIntakeCommand(positions.LOWER));
+
+  }
+    
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     //new Trigger(Controller2.y()).whileTrue(new ShooterCommand(fCam.getDistanceToTarget(), fCam.getYaw()));
     //new Trigger(Controller2.pov(0)).onTrue(new);
@@ -77,8 +115,8 @@ public class RobotContainer {
     // cancelling on release.
     //Controller1.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
-  }
+    //new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

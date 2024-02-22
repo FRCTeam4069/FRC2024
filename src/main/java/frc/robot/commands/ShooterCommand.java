@@ -18,8 +18,8 @@ public class ShooterCommand extends Command {
 
     @Override
     public void execute(){
-        RobotContainer.shooter.ShootWithPos(x, theta); 
-
+        //RobotContainer.shooter.ShootWithPos(x, theta); 
+        RobotContainer.shooter.drive();
     }
 
     @Override
