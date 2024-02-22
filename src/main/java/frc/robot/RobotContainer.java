@@ -20,6 +20,7 @@ import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Limelight.CameraController;
+import frc.robot.subsystems.ClimberSubsystem;
 
 import java.io.File;
 
@@ -54,8 +55,12 @@ public class RobotContainer {
   //public static final IntakeController intake = new IntakeController();
 
   public static final ShooterController shooter = new ShooterController();
+
   public static final IndexerController indexer = new IndexerController();
   public static final IntakeController intake = new IntakeController();
+
+  public static final ClimberSubsystem climber = new ClimberSubsystem();
+  
   
   public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
