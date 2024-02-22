@@ -29,7 +29,7 @@ public class IntakeController extends SubsystemBase {
     }
 
     public void driveFeed(){
-        feedMotor.set(1);
+        feedMotor.set(-1);
     }
     public void stopFeed(){
         feedMotor.stopMotor();

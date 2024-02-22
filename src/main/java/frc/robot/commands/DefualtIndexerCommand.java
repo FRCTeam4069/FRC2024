@@ -1,32 +1,28 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.IndexerController;
 
-public class IndexerCommand extends Command{
+public class DefualtIndexerCommand extends Command{
     private IndexerController indexer = RobotContainer.indexer;
     boolean isLoaded, shooting, speed;
     
 
-    public IndexerCommand(boolean isLoaded, boolean shooting, boolean atSpeed){
-        this.isLoaded = isLoaded;
-        this.shooting = shooting;
-        speed = atSpeed;
+    public DefualtIndexerCommand(BooleanSupplier requested){
+        isLoaded = requested.getAsBoolean();
+        addRequirements(RobotContainer.indexer);
     }
 
 
     public void execute(){
-        if(shooting && speed){
+        
             indexer.feedShooter();
-        }
-
-        if(!shooting && !isLoaded){
-            indexer.feedShooter();
-        }
-        else{
-            indexer.stop();
-        }
+        
+        
+        
     }
 
     public void end(boolean interupted){
