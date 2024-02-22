@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import frc.robot.commands.ArticIntakeCommand;
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.FieldCentricDrive;
+import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.ArticIntakeCommand.positions;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
@@ -89,7 +92,17 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller1.a().whileTrue(new ShooterCommand(0, 0));
+    new Trigger(Controller2.y()).whileTrue(new ShooterCommand(0, 0));
+
+
+    new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
+    new Trigger(Controller2.rightBumper()).whileTrue(new IndexerCommand(indexer.getPhotoReading() < 30, 
+                                                                        shooter.isShooting(), 
+                                                                        shooter.atSpeed()));
+                                                                        
+    new Trigger(Controller2.pov(0)).onTrue(new ArticIntakeCommand(positions.UPPER));
+    new Trigger(Controller2.pov(180)).onTrue(new ArticIntakeCommand(positions.LOWER));
+
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

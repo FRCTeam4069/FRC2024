@@ -93,6 +93,15 @@ public class ShooterController extends SubsystemBase {
     public Command sysIdDynamic(SysIdRoutine.Direction d){
         return routine.dynamic(d);
     }
+
+    public boolean atSpeed(){
+        if(talon1.getVelocity().getValueAsDouble() >= 75 && talon1.getVelocity().getValueAsDouble() <= 85) return true;
+        else return false;
+    }
+
+    public boolean isShooting(){
+        return talon1.getVelocity().getValueAsDouble() > 20;
+    }
    
 }
 

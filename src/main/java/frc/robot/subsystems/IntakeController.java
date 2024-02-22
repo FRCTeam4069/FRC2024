@@ -40,4 +40,8 @@ public class IntakeController extends SubsystemBase {
     public void stopArt(){
         artMotor1.stopMotor();
     }
+
+    public double getEncoder(){
+        return artMotor1.getEncoder().getPosition();
+    }
 }
