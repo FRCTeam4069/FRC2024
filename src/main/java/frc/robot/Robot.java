@@ -110,9 +110,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    RobotContainer.Controller1.a().and(RobotContainer.Controller1.rightBumper()).whileTrue(RobotContainer.shooter.sysIDQuasistatic(edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction.kReverse));
-    RobotContainer.Controller1.b().and(RobotContainer.Controller1.rightBumper()).whileTrue(RobotContainer.shooter.sysIDQuasistatic(edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction.kReverse));
+    
   }
+  
 
   /** This function is called once when the robot is first started up. */
   @Override
@@ -121,4 +121,5 @@ public class Robot extends TimedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
+
 }

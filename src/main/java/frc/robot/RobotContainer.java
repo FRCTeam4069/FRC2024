@@ -10,7 +10,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.FieldCentricDrive;
-import frc.robot.commands.IndexerCommand;
+import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ArticIntakeCommand.positions;
 import frc.robot.constants.CameraConstants;
@@ -55,9 +55,12 @@ public class RobotContainer {
   //public static final IntakeController intake = new IntakeController();
 
   public static final ShooterController shooter = new ShooterController();
+
+  public static final IndexerController indexer = new IndexerController();
+  public static final IntakeController intake = new IntakeController();
+
   public static final ClimberSubsystem climber = new ClimberSubsystem();
-  public static final IndexerController indexer = null;
-  public static final IntakeController intake = null;
+  
   
   public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
@@ -74,13 +77,18 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    // drive.setDefaultCommand(new FieldCentricDrive(
-    //   drive, 
+    //  drive.setDefaultCommand(new FieldCentricDrive(
+    //    drive, 
     //   () -> Controller1.getLeftY(),
     //   () -> Controller1.getLeftX(),
     //   () -> Controller1.getRightX()));
     
     // Configure the trigger bindings
+
+    // indexer.setDefaultCommand(new DefualtIndexerCommand(
+    //   () -> Controller2.leftBumper().getAsBoolean()
+    // ));
+
     configureBindings();
   }
 
@@ -98,10 +106,8 @@ public class RobotContainer {
 
 
     new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
-    new Trigger(Controller2.rightBumper()).whileTrue(new IndexerCommand(indexer.getPhotoReading() < 30, 
-                                                                        shooter.isShooting(), 
-                                                                        shooter.atSpeed()));
-                                                                        
+    
+    new Trigger(Controller2.rightBumper()).whileTrue(new DefualtIndexerCommand(Controller2.leftBumper()));                                                       
     new Trigger(Controller2.pov(0)).onTrue(new ArticIntakeCommand(positions.UPPER));
     new Trigger(Controller2.pov(180)).onTrue(new ArticIntakeCommand(positions.LOWER));
 

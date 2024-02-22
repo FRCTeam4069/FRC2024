@@ -23,5 +23,5 @@ public final class DeviceIDs {
     public static final byte STEER_LR = 22;
     public static final byte STEER_RR = 11;
 
-    //public static final byte CLIMBER = 0;       // !!!
+    public static final byte CLIMBER = 1;
 }
