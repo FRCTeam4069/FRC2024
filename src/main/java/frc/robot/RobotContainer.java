@@ -15,6 +15,7 @@ import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.Limelight.CameraController;
+import frc.robot.subsystems.ClimberSubsystem;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
@@ -42,6 +43,7 @@ public class RobotContainer {
   public static final ShooterController shooter = new ShooterController();
   public static final IndexerController indexer = new IndexerController();
   public static final IntakeController intake = new IntakeController();
+  public static final ClimberSubsystem climber = new ClimberSubsystem();
   
   public Pigeon2 gyro = new Pigeon2(0);
 
