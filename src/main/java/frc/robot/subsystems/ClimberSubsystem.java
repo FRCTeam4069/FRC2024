@@ -12,7 +12,7 @@ public class ClimberSubsystem extends SubsystemBase {
     private static double pG = 0.1;
 
     public ClimberSubsystem() {
-        climber = new CANSparkMax(Constants.CLIMBER, MotorType.kBrushless);
+        //climber = new CANSparkMax(DeviceIDs.CLIMBER, MotorType.kBrushless);
     }
 
     public void raiseClimber() {
@@ -21,6 +21,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public int positionDifference() {
         // need to do something about this
+        return 1;
     }
 
     // a.k.a raise robot
