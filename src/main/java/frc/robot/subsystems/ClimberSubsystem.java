@@ -1,11 +1,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import frc.robot.DeviceIDs;
+import frc.robot.constants.DeviceIDs;
 
 public class ClimberSubsystem extends SubsystemBase {
     CANSparkMax climber;
