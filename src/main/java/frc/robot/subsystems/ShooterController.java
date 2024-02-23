@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
+
 
 public class ShooterController extends SubsystemBase {
     TalonFX talon1;
@@ -36,24 +36,13 @@ public class ShooterController extends SubsystemBase {
     private final MutableMeasure<Angle> angle = mutable(Rotations.of(0));
     private final MutableMeasure<Velocity<Angle>> velo = mutable(RotationsPerSecond.of(0));
 
-    SysIdRoutine routine = new SysIdRoutine(new SysIdRoutine.Config(), 
-    new SysIdRoutine.Mechanism(
-        (Measure<Voltage> volts) -> {
-            talon2.setVoltage(volts.in(Volts));
-        },
-        (SysIdRoutineLog log) ->{
-            log.motor("talon2").voltage(appliedVoltage.mut_replace(talon2.get() * RobotController.getBatteryVoltage(), Volts))
-            .angularPosition(angle.mut_replace(talon2.getPosition().getValueAsDouble(), Rotations))
-            .angularVelocity(velo.mut_replace(talon2.getVelocity().getValueAsDouble(), RotationsPerSecond));
-        }, this)
-        );
+    SysIdRoutine routine;
         
 
     public ShooterController(){
-        talon1 = new TalonFX(8);
-        talon2 = new TalonFX(9);
+        talon1 = new TalonFX(9);
+        talon2 = new TalonFX(8);
 
-        talon1.setInverted(true);
 
         var slot0Configs = new Slot0Configs();
         slot0Configs.kV = 0.12273;
@@ -61,17 +50,26 @@ public class ShooterController extends SubsystemBase {
         slot0Configs.kI = 0.48;
         slot0Configs.kD = 0.01;
 
+        // var slot1Configs = new Slot0Configs();
+        // slot0Configs.kV = 0.12273;
+        // slot0Configs.kP = 0.11;
+        // slot0Configs.kI = 0.48;
+        // slot0Configs.kD = 0.01;
+        
+
         talon1.getConfigurator().apply(slot0Configs, 0.050);
         talon2.getConfigurator().apply(slot0Configs, 0.050);
 
 
         //feedforward = new SimpleMotorFeedforward(0.79972, );
+
+       talon1.setInverted(true);
     }
 
     public void drive(){
         v.Slot = 0;
         talon1.setControl(v.withVelocity(80));
-        talon2.setControl(v.withVelocity(40));
+        talon2.setControl(v.withVelocity(-40));
     }
     public void stop(){
         talon1.set(0);
@@ -87,12 +85,6 @@ public class ShooterController extends SubsystemBase {
         talon2.setControl(v.withVelocity(rightSpeed));
     }
 
-    public Command sysIDQuasistatic(SysIdRoutine.Direction d){
-        return routine.quasistatic(d);
-    }
-    public Command sysIdDynamic(SysIdRoutine.Direction d){
-        return routine.dynamic(d);
-    }
 
     public boolean atSpeed(){
         if(talon1.getVelocity().getValueAsDouble() >= 75 && talon1.getVelocity().getValueAsDouble() <= 85) return true;
@@ -100,7 +92,14 @@ public class ShooterController extends SubsystemBase {
     }
 
     public boolean isShooting(){
-        return talon1.getVelocity().getValueAsDouble() > 20;
+        return talon1.getVelocity().getValueAsDouble() > 10;
+    }
+
+    public double getFasterVelocity(){
+        return talon1.getVelocity().getValueAsDouble();
+    }
+    public double getSlowerVelocity(){
+        return talon2.getVelocity().getValueAsDouble();
     }
    
 }

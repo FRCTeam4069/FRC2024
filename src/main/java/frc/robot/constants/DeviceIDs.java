@@ -6,7 +6,6 @@ public final class DeviceIDs {
 
     //TODO: make these exist in hardware and double check others
     public static final byte FEEDER = 12;
-    //public static final byte CLIMBER = 
 
     public static final byte SHOOTER_ARTICULATE_LEFT = 5;
     public static final byte SHOOTER_ARTICULATE_RIGHT = 6;
@@ -28,4 +27,6 @@ public final class DeviceIDs {
     public static final byte ENCODER_RF = 33;
     public static final byte ENCODER_LR = 32;
     public static final byte ENCODER_RR = 31;
+
+    public static final byte CLIMBER = 40;
 }
