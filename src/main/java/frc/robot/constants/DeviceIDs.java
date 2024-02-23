@@ -29,4 +29,7 @@ public final class DeviceIDs {
     public static final byte ENCODER_RR = 31;
 
     public static final byte CLIMBER = 40;
+
+    // From Ahmed's Constants file
+    public static final byte PHOTO_ELECTRIC_SENSOR_PORT = 2;
 }
