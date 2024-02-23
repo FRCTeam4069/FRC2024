@@ -19,8 +19,13 @@ public final class DeviceIDs {
     public static final byte DRIVE_LR = 2;
     public static final byte DRIVE_RR = 1;
     
-    public static final byte STEER_LF = 44;
-    public static final byte STEER_RF = 33;
+    public static final byte STEER_LF = 24;
+    public static final byte STEER_RF = 23;
     public static final byte STEER_LR = 22;
-    public static final byte STEER_RR = 11;
+    public static final byte STEER_RR = 21;
+
+    public static final byte ENCODER_LF = 34;
+    public static final byte ENCODER_RF = 33;
+    public static final byte ENCODER_LR = 32;
+    public static final byte ENCODER_RR = 31;
 }
