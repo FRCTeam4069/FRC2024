@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -77,12 +78,14 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    //  drive.setDefaultCommand(new FieldCentricDrive(
-    //    drive, 
-    //   () -> Controller1.getLeftY(),
-    //   () -> Controller1.getLeftX(),
-    //   () -> Controller1.getRightX()));
+    drive.setDefaultCommand(drive.driveCommand(
+      () -> Controller1.getLeftY(),
+      () -> Controller1.getLeftX(),
+      () -> Controller1.getRightX()));
     
+
+    Controller1.a().onTrue(new RunCommand(() -> drive.zeroGyro()));
+
     // Configure the trigger bindings
 
     // indexer.setDefaultCommand(new DefualtIndexerCommand(
