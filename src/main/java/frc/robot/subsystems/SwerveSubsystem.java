@@ -11,7 +11,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
+//import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,7 +20,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -52,9 +51,11 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public        double      maximumSpeed = Units.feetToMeters(23.0);
 
+  /*
   private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(0.001);
   private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(0.001);
   private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(0.001);
+  */
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.

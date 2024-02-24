@@ -7,9 +7,7 @@ package frc.robot;
 
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FeedIntakeCommand;
-import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.defaultArtCommand;
@@ -28,16 +26,12 @@ import frc.robot.subsystems.ClimberSubsystem;
 import java.io.File;
 
 import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
-import com.ctre.phoenix6.hardware.Pigeon2;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -67,12 +61,8 @@ public class RobotContainer {
 
   public static final ShooterRotationController artShooter = new ShooterRotationController();
   
-  
   public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
-  //private final SwerveSubsystem drive = SwerveSubsystem.getInstance();
-  
-  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController Controller1 =

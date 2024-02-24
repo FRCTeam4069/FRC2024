@@ -6,14 +6,12 @@ package frc.robot;
 
 import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.FieldCentricDrive;
 import frc.robot.subsystems.ShooterRotationController;
 
 /**
