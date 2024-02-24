@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.ShooterRotationController;
+import frc.robot.subsystems.ShooterTest;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -111,6 +112,7 @@ public class Robot extends TimedRobot {
 
   }
 
+  private ShooterTest t;
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
@@ -118,14 +120,16 @@ public class Robot extends TimedRobot {
     //c = new ShooterRotationController();
 
     SmartDashboard.clearPersistent("Field");
+
+    t = new ShooterTest();
    
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    SmartDashboard.putNumber("SHOOTER", c.getEncoder());
-    m_robotContainer.artShooter.runWithSpeed(m_robotContainer.Controller1.getLeftY());
+    //SmartDashboard.putNumber("SHOOTER", c.getEncoder());
+    t.drive(m_robotContainer.Controller1.getLeftY());
   }
   
 

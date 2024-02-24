@@ -38,6 +38,9 @@ public class IntakeController extends SubsystemBase {
     public void driveFeed(){
         feedMotor.set(limit.calculate(-0.7));
     }
+    public void backIntake(){
+        feedMotor.set(limit.calculate(0.7));
+    }
     public void stopFeed(){
         feedMotor.stopMotor();
     }
