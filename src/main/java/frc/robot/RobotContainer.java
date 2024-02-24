@@ -114,8 +114,8 @@ public class RobotContainer {
     new Trigger(Controller2.x()).onTrue(intake.setPosition(positions.LOWER));
 
 
-    // new Trigger(Controller2.b()).onTrue(artShooter.setAngle(shooterAngles.NINTEY));
-    // new Trigger(Controller2.a()).onTrue(artShooter.setAngle(shooterAngles.ZERO));
+    new Trigger(Controller2.b()).onTrue(artShooter.setAngle(shooterAngles.NINTEY));
+    new Trigger(Controller2.a()).onTrue(artShooter.setAngle(shooterAngles.ZERO));
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

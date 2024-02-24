@@ -112,7 +112,7 @@ public class Robot extends TimedRobot {
 
   }
 
-  private ShooterTest t;
+  //private ShooterTest t;
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
@@ -121,7 +121,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.clearPersistent("Field");
 
-    t = new ShooterTest();
+    //t = new ShooterTest();
    
   }
 
@@ -129,7 +129,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     //SmartDashboard.putNumber("SHOOTER", c.getEncoder());
-    t.drive(m_robotContainer.Controller1.getLeftY());
+    SmartDashboard.putNumber("intake", m_robotContainer.intake.getEncoder());
   }
   
 

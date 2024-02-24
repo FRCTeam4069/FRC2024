@@ -29,10 +29,14 @@ public class IntakeController extends SubsystemBase {
         feedMotor.setIdleMode(IdleMode.kCoast);
         artMotor1.setIdleMode(IdleMode.kBrake);
 
+        artMotor1.getEncoder().setPosition(0);
+
         artMotor1.setSoftLimit(SoftLimitDirection.kForward, 0);
         artMotor1.setSoftLimit(SoftLimitDirection.kReverse, IntakeConstants.UPPER_POSITION);
         
         limit = new SlewRateLimiter(.94);
+
+        artMotor1.setSmartCurrentLimit(20);
     }
 
     public void driveFeed(){

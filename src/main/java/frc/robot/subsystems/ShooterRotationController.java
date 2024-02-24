@@ -21,20 +21,20 @@ public class ShooterRotationController extends SubsystemBase {
     private PIDController controller;
 
     public ShooterRotationController(){
-        // //left = new CANSparkMax(DeviceIDs.SHOOTER_ARTICULATE_LEFT +45, MotorType.kBrushless);
-        // right = new CANSparkMax(DeviceIDs.SHOOTER_ARTICULATE_RIGHT+45, MotorType.kBrushless);
+        left = new CANSparkMax(DeviceIDs.SHOOTER_ARTICULATE_LEFT +45, MotorType.kBrushless);
+        right = new CANSparkMax(DeviceIDs.SHOOTER_ARTICULATE_RIGHT+45, MotorType.kBrushless);
 
-        // encoder = new DutyCycleEncoder(0);
-        // left.setIdleMode(IdleMode.kBrake);
-        // right.setIdleMode(IdleMode.kBrake);
+        encoder = new DutyCycleEncoder(0);
+        left.setIdleMode(IdleMode.kBrake);
+        right.setIdleMode(IdleMode.kBrake);
 
-        // left.setInverted(true);
+        left.setInverted(true);
 
-        // left.follow(right);
+        
 
-        // //encoder.reset();
+        //encoder.reset();
 
-        // controller = new PIDController(kP, kI, kD);
+        controller = new PIDController(kP, kI, kD);
 
     }
 
