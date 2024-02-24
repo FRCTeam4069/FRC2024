@@ -26,11 +26,13 @@ import frc.robot.subsystems.ClimberSubsystem;
 import java.io.File;
 
 import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -79,7 +81,7 @@ public class RobotContainer {
       () -> Controller1.getRightX()));
     
 
-    Controller1.a().onTrue(new RunCommand(() -> drive.zeroGyro()));
+    Controller1.a().onTrue(new InstantCommand(() -> drive.zeroGyro()));
 
     intake.setDefaultCommand(new defaultArtCommand());
 
@@ -134,6 +136,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    //return Autos.exampleAuto(m_exampleSubsystem);
+    return new PathPlannerAuto("Example Auto");
   }
 }
