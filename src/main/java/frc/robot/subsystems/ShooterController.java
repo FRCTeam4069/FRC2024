@@ -17,6 +17,8 @@ import edu.wpi.first.units.Voltage;
 import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,6 +39,8 @@ public class ShooterController extends SubsystemBase {
     private final MutableMeasure<Velocity<Angle>> velo = mutable(RotationsPerSecond.of(0));
 
     SysIdRoutine routine;
+
+    private DutyCycleEncoder encoder;
         
 
     public ShooterController(){
@@ -64,6 +68,9 @@ public class ShooterController extends SubsystemBase {
         //feedforward = new SimpleMotorFeedforward(0.79972, );
 
        talon1.setInverted(true);
+
+       
+
     }
 
     public void drive(){
@@ -101,6 +108,8 @@ public class ShooterController extends SubsystemBase {
     public double getSlowerVelocity(){
         return talon2.getVelocity().getValueAsDouble();
     }
+
+    
    
 }
 

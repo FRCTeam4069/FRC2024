@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.FieldCentricDrive;
+import frc.robot.subsystems.ShooterRotationController;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,6 +27,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  ShooterRotationController c;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -35,8 +37,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    
     
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    // m_robotContainer.intake.setBrakeState(1);
 
   }
 
@@ -54,6 +60,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    //SmartDashboard.putNumber("intake encoder", m_robotContainer.intake.getEncoder());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -88,6 +95,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    
+
   }
 
   /** This function is called periodically during operator control. */
@@ -100,6 +109,7 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("2", values[2]);
     //SmartDashboard.putNumber("3", values[3]);
     
+    
 
   }
 
@@ -107,12 +117,17 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    //c = new ShooterRotationController();
+
+    SmartDashboard.clearPersistent("Field");
+   
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    
+    SmartDashboard.putNumber("SHOOTER", c.getEncoder());
+    m_robotContainer.artShooter.runWithSpeed(m_robotContainer.Controller1.getLeftY());
   }
   
 
