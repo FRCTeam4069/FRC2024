@@ -7,10 +7,13 @@ package frc.robot;
 
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.BackIntakeCommand;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
+import frc.robot.commands.unIndexCOmmand;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
@@ -76,15 +79,18 @@ public class RobotContainer {
   public RobotContainer() {
     
     drive.setDefaultCommand(drive.driveCommand(
-      () -> Controller1.getLeftY(),
-      () -> Controller1.getLeftX(),
-      () -> Controller1.getRightX()));
+       () -> Controller1.getLeftY(),
+       () -> Controller1.getLeftX(),
+       () -> Controller1.getRightX()));
     
 
     Controller1.a().onTrue(new InstantCommand(() -> drive.zeroGyro()));
 
     intake.setDefaultCommand(new defaultArtCommand());
-
+    //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
+    artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter)
+    );
+    
     // Configure the trigger bindings
 
     //  indexer.setDefaultCommand(new DefualtIndexerCommand(
@@ -108,14 +114,16 @@ public class RobotContainer {
 
 
     new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
+    new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
+    new Trigger(Controller2.leftBumper()).whileTrue(new unIndexCOmmand(indexer));
     
     new Trigger(Controller2.rightBumper()).whileTrue(new DefualtIndexerCommand(Controller2.leftBumper()));                                                       
-    new Trigger(Controller2.leftBumper()).onTrue(intake.setPosition(frc.robot.subsystems.IntakeController.positions.UPPER));
+    new Trigger(Controller2.a()).onTrue(intake.setPosition(frc.robot.subsystems.IntakeController.positions.UPPER));
     new Trigger(Controller2.x()).onTrue(intake.setPosition(positions.LOWER));
 
 
-    // new Trigger(Controller2.b()).onTrue(artShooter.setAngle(shooterAngles.NINTEY));
-    // new Trigger(Controller2.a()).onTrue(artShooter.setAngle(shooterAngles.ZERO));
+    new Trigger(Controller2.b()).onTrue(artShooter.setAngle(shooterAngles.NINTEY));
+    //new Trigger(Controller2.a()).onTrue(artShooter.setAngle(shooterAngles.ZERO));
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

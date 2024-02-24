@@ -18,7 +18,7 @@ public class IntakeController extends SubsystemBase {
 
     private SlewRateLimiter limit;
 
-    private final double LOWER = IntakeConstants.LOWER_POSITION - 8, 
+    private final double LOWER = IntakeConstants.LOWER_POSITION - 6, 
                          UPPER = IntakeConstants.UPPER_POSITION - 3;
 
 
@@ -29,20 +29,28 @@ public class IntakeController extends SubsystemBase {
         feedMotor.setIdleMode(IdleMode.kCoast);
         artMotor1.setIdleMode(IdleMode.kBrake);
 
+        artMotor1.getEncoder().setPosition(UPPER);
+
         artMotor1.setSoftLimit(SoftLimitDirection.kForward, 0);
         artMotor1.setSoftLimit(SoftLimitDirection.kReverse, IntakeConstants.UPPER_POSITION);
         
         limit = new SlewRateLimiter(.94);
+
+        artMotor1.setSmartCurrentLimit(20);
     }
 
     public void driveFeed(){
         feedMotor.set(limit.calculate(-0.7));
+    }
+    public void backIntake(){
+        feedMotor.set(limit.calculate(0.7));
     }
     public void stopFeed(){
         feedMotor.stopMotor();
     }
     public void driveArt(double speed){
         artMotor1.set(speed);
+        System.out.println("encoder" + getEncoder());
     }
     public void stopArt(){
         artMotor1.stopMotor();
