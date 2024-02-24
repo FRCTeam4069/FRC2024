@@ -10,6 +10,8 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -50,7 +52,9 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public        double      maximumSpeed = Units.feetToMeters(23.0);
 
-  //private static SwerveSubsystem INSTANCE = null;
+  private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(0.001);
+  private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(0.001);
+  private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(0.001);
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -88,6 +92,14 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive.setCosineCompensator(!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
     //setupPathPlanner();
     swerveDrive.setMotorIdleMode(true);
+
+    /*
+    swerveDrive.swerveController.addSlewRateLimiters(
+      xSlewRateLimiter,
+      ySlewRateLimiter,
+      wSlewRateLimiter
+    );
+    */
 
   }
 
