@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import frc.robot.commands.ArticIntakeCommand;
+
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -12,14 +12,17 @@ import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.ShooterCommand;
-import frc.robot.commands.ArticIntakeCommand.positions;
+import frc.robot.commands.defaultArtCommand;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.ShooterController;
+import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.Limelight.CameraController;
+import frc.robot.subsystems.ShooterRotationController.shooterAngles;
 import frc.robot.subsystems.ClimberSubsystem;
 
 import java.io.File;
@@ -61,6 +64,8 @@ public class RobotContainer {
   public static final IntakeController intake = new IntakeController();
 
   public static final ClimberSubsystem climber = new ClimberSubsystem();
+
+  public static final ShooterRotationController artShooter = new ShooterRotationController();
   
   
   public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
@@ -86,11 +91,13 @@ public class RobotContainer {
 
     Controller1.a().onTrue(new RunCommand(() -> drive.zeroGyro()));
 
+    intake.setDefaultCommand(new defaultArtCommand());
+
     // Configure the trigger bindings
 
-    // indexer.setDefaultCommand(new DefualtIndexerCommand(
-    //   () -> Controller2.leftBumper().getAsBoolean()
-    // ));
+    //  indexer.setDefaultCommand(new DefualtIndexerCommand(
+    //    () -> Controller2.leftBumper().getAsBoolean()
+    //  ));
 
     configureBindings();
   }
@@ -111,9 +118,12 @@ public class RobotContainer {
     new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     
     new Trigger(Controller2.rightBumper()).whileTrue(new DefualtIndexerCommand(Controller2.leftBumper()));                                                       
-    new Trigger(Controller2.pov(0)).onTrue(new ArticIntakeCommand(positions.UPPER));
-    new Trigger(Controller2.pov(180)).onTrue(new ArticIntakeCommand(positions.LOWER));
+    new Trigger(Controller2.leftBumper()).onTrue(intake.setPosition(frc.robot.subsystems.IntakeController.positions.UPPER));
+    new Trigger(Controller2.x()).onTrue(intake.setPosition(positions.LOWER));
 
+
+    // new Trigger(Controller2.b()).onTrue(artShooter.setAngle(shooterAngles.NINTEY));
+    // new Trigger(Controller2.a()).onTrue(artShooter.setAngle(shooterAngles.ZERO));
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
