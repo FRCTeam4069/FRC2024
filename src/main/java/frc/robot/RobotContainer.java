@@ -11,7 +11,9 @@ import frc.robot.commands.BackIntakeCommand;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
+import frc.robot.commands.unIndexCOmmand;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
@@ -62,7 +64,7 @@ public class RobotContainer {
 
   public static final ShooterRotationController artShooter = new ShooterRotationController();
   
-  //public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+  public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -74,16 +76,19 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    // drive.setDefaultCommand(drive.driveCommand(
-    //   () -> Controller1.getLeftY(),
-    //   () -> Controller1.getLeftX(),
-    //   () -> Controller1.getRightX()));
+    drive.setDefaultCommand(drive.driveCommand(
+       () -> Controller1.getLeftY(),
+       () -> Controller1.getLeftX(),
+       () -> Controller1.getRightX()));
     
 
     //Controller1.a().onTrue(new RunCommand(() -> drive.zeroGyro()));
 
     intake.setDefaultCommand(new defaultArtCommand());
-
+    //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
+    artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter)
+    );
+    
     // Configure the trigger bindings
 
     //  indexer.setDefaultCommand(new DefualtIndexerCommand(
@@ -108,6 +113,7 @@ public class RobotContainer {
 
     new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
+    new Trigger(Controller2.leftBumper()).whileTrue(new unIndexCOmmand(indexer));
     
     new Trigger(Controller2.rightBumper()).whileTrue(new DefualtIndexerCommand(Controller2.leftBumper()));                                                       
     new Trigger(Controller2.a()).onTrue(intake.setPosition(frc.robot.subsystems.IntakeController.positions.UPPER));
@@ -115,7 +121,7 @@ public class RobotContainer {
 
 
     new Trigger(Controller2.b()).onTrue(artShooter.setAngle(shooterAngles.NINTEY));
-    new Trigger(Controller2.a()).onTrue(artShooter.setAngle(shooterAngles.ZERO));
+    //new Trigger(Controller2.a()).onTrue(artShooter.setAngle(shooterAngles.ZERO));
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

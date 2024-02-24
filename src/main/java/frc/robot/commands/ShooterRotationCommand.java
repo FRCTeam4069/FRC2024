@@ -1,13 +1,15 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterRotationController;
 
-public class ShooterRotationCommand {
-    private final ShooterRotationController shooter = RobotContainer.artShooter;
+public class ShooterRotationCommand extends Command {
+    private ShooterRotationController shooter;
 
-    public ShooterRotationCommand(){
-
+    public ShooterRotationCommand(ShooterRotationController c){
+        shooter = c;
+        addRequirements(c);
     }
 
     public void execute(){

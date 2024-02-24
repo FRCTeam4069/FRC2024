@@ -11,10 +11,10 @@ public class ShooterTest extends SubsystemBase {
     CANSparkMax left, right;
 
     public ShooterTest(){
-        // left = new CANSparkMax(5, MotorType.kBrushless);
-        // right = new CANSparkMax(6, MotorType.kBrushless);
+        left = new CANSparkMax(5, MotorType.kBrushless);
+        right = new CANSparkMax(6, MotorType.kBrushless);
 
-        // left.setInverted(true);
+        left.setInverted(true);
 
         //left.follow(right);
     }

@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -17,18 +19,19 @@ public class ShooterRotationController extends SubsystemBase {
     private CANSparkMax left, right;
     private DutyCycleEncoder encoder;
 
-    private final double kP = 0.01, kI = 0, kD = 0;
+    private final double kP = 4.5, kI = 0, kD = 0.01;
     private PIDController controller;
 
     public ShooterRotationController(){
-        left = new CANSparkMax(DeviceIDs.SHOOTER_ARTICULATE_LEFT +45, MotorType.kBrushless);
-        right = new CANSparkMax(DeviceIDs.SHOOTER_ARTICULATE_RIGHT+45, MotorType.kBrushless);
+        left = new CANSparkMax(5 , MotorType.kBrushless);
+        right = new CANSparkMax(6, MotorType.kBrushless);
 
         encoder = new DutyCycleEncoder(0);
         left.setIdleMode(IdleMode.kBrake);
         right.setIdleMode(IdleMode.kBrake);
 
-        left.setInverted(true);
+        left.setInverted(false);
+        right.setInverted(false);
 
         
 
@@ -36,14 +39,33 @@ public class ShooterRotationController extends SubsystemBase {
 
         controller = new PIDController(kP, kI, kD);
 
+        
+
     }
 
-    public void runWithSpeed(double speed){
+    @Override
+    public void periodic() {
+        System.out.println(getTargetAngle());
+        System.out.println("right: " + right.get());
+        System.out.println("left: " + left.get());
+        System.out.println("encoder" + encoder.getAbsolutePosition());
+
+    }
+
+    public void drive(double speed) {
+        left.set(-speed);
         right.set(speed);
     }
 
+    // public void runWithSpeed(double speed){
+    //     right.set(speed);
+    // }
+
     public void goToAngle(){
         right.set(controller.calculate(getAngle(), getTargetAngle()));
+        left.set(-controller.calculate(getAngle(), getTargetAngle()));
+        // right.set(0.1);
+        // left.set(-0.1);
     }
 
     public double getEncoder(){
@@ -60,9 +82,13 @@ public class ShooterRotationController extends SubsystemBase {
         return this.runOnce(() -> angle = a);
     }
 
+    public Command setSpeed(DoubleSupplier speed) {
+        return this.run(() -> drive(speed.getAsDouble()));
+    }
+
     public double getTargetAngle(){
-        if(angle == shooterAngles.NINTEY) return 90;
-        else if(angle == shooterAngles.NEG_NINTEY) return -90;
+        if(angle == shooterAngles.NINTEY) return (Math.PI/2);
+        else if(angle == shooterAngles.NEG_NINTEY) return -Math.PI/2;
         return 0;
     }
     public enum shooterAngles{
