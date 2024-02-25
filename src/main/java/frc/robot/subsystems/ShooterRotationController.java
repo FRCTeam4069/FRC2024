@@ -62,8 +62,8 @@ public class ShooterRotationController extends SubsystemBase {
     // }
 
     public void goToAngle(){
-        right.set(controller.calculate(getAngle(), getTargetAngle()));
-        left.set(-controller.calculate(getAngle(), getTargetAngle()));
+        right.set(controller.calculate(getAngle(), Math.toRadians(90-40)));
+        left.set(-controller.calculate(getAngle(), Math.toRadians(90-40)));
         // right.set(0.1);
         // left.set(-0.1);
     }
