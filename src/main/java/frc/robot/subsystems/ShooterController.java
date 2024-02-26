@@ -75,8 +75,8 @@ public class ShooterController extends SubsystemBase {
 
     public void drive(){
         v.Slot = 0;
-        talon1.setControl(v.withVelocity(80));
-        talon2.setControl(v.withVelocity(-40));
+        talon1.setControl(v.withVelocity(60));
+        talon2.setControl(v.withVelocity(-30));
     }
     public void stop(){
         talon1.set(0);
