@@ -9,8 +9,10 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BackIntakeCommand;
 import frc.robot.commands.FeedIntakeCommand;
+import frc.robot.commands.SetShooterCommand;
 import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
@@ -90,8 +92,7 @@ public class RobotContainer {
 
     intake.setDefaultCommand(new defaultArtCommand());
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
-    artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter)
-    );
+    artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     
     // Configure the trigger bindings
 
@@ -113,19 +114,18 @@ public class RobotContainer {
    */
   private void configureBindings() {
     new Trigger(Controller2.y()).whileTrue(new ShooterCommand(0, 0));
-
+    new Trigger(Controller2.x()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
+    new Trigger(Controller2.a()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
+    new Trigger(Controller2.b()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
 
     new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     new Trigger(Controller2.leftBumper()).whileTrue(new unIndexCOmmand(indexer));
     
     new Trigger(Controller2.rightBumper()).whileTrue(new DefualtIndexerCommand(Controller2.leftBumper()));                                                       
-    new Trigger(Controller2.a()).onTrue(intake.setPosition(frc.robot.subsystems.IntakeController.positions.UPPER));
-    new Trigger(Controller2.x()).onTrue(intake.setPosition(positions.LOWER));
-
-
-    new Trigger(Controller2.b()).onTrue(artShooter.setAngle(shooterAngles.NINTEY));
-    //new Trigger(Controller2.a()).onTrue(artShooter.setAngle(shooterAngles.ZERO));
+    new Trigger(Controller2.rightBumper()).onTrue(intake.setPosition(positions.LOWER))
+                                          .onFalse(intake.setPosition(positions.UPPER));
+        
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

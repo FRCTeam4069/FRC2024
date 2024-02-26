@@ -109,6 +109,11 @@ public class ShooterController extends SubsystemBase {
         return talon2.getVelocity().getValueAsDouble();
     }
 
+    public void driveWithCustomSpeed(double leftVel, double rightVel){
+        v.Slot = 0;
+        talon1.setControl(v.withVelocity(leftVel));
+        talon2.setControl(v.withVelocity(-rightVel));
+    }
     
    
 }
