@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.ShooterTest;
+import swervelib.SwerveDriveTest;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to

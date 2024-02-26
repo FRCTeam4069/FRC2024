@@ -45,10 +45,12 @@ public class ShooterRotationController extends SubsystemBase {
 
     @Override
     public void periodic() {
+        /* 
         System.out.println(getTargetAngle());
         System.out.println("right: " + right.get());
         System.out.println("left: " + left.get());
         System.out.println("encoder" + encoder.getAbsolutePosition());
+        */
 
     }
 
