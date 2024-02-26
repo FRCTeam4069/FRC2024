@@ -62,6 +62,8 @@ public class IntakeController extends SubsystemBase {
 
     
 
+    
+
     positions p;
 
     public double getPositionValue(){
@@ -72,6 +74,10 @@ public class IntakeController extends SubsystemBase {
         return this.runOnce(() -> p = po);
     }
 
+    public positions getPosition(){
+        return p;
+    }
+    
     public enum positions{
         UPPER,
         LOWER

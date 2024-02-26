@@ -8,6 +8,7 @@ package frc.robot;
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BackIntakeCommand;
+import frc.robot.commands.BringIntakeUpCommand;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.SetShooterCommand;
 import frc.robot.commands.DefualtIndexerCommand;
@@ -90,9 +91,10 @@ public class RobotContainer {
     Controller1.x().onTrue(drive.sysIdDriveMotorCommand());
     
 
-    intake.setDefaultCommand(new defaultArtCommand());
+    //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
+    intake.setDefaultCommand(new defaultArtCommand());
     
     // Configure the trigger bindings
 
@@ -118,13 +120,15 @@ public class RobotContainer {
     new Trigger(Controller2.a()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
     new Trigger(Controller2.b()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
 
-    new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
-    new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
+    //new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
+    //new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     new Trigger(Controller2.leftBumper()).whileTrue(new unIndexCOmmand(indexer));
     
     new Trigger(Controller2.rightBumper()).whileTrue(new DefualtIndexerCommand(Controller2.leftBumper()));                                                       
-    new Trigger(Controller2.rightBumper()).onTrue(intake.setPosition(positions.LOWER))
-                                          .onFalse(intake.setPosition(positions.UPPER));
+   
+    //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
+    
+    new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
         
   }
     

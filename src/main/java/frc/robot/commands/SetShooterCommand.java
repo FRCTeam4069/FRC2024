@@ -23,12 +23,13 @@ public class SetShooterCommand extends Command{
             angle = 35;
         } 
         else if(positions == ShooterPositions.WHITE_LINE){
-            velocity = 70;
-            angle = 50;
+            velocity = 60;
+            angle = 48.5;
         }
         else {
             velocity = 80;
-            angle = 60;
+            angle = 58;
+            //3.2m
         }
     }
 
