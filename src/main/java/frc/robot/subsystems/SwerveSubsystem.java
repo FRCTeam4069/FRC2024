@@ -11,6 +11,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 //import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,8 +20,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
@@ -31,6 +34,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
+import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -38,6 +42,7 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import frc.robot.constants.AutonConstants;
+import frc.robot.constants.DrivebaseConstants;
 
 public class SwerveSubsystem extends SubsystemBase
 {
@@ -101,6 +106,9 @@ public class SwerveSubsystem extends SubsystemBase
       wSlewRateLimiter
     );
     */
+
+    //swerveDrive.replaceSwerveModuleFeedforward(DrivebaseConstants.BACK_LEFT_FEEDFORWARD);
+
 
   }
 
@@ -270,7 +278,7 @@ public class SwerveSubsystem extends SubsystemBase
         SwerveDriveTest.setDriveSysIdRoutine(
             new Config(),
             this, swerveDrive, 12),
-        3.0, 5.0, 3.0);
+        3.0, 20.0, 20.0);
   }
 
   /**
@@ -306,6 +314,30 @@ public class SwerveSubsystem extends SubsystemBase
                         false);
     });
   }
+
+  /**
+   * Command to drive the robot using translative values and heading as angular velocity.
+   * Adds deadzone for inputs
+   *
+   * @param translationX     Translation in the X direction. Cubed for smoother controls.
+   * @param translationY     Translation in the Y direction. Cubed for smoother controls.
+   * @param angularRotationX Angular velocity of the robot to set. Cubed for smoother controls.
+   * @return Drive command.
+   */
+  public Command teleopDriveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX)
+  {
+    return run(() -> {
+      double xSpeed = Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity();
+      double ySpeed = Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity();
+      // Make the robot move
+      swerveDrive.drive(new Translation2d(xSpeed,
+                                          ySpeed),
+                        Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
+                        true,
+                        false);
+    });
+  }
+
 
   /**
    * The primary method for controlling the drivebase.  Takes a {@link Translation2d} and a rotation rate, and

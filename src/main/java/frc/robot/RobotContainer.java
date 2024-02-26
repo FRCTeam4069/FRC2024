@@ -80,11 +80,13 @@ public class RobotContainer {
     
     drive.setDefaultCommand(drive.driveCommand(
        () -> Controller1.getLeftY(),
-       () -> Controller1.getLeftX(),
-       () -> Controller1.getRightX()));
+       () -> /*Controller1.getLeftX()*/0.0,
+       () -> /*Controller1.getRightX()*/0.0));
     
-
     Controller1.a().onTrue(new InstantCommand(() -> drive.zeroGyro()));
+
+    Controller1.x().onTrue(drive.sysIdDriveMotorCommand());
+    
 
     intake.setDefaultCommand(new defaultArtCommand());
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));

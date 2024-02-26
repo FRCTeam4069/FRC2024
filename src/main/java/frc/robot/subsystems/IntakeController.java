@@ -50,7 +50,7 @@ public class IntakeController extends SubsystemBase {
     }
     public void driveArt(double speed){
         artMotor1.set(speed);
-        System.out.println("encoder" + getEncoder());
+        //System.out.println("encoder" + getEncoder());
     }
     public void stopArt(){
         artMotor1.stopMotor();
