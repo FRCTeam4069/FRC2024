@@ -40,7 +40,7 @@ public class ShooterController extends SubsystemBase {
 
     SysIdRoutine routine;
 
-    private DutyCycleEncoder encoder;
+    //private DutyCycleEncoder encoder;
         
 
     public ShooterController(){
@@ -99,7 +99,7 @@ public class ShooterController extends SubsystemBase {
     }
 
     public boolean isShooting(){
-        return talon1.getVelocity().getValueAsDouble() > 10;
+        return talon1.getVelocity().getValueAsDouble() > 6;
     }
 
     public double getFasterVelocity(){
@@ -111,8 +111,16 @@ public class ShooterController extends SubsystemBase {
 
     public void driveWithCustomSpeed(double leftVel, double rightVel){
         v.Slot = 0;
-        talon1.setControl(v.withVelocity(leftVel));
-        talon2.setControl(v.withVelocity(-rightVel));
+
+        if(leftVel <= 30){
+            talon1.setControl(v.withVelocity(leftVel));
+            talon2.setControl(v.withVelocity(-leftVel));
+        }
+        else{
+            talon1.setControl(v.withVelocity(leftVel));
+            talon2.setControl(v.withVelocity(-rightVel));
+        }
+        
     }
     
    

@@ -61,6 +61,9 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     //SmartDashboard.putNumber("intake encoder", m_robotContainer.intake.getEncoder());
+  //   SmartDashboard.putNumber("Angle", m_robotContainer.artShooter.getEncoder());
+  //  SmartDashboard.putNumber("Sensor", m_robotContainer.indexer.getPhotoReading());
+   m_robotContainer.cam.printerNumbers();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -114,7 +117,6 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("1", values[1]);
     //SmartDashboard.putNumber("2", values[2]);
     //SmartDashboard.putNumber("3", values[3]);
-    
     
 
   }

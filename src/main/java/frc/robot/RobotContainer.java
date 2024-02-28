@@ -52,7 +52,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  public AprilTagFieldLayout aprilTagFieldLayout;
+  //public AprilTagFieldLayout aprilTagFieldLayout;
   //public CameraController fCam = new CameraController(CameraConstants.fCamName);
   //public CameraController bCam = new CameraController(CameraConstants.bCamName);
 
@@ -60,7 +60,9 @@ public class RobotContainer {
   //public static final IndexerController indexer = new IndexerController();
   //public static final IntakeController intake = new IntakeController();
 
+  public static CameraController cam = new CameraController("frontCamera","http://10.40.69.11:5800", "photonvision");
   public static final ShooterController shooter = new ShooterController();
+  
 
   public static final IndexerController indexer = new IndexerController();
   public static final IntakeController intake = new IntakeController();
@@ -119,16 +121,18 @@ public class RobotContainer {
     new Trigger(Controller2.x()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     new Trigger(Controller2.a()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
     new Trigger(Controller2.b()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
+    new Trigger(Controller2.leftStick()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
 
     //new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     //new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     new Trigger(Controller2.leftBumper()).whileTrue(new unIndexCOmmand(indexer));
     
-    new Trigger(Controller2.rightBumper()).whileTrue(new DefualtIndexerCommand(Controller2.leftBumper()));                                                       
+    new Trigger(Controller2.rightBumper()).whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
    
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
     new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
+    new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
         
   }
     

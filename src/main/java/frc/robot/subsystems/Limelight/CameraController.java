@@ -29,6 +29,7 @@ public class CameraController extends SubsystemBase {
     public CameraController(String camName) {
         this.cam = new PhotonCamera(camName);
         photonPoseEstimator = new PhotonPoseEstimator(m_RobotContainer.aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam, CameraConstants.robotToFrontCam);
+        photonPoseEstimator.setRobotToCameraTransform(getAltCamToTarget());
     }
 
     public PhotonPipelineResult getResult() {
@@ -40,10 +41,9 @@ public class CameraController extends SubsystemBase {
     }
 
     public List<PhotonTrackedTarget> getTarget() {
-        if (hasTarget()) {
-            return getResult().getTargets();
-        }
-        else return null;
+        
+        return getResult().getTargets();
+        
     }
 
     public PhotonTrackedTarget getBestTarget() {
