@@ -14,6 +14,8 @@ import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,10 +27,12 @@ public class CameraController extends SubsystemBase {
     private static PhotonPoseEstimator photonPoseEstimator;
     private RobotContainer m_RobotContainer;
     private String tableName;
+    private AprilTagFieldLayout aprilTagFieldLayout;
     
     public CameraController(String camName) {
         this.cam = new PhotonCamera(camName);
-        photonPoseEstimator = new PhotonPoseEstimator(m_RobotContainer.aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam, CameraConstants.robotToFrontCam);
+        aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam, CameraConstants.robotToFrontCam);
         photonPoseEstimator.setRobotToCameraTransform(getAltCamToTarget());
     }
 
@@ -103,10 +107,16 @@ public class CameraController extends SubsystemBase {
     }
 
     public void printNumbers() {
-        SmartDashboard.putNumber(tableName + " targetArea:", getArea());
-        SmartDashboard.putNumber(tableName + " targetPitch:", getPitch());
-        SmartDashboard.putNumber(tableName + " targetYaw:", getYaw());
-        SmartDashboard.putNumber(tableName + " targetDistance:", getDistanceToTarget());
+        if(cam.getLatestResult().hasTargets()){
+             SmartDashboard.putNumber(tableName + " targetArea:", getArea());
+            SmartDashboard.putNumber(tableName + " targetPitch:", getPitch());
+            SmartDashboard.putNumber(tableName + " targetYaw:", getYaw());
+            SmartDashboard.putNumber(tableName + " targetDistance:", getDistanceToTarget());
+        }
+        else{
+            System.out.println("no target");
+        }
+       
     }
 
 }
