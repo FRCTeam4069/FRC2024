@@ -62,11 +62,7 @@ public class RobotContainer {
   //public static final IndexerController indexer = new IndexerController();
   //public static final IntakeController intake = new IntakeController();
 
-<<<<<<< HEAD
-  //public static CameraController cam = new CameraController("frontCamera","http://10.40.69.11:5800", "photonvision");
-=======
-  public static CameraController cam = new CameraController("frontCamera","http://10.40.69.11:5800", "photonvision");
->>>>>>> refs/remotes/origin/main
+  //t public static CameraController cam = new CameraController("frontCamera","http://10.40.69.11:5800", "photonvision");
   public static final ShooterController shooter = new ShooterController();
   
 
@@ -102,19 +98,13 @@ public class RobotContainer {
     Controller1.a().onTrue(drive.sysIdDriveTestQuasistatic());
     Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
 
-    //Controller1.x().onTrue(drive.sysIdDriveMotorCommand());
+    //Controller1.x().onTrue(drive.sysIdDrivcameMotorCommand());
     
-<<<<<<< HEAD
     //intake.setDefaultCommand(new defaultArtCommand());
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
-=======
-
-    //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
-    //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
->>>>>>> refs/remotes/origin/main
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     intake.setDefaultCommand(new defaultArtCommand());
     
