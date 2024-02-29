@@ -24,6 +24,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.Limelight.CameraController;
 import frc.robot.subsystems.ShooterRotationController.shooterAngles;
+import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.ClimberSubsystem;
 
 import java.io.File;
@@ -32,6 +33,7 @@ import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -66,7 +68,10 @@ public class RobotContainer {
 
   public static final ShooterRotationController artShooter = new ShooterRotationController();
   
-  public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+  //public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+
+  public SwerveDrivetrain drive = new SwerveDrivetrain();
+  
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -77,21 +82,35 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
-    drive.setDefaultCommand(drive.driveCommand(
-       () -> Controller1.getLeftY(),
-       () -> /*Controller1.getLeftX()*/0.0,
-       () -> /*Controller1.getRightX()*/0.0));
-    
-    Controller1.a().onTrue(new InstantCommand(() -> drive.zeroGyro()));
+    // drive.setDefaultCommand(drive.driveCommand(
+    //    () -> Controller1.getLeftY(),
+    //    () -> /*Controller1.getLeftX()*/0.0,
+    //    () -> /*Controller1.getRightX()*/0.0));
+    //drive.coast();
 
-    Controller1.x().onTrue(drive.sysIdDriveMotorCommand());
+    // drive.setDefaultCommand(drive.angleModulesCommand(
+    //   () -> Controller1.getLeftX(),
+    //   () -> Controller1.getLeftY()
+    // ));
     
 
-    intake.setDefaultCommand(new defaultArtCommand());
+    // drive.setDefaultCommand(drive.driveCommand(
+    //   () -> Controller1.getLeftY(), 
+    //   () -> Controller1.getLeftX(), 
+    //   () -> Controller1.getRightX()));
+    
+    //Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
+    drive.coast();
+    
+    Controller1.a().onTrue(drive.sysIdDriveTestQuasistatic());
+    Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
+
+    //Controller1.x().onTrue(drive.sysIdDriveMotorCommand());
+    
+
+    //intake.setDefaultCommand(new defaultArtCommand());
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
-    artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter)
-    );
+    //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     
     // Configure the trigger bindings
 
@@ -99,7 +118,7 @@ public class RobotContainer {
     //    () -> Controller2.leftBumper().getAsBoolean()
     //  ));
 
-    configureBindings();
+    //configureBindings();
   }
 
   /**
