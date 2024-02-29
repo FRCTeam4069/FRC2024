@@ -10,16 +10,16 @@ import frc.robot.constants.DeviceIDs;
 
 public class IndexerController extends SubsystemBase {
     CANSparkMax m1;
-    private AnalogInput pes;
+    private final edu.wpi.first.wpilibj.AnalogInput pes;
 
     public IndexerController(){
         m1 = new CANSparkMax(DeviceIDs.FEEDER, MotorType.kBrushless);
-        //pes = new AnalogInput(Constants.PHOTO_ELECTRIC_SENSOR_PORT);
+        pes = new edu.wpi.first.wpilibj.AnalogInput(0);
         m1.setIdleMode(IdleMode.kBrake);
     }
 
     public void feedShooter(){
-        m1.set(0.7);
+        m1.set(0.445);
     }
 
     public void unFeedShooter(){
@@ -29,8 +29,8 @@ public class IndexerController extends SubsystemBase {
         m1.stopMotor();
     }
 
-    // public double getPhotoReading(){
-    //     return pes.getValue();
-    // }
+    public double getPhotoReading(){
+        return pes.getVoltage();
+    }
     
 }

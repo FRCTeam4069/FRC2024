@@ -9,6 +9,7 @@ public class ShooterRotationCommand extends Command {
 
     public ShooterRotationCommand(ShooterRotationController c){
         shooter = c;
+        
         addRequirements(c);
     }
 
