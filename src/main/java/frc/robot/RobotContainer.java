@@ -5,42 +5,36 @@
 package frc.robot;
 
 
-//import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
+import java.io.File;
+
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BackIntakeCommand;
+import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.SetShooterCommand;
-import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
-import frc.robot.constants.CameraConstants;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
+import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.Limelight.CameraController;
-import frc.robot.subsystems.ShooterRotationController.shooterAngles;
-import frc.robot.subsystems.ClimberSubsystem;
-
-import java.io.File;
-
-import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -51,7 +45,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  public AprilTagFieldLayout aprilTagFieldLayout;
   //public CameraController fCam = new CameraController(CameraConstants.fCamName);
   //public CameraController bCam = new CameraController(CameraConstants.bCamName);
 
@@ -60,6 +53,8 @@ public class RobotContainer {
   //public static final IntakeController intake = new IntakeController();
 
   public static final ShooterController shooter = new ShooterController();
+
+  public static final CameraIsAsCameraDoes FrontCamera = new CameraIsAsCameraDoes("frontCam");
 
   public static final IndexerController indexer = new IndexerController();
   public static final IntakeController intake = new IntakeController();

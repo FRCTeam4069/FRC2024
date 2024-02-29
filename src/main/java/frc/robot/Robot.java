@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    m_robotContainer.FrontCamera.printNumbers();
     //SmartDashboard.putNumber("intake encoder", m_robotContainer.intake.getEncoder());
   }
 
@@ -110,7 +111,6 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //double values[] = m_robotContainer.drive.getEncoderValues();
     //SmartDashboard.putNumberArray("modules", values);
-
     //SmartDashboard.putNumber("1", values[1]);
     //SmartDashboard.putNumber("2", values[2]);
     //SmartDashboard.putNumber("3", values[3]);
