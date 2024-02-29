@@ -13,20 +13,20 @@ public final class DeviceIDs {
     public static final byte SHOOTER_FLYWHEEL_LEFT = 8;
     public static final byte SHOOTER_FLYWHEEL_RIGHT = 9;
 
-    public static final byte DRIVE_LF = 4;
-    public static final byte DRIVE_RF = 3;
-    public static final byte DRIVE_LR = 2;
-    public static final byte DRIVE_RR = 1;
+    public static final byte DRIVE_FL = 4;
+    public static final byte DRIVE_FR = 3;
+    public static final byte DRIVE_BL = 2;
+    public static final byte DRIVE_BR = 1;
     
-    public static final byte STEER_LF = 24;
-    public static final byte STEER_RF = 23;
-    public static final byte STEER_LR = 22;
-    public static final byte STEER_RR = 21;
+    public static final byte STEER_FL = 24;
+    public static final byte STEER_FR = 23;
+    public static final byte STEER_BL = 22;
+    public static final byte STEER_BR = 21;
 
-    public static final byte ENCODER_LF = 34;
-    public static final byte ENCODER_RF = 33;
-    public static final byte ENCODER_LR = 32;
-    public static final byte ENCODER_RR = 31;
+    public static final byte ENCODER_FL = 34;
+    public static final byte ENCODER_FR = 33;
+    public static final byte ENCODER_BL = 32;
+    public static final byte ENCODER_BR = 31;
 
     public static final byte CLIMBER = 40;
 

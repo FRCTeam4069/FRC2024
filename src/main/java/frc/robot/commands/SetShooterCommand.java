@@ -19,17 +19,44 @@ public class SetShooterCommand extends Command{
         addRequirements(s, r);
 
         if(positions == ShooterPositions.WALL_AREA){
-            velocity = 60;
-            angle = 35;
+            velocity = 60; //60 from wall
+            angle = 43;    //35 from wall
         } 
         else if(positions == ShooterPositions.WHITE_LINE){
-            velocity = 70;
-            angle = 50;
+            velocity = 60;
+            angle = 48.5;
+        }
+        else if(positions == ShooterPositions.AMP_AREA){
+            velocity = 9.85;
+            angle = 31;
         }
         else {
             velocity = 80;
-            angle = 60;
+            angle = 58;
+            //3.2m
         }
+
+        //v from wall = 60
+        //a from wall = 35
+
+        //v from white line = 60
+        //a from white line = 48.5
+
+        //v from safe zone/ equavilet distance = 80
+        //a from safe zone/ equavilet distance = 58
+
+        //32 inches from safe velocity = 70; 
+        //angle = 63;
+
+        //64 inches from safe
+        //velocity = 70;    
+        //angle = 65;
+
+        //behind redline velocity = 85; 
+        //angle = 71.5;
+
+        //19 inches from centerstage same as wall
+
     }
 
     public void execute(){

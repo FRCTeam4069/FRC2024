@@ -12,17 +12,19 @@ public class DefualtIndexerCommand extends Command{
     
 
     public DefualtIndexerCommand(BooleanSupplier requested){
-        isLoaded = requested.getAsBoolean();
+        //isLoaded = requested.getAsBoolean();
         addRequirements(RobotContainer.indexer);
     }
 
 
     public void execute(){
-        
+        if(indexer.getPhotoReading() < 0.15 || RobotContainer.shooter.isShooting()){
             indexer.feedShooter();
-        
-        
-        
+        }
+        else{
+            indexer.stop();
+            this.end(false);
+        }
     }
 
     public void end(boolean interupted){
