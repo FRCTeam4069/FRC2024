@@ -63,7 +63,11 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("intake encoder", m_robotContainer.intake.getEncoder());
   //   SmartDashboard.putNumber("Angle", m_robotContainer.artShooter.getEncoder());
   //  SmartDashboard.putNumber("Sensor", m_robotContainer.indexer.getPhotoReading());
+<<<<<<< HEAD
    //m_robotContainer.cam.printerNumbers();
+=======
+   m_robotContainer.cam.printerNumbers();
+>>>>>>> refs/remotes/origin/main
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
