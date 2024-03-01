@@ -54,7 +54,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     private Measure<Time> m_timeout = Millisecond.of(6000);
     private Measure<Velocity<Voltage>> rampRate = Volts.per(Second).of(2);
 
-    private final SysIdRoutine routine = new SysIdRoutine(
+    private final SysIdRoutine driveRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(
             rampRate, null, m_timeout
         ), 
@@ -87,6 +87,45 @@ public class SwerveDrivetrain extends SubsystemBase {
                 log.motor("backRight")
                     .voltage(m_appliedVoltage.mut_replace(
                         br.getDriveSpeed() * RobotController.getBatteryVoltage(), Volts
+                    ))
+                    .linearPosition(m_distance.mut_replace(br.getDrivePosition(), Meters))
+                    .linearVelocity(m_velocity.mut_replace(br.getDriveVelocity(), MetersPerSecond));
+            }, this));
+        
+
+    private final SysIdRoutine steerRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            rampRate, null, m_timeout
+        ), 
+        new SysIdRoutine.Mechanism(
+            (Measure<Voltage> volts) -> {
+                fl.setSteerVoltage(volts.in(Volts));
+                fr.setSteerVoltage(volts.in(Volts));
+                bl.setSteerVoltage(volts.in(Volts));
+                br.setSteerVoltage(volts.in(Volts));
+            }, 
+            log -> {
+                log.motor("frontLeft")
+                    .voltage(m_appliedVoltage.mut_replace(
+                        fl.getSteerSpeed() * RobotController.getBatteryVoltage(), Volts
+                    ))
+                    .linearPosition(m_distance.mut_replace(fl.getDrivePosition(), Meters))
+                    .linearVelocity(m_velocity.mut_replace(fl.getDriveVelocity(), MetersPerSecond));
+                log.motor("frontRight")
+                    .voltage(m_appliedVoltage.mut_replace(
+                        fr.getSteerSpeed() * RobotController.getBatteryVoltage(), Volts
+                    ))
+                    .linearPosition(m_distance.mut_replace(fr.getSteerPosition(), Meters))
+                    .linearVelocity(m_velocity.mut_replace(fr.getDriveVelocity(), MetersPerSecond));
+                log.motor("backLeft")
+                    .voltage(m_appliedVoltage.mut_replace(
+                        bl.getSteerSpeed() * RobotController.getBatteryVoltage(), Volts
+                    ))
+                    .linearPosition(m_distance.mut_replace(bl.getDrivePosition(), Meters))
+                    .linearVelocity(m_velocity.mut_replace(bl.getDriveVelocity(), MetersPerSecond));
+                log.motor("backRight")
+                    .voltage(m_appliedVoltage.mut_replace(
+                        br.getSteerSpeed() * RobotController.getBatteryVoltage(), Volts
                     ))
                     .linearPosition(m_distance.mut_replace(br.getDrivePosition(), Meters))
                     .linearVelocity(m_velocity.mut_replace(br.getDriveVelocity(), MetersPerSecond));
@@ -291,42 +330,42 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return routine.quasistatic(direction);
+        return driveRoutine.quasistatic(direction);
     }
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return routine.dynamic(direction);
+        return driveRoutine.dynamic(direction);
     }
 
     public final double delay = 3;
     public final double timeout = 10;
     public Command sysIdDriveTest() {
-        return routine
+        return driveRoutine
             .quasistatic(SysIdRoutine.Direction.kForward)
             .withTimeout(timeout)
             .andThen(Commands.waitSeconds(delay))
             .andThen(
-                routine.quasistatic(SysIdRoutine.Direction.kReverse).withTimeout(timeout))
+                driveRoutine.quasistatic(SysIdRoutine.Direction.kReverse).withTimeout(timeout))
             .andThen(Commands.waitSeconds(delay))
-            .andThen(routine.dynamic(SysIdRoutine.Direction.kForward).withTimeout(timeout))
+            .andThen(driveRoutine.dynamic(SysIdRoutine.Direction.kForward).withTimeout(timeout))
             .andThen(Commands.waitSeconds(delay))
-            .andThen(routine.dynamic(SysIdRoutine.Direction.kReverse).withTimeout(timeout));
+            .andThen(driveRoutine.dynamic(SysIdRoutine.Direction.kReverse).withTimeout(timeout));
     }
 
     public Command sysIdDriveTestQuasistatic() {
-        return routine
+        return driveRoutine
             .quasistatic(SysIdRoutine.Direction.kForward)
             .withTimeout(timeout)
             .andThen(Commands.waitSeconds(delay))
             .andThen(
-                routine.quasistatic(SysIdRoutine.Direction.kReverse).withTimeout(timeout));
+                driveRoutine.quasistatic(SysIdRoutine.Direction.kReverse).withTimeout(timeout));
     }
 
     public Command sysIdDriveTestDynamic() {
-        return routine
+        return driveRoutine
             .dynamic(SysIdRoutine.Direction.kForward).withTimeout(timeout)
             .andThen(Commands.waitSeconds(delay))
-            .andThen(routine.dynamic(SysIdRoutine.Direction.kReverse).withTimeout(timeout));
+            .andThen(driveRoutine.dynamic(SysIdRoutine.Direction.kReverse).withTimeout(timeout));
     }
 
 }

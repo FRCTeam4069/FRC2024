@@ -43,7 +43,7 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import frc.robot.constants.AutonConstants;
 
-
+@Deprecated
 public class SwerveSubsystem extends SubsystemBase
 {
 

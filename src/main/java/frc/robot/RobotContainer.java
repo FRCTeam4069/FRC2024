@@ -87,26 +87,23 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // drive.setDefaultCommand(drive.driveCommand(
-    //   () -> Controller1.getLeftY(), 
-    //   () -> Controller1.getLeftX(), 
-    //   () -> Controller1.getRightX()));
+     drive.setDefaultCommand(drive.driveCommand(
+       () -> Controller1.getLeftY(), 
+       () -> 0.0, 
+       () -> 0.0));
     
-    //Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
-    drive.coast();
+    Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
+    //drive.coast();
     
-    Controller1.a().onTrue(drive.sysIdDriveTestQuasistatic());
-    Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
+    //Controller1.a().onTrue(drive.sysIdDriveTestQuasistatic());
+    //Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
 
     //Controller1.x().onTrue(drive.sysIdDrivcameMotorCommand());
     
-    //intake.setDefaultCommand(new defaultArtCommand());
-    //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
-    //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
-    artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
-    intake.setDefaultCommand(new defaultArtCommand());
+    //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
+    //intake.setDefaultCommand(new defaultArtCommand());
     
     // Configure the trigger bindings
 

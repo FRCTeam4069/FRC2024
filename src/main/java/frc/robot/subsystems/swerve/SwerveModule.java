@@ -173,10 +173,17 @@ public class SwerveModule {
         drive.setVoltage(volts);
     }
 
+    public void setSteerVoltage(double volts) {
+        steer.setVoltage(volts);
+    }
+
     public double getDriveSpeed() {
         return drive.getAppliedOutput();
     }
 
+    public double getSteerSpeed() {
+        return steer.getAppliedOutput();
+    }
     public double getVoltage() {
         return drive.getAppliedOutput();
     }
