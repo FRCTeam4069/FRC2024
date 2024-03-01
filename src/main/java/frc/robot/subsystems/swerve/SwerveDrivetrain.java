@@ -95,7 +95,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     private final SysIdRoutine steerRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(
-            rampRate, null, m_timeout
+            null, null, null
         ), 
         new SysIdRoutine.Mechanism(
             (Measure<Voltage> volts) -> {
@@ -109,26 +109,26 @@ public class SwerveDrivetrain extends SubsystemBase {
                     .voltage(m_appliedVoltage.mut_replace(
                         fl.getSteerSpeed() * RobotController.getBatteryVoltage(), Volts
                     ))
-                    .linearPosition(m_distance.mut_replace(fl.getDrivePosition(), Meters))
-                    .linearVelocity(m_velocity.mut_replace(fl.getDriveVelocity(), MetersPerSecond));
+                    .linearPosition(m_distance.mut_replace(fl.getSteerPosition(), Meters))
+                    .linearVelocity(m_velocity.mut_replace(fl.getSteerVelocity(), MetersPerSecond));
                 log.motor("frontRight")
                     .voltage(m_appliedVoltage.mut_replace(
                         fr.getSteerSpeed() * RobotController.getBatteryVoltage(), Volts
                     ))
                     .linearPosition(m_distance.mut_replace(fr.getSteerPosition(), Meters))
-                    .linearVelocity(m_velocity.mut_replace(fr.getDriveVelocity(), MetersPerSecond));
+                    .linearVelocity(m_velocity.mut_replace(fr.getSteerVelocity(), MetersPerSecond));
                 log.motor("backLeft")
                     .voltage(m_appliedVoltage.mut_replace(
                         bl.getSteerSpeed() * RobotController.getBatteryVoltage(), Volts
                     ))
-                    .linearPosition(m_distance.mut_replace(bl.getDrivePosition(), Meters))
-                    .linearVelocity(m_velocity.mut_replace(bl.getDriveVelocity(), MetersPerSecond));
+                    .linearPosition(m_distance.mut_replace(bl.getSteerPosition(), Meters))
+                    .linearVelocity(m_velocity.mut_replace(bl.getSteerVelocity(), MetersPerSecond));
                 log.motor("backRight")
                     .voltage(m_appliedVoltage.mut_replace(
                         br.getSteerSpeed() * RobotController.getBatteryVoltage(), Volts
                     ))
-                    .linearPosition(m_distance.mut_replace(br.getDrivePosition(), Meters))
-                    .linearVelocity(m_velocity.mut_replace(br.getDriveVelocity(), MetersPerSecond));
+                    .linearPosition(m_distance.mut_replace(br.getSteerPosition(), Meters))
+                    .linearVelocity(m_velocity.mut_replace(br.getSteerVelocity(), MetersPerSecond));
             }, this));
 
     public SwerveDrivetrain() {
@@ -339,6 +339,20 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     public final double delay = 3;
     public final double timeout = 10;
+
+    public Command sysIdSteerTest() {
+        return steerRoutine
+            .quasistatic(SysIdRoutine.Direction.kForward)
+            .withTimeout(20.0)
+            .andThen(Commands.waitSeconds(delay))
+            .andThen(
+                driveRoutine.quasistatic(SysIdRoutine.Direction.kReverse).withTimeout(20.0))
+            .andThen(Commands.waitSeconds(delay))
+            .andThen(driveRoutine.dynamic(SysIdRoutine.Direction.kForward).withTimeout(20.0))
+            .andThen(Commands.waitSeconds(delay))
+            .andThen(driveRoutine.dynamic(SysIdRoutine.Direction.kReverse).withTimeout(20.0));
+    }
+
     public Command sysIdDriveTest() {
         return driveRoutine
             .quasistatic(SysIdRoutine.Direction.kForward)
