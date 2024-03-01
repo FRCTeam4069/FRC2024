@@ -96,10 +96,18 @@ public class SwerveModule {
 
     /**
      * get velocity of the drive motor
-     * @return m/s (hopefully)
+     * @return m/s (hopefully) (almost certainly)
      */
     public double getDriveVelocity() {
         return drive.getEncoder().getVelocity() / 60.0;
+    }
+
+    /**
+     * get velocity of the steer motor
+     * @return m/s (hopefully) (almost certainly)
+     */
+    public double getSteerVelocity() {
+        return steer.getEncoder().getVelocity() / 60.0;
     }
 
     /**
@@ -173,10 +181,31 @@ public class SwerveModule {
         drive.setVoltage(volts);
     }
 
+    public void setSteerVoltage(double volts) {
+        steer.setVoltage(volts);
+    }
+
+    /**
+     * drive motor speed being applied
+     * @return -1.0 to 1.0
+     */
     public double getDriveSpeed() {
         return drive.getAppliedOutput();
     }
 
+    /**
+     * steer motor speed being applied
+     * @return -1.0 to 1.0
+     */
+    public double getSteerSpeed() {
+        return steer.getAppliedOutput();
+    }
+
+    /**
+     * drive motor speed being applied
+     * (i know this is stupid, im dont care)
+     * @return -1.0 to 1.0
+     */
     public double getVoltage() {
         return drive.getAppliedOutput();
     }
