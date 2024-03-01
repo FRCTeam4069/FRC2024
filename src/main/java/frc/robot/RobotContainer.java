@@ -26,6 +26,7 @@ import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
+import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
@@ -39,6 +40,8 @@ import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.ShooterRotationController.shooterAngles;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.constants.CameraConstants;
+import frc.robot.subsystems.Limelight.CameraHelper;
 
 import java.io.File;
 
@@ -75,8 +78,8 @@ public class RobotContainer {
   //t public static CameraController cam = new CameraController("frontCamera","http://10.40.69.11:5800", "photonvision");
   public static final ShooterController shooter = new ShooterController();
   
-
-  public static final CameraIsAsCameraDoes FrontCamera = new CameraIsAsCameraDoes("frontCam");
+  // public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
+  public static final CameraIsAsCameraDoes FrontCamera = new CameraIsAsCameraDoes("limelight-front");
 
   public static final IndexerController indexer = new IndexerController();
   public static final IntakeController intake = new IntakeController();
