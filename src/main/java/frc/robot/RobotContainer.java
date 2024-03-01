@@ -11,6 +11,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -21,6 +22,7 @@ import frc.robot.commands.BringIntakeUpCommand;
 import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.SetShooterCommand;
+import frc.robot.commands.SetShooterRotation;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
@@ -38,7 +40,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Limelight.CameraController;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.ShooterRotationController.shooterAngles;
-import frc.robot.subsystems.swerve.SwerveDrivetrain;
+import frc.robot.subsystems.Swerve.SwerveDrivetrain;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.Limelight.CameraHelper;
@@ -78,7 +80,7 @@ public class RobotContainer {
   //t public static CameraController cam = new CameraController("frontCamera","http://10.40.69.11:5800", "photonvision");
   public static final ShooterController shooter = new ShooterController();
   
-  // public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
+// public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
   public static final CameraIsAsCameraDoes FrontCamera = new CameraIsAsCameraDoes("limelight-front");
 
   public static final IndexerController indexer = new IndexerController();
@@ -116,7 +118,7 @@ public class RobotContainer {
     //Controller1.x().onTrue(drive.sysIdDrivcameMotorCommand());
     
     //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
-    //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
+    artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //intake.setDefaultCommand(new defaultArtCommand());
     
@@ -126,7 +128,7 @@ public class RobotContainer {
     //    () -> Controller2.leftBumper().getAsBoolean()
     //  ));
 
-    //configureBindings();
+    configureBindings();
   }
 
   /**
@@ -139,7 +141,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new Trigger(Controller2.y()).whileTrue(new ShooterCommand(0, 0));
+    new Trigger(Controller2.y()).whileTrue(new SetShooterRotation(artShooter, Math.hypot(FrontCamera.getXDistanceToApriltag(8, 7), FrontCamera.getYDistanceToApriltag(7)), shooter));
     new Trigger(Controller2.x()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     new Trigger(Controller2.a()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
     new Trigger(Controller2.b()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
