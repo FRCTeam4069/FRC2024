@@ -78,9 +78,27 @@ public class SwerveModule {
 
     }
 
+    /**
+     * please call this to update the encoders
+     */
     public void update() {
         heading = encoder.getAbsolutePosition().getValueAsDouble() * 2 * Math.PI;
     }
+
+    public SwerveModuleState getCurrentState() {
+        return new SwerveModuleState(getDriveVelocity(), getRotation2d());
+    }
+
+    public double getRadiansNow() {
+        heading = encoder.getAbsolutePosition().getValueAsDouble() * 2 * Math.PI;
+        return heading;
+    }
+
+    public double getEncoderVelocity() {
+        return encoder.getVelocity().getValueAsDouble() * 2 * Math.PI;
+    }
+
+
 
     /**
      * get heading of the module with CANCoder
@@ -103,8 +121,8 @@ public class SwerveModule {
     }
 
     /**
-     * get velocity of the steer motor
-     * @return m/s (hopefully) (almost certainly)
+     * get angular velocity of the steer motor
+     * @return deg/s (hopefully)
      */
     public double getSteerVelocity() {
         return steer.getEncoder().getVelocity() / 60.0;
@@ -123,10 +141,11 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState state) {
-        if (Math.abs(state.speedMetersPerSecond) < 0.06) {
+        if (Math.abs(state.speedMetersPerSecond) < 0.01) {
             stop();
             return;
         }
+        
 
         state = SwerveModuleState.optimize(state, getRotation2d());
         desiredStates = state;
@@ -152,6 +171,10 @@ public class SwerveModule {
         return desiredStates;
     }
 
+    /**
+     * 
+     * @return degrees
+     */
     public double getSteerPosition() {
         return steer.getEncoder().getPosition();
     }

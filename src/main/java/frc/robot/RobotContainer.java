@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -42,6 +43,8 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -58,7 +61,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public AprilTagFieldLayout aprilTagFieldLayout;
-  public CameraController fCam = new CameraController(CameraConstants.fCamName);
+  //public CameraController fCam = new CameraController(CameraConstants.fCamName);
   //public CameraController bCam = new CameraController(CameraConstants.bCamName);
 
   //t public static CameraController cam = new CameraController("frontCamera","http://10.40.69.11:5800", "photonvision");
@@ -79,6 +82,8 @@ public class RobotContainer {
   //public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
   public SwerveDrivetrain drive = new SwerveDrivetrain();
+
+  public final SendableChooser<Command> autoChooser;
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController Controller1 =
@@ -88,16 +93,23 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-     drive.setDefaultCommand(drive.driveCommand(
-       () -> Controller1.getLeftY(), 
-       () -> 0.0, 
-       () -> 0.0));
+    drive.setDefaultCommand(drive.driveCommand(
+      () -> Controller1.getLeftY(), 
+      () -> Controller1.getLeftX(), 
+      () -> Controller1.getRightX()));
     
-    //Controller1.a().onTrue(drive.sysIdDriveTestQuasistatic());
+    //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
+    Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
+    
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    //Controller1.a().onTrue(drive.sysIdSteerTest());
     //Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
 
     //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
-    artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
+    //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //intake.setDefaultCommand(new defaultArtCommand());
     
@@ -107,7 +119,7 @@ public class RobotContainer {
     //    () -> Controller2.leftBumper().getAsBoolean()
     //  ));
 
-    configureBindings();
+    //configureBindings();
   }
 
   /**
@@ -137,7 +149,6 @@ public class RobotContainer {
     Controller2.rightBumper().whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
         
-    Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
@@ -159,6 +170,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return Autos.exampleAuto(m_exampleSubsystem);
-    return new PathPlannerAuto("Example Auto");
+    return autoChooser.getSelected();
+    //return new PathPlannerAuto("Example Auto");
   }
 }

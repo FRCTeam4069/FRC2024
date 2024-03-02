@@ -9,9 +9,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 public final class DrivebaseConstants {
-    public static final double driveConversionFactor = 0.06209840731609397;
+    public static final double driveConversionFactor = 0.05215454470665408;
     public static final double steerConversionFactor = 16.8;
     public static final double moduleOffset = Units.inchesToMeters(10.375);
+    public static final double drivebaseRadius = Math.hypot(moduleOffset, moduleOffset);
     public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
         new Translation2d(moduleOffset, moduleOffset), //fl
         new Translation2d(moduleOffset, -moduleOffset), //fr
@@ -24,7 +25,8 @@ public final class DrivebaseConstants {
         maxVelocity / new Rotation2d(moduleOffset, moduleOffset).getRadians();
     public static final double KS = 0.01;
     public static final double KV = 0.15;
-    public static final double KP = 0.45;
+    public static final double KP = 0.40;
+    public static final double KD = 0.00;
 
     public static class ModuleCoefficient {
         public double kS = 0.29966;
@@ -55,7 +57,7 @@ public final class DrivebaseConstants {
 
         KP,
         0.0,
-        0.0
+        KD
     );
 
     public static ModuleCoefficient BACK_RIGHT = new ModuleCoefficient (
@@ -65,7 +67,7 @@ public final class DrivebaseConstants {
 
         KP,
         0.0,
-        0.0
+        KD
     );
     public static ModuleCoefficient FRONT_LEFT = new ModuleCoefficient (
         0.18494, // -0.25525,
@@ -74,7 +76,7 @@ public final class DrivebaseConstants {
 
         KP,
         0.0,
-        0.0
+        KD
     );
     public static ModuleCoefficient FRONT_RIGHT = new ModuleCoefficient (
         0.23188,
@@ -83,7 +85,7 @@ public final class DrivebaseConstants {
 
         KP,
         0.0,
-        0.0
+        KD
     );
 
     public static final SimpleMotorFeedforward BACK_LEFT_FEEDFORWARD = new SimpleMotorFeedforward(BACK_LEFT.kS, BACK_LEFT.kV, BACK_LEFT.kA);
