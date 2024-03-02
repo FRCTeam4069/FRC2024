@@ -4,17 +4,8 @@
 
 package frc.robot;
 
-
-import java.io.File;
-
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.hal.PowerDistributionFaults;
-import edu.wpi.first.hal.PowerDistributionStickyFaults;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -39,19 +30,13 @@ import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
-import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Limelight.CameraController;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.ShooterRotationController.shooterAngles;
-import frc.robot.subsystems.Swerve.SwerveDrivetrain;
+import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.Limelight.CameraHelper;
-
-import java.io.File;
-
-import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -72,18 +57,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  //public AprilTagFieldLayout aprilTagFieldLayout;
-  //public CameraController fCam = new CameraController(CameraConstants.fCamName);
+  public AprilTagFieldLayout aprilTagFieldLayout;
+  public CameraController fCam = new CameraController(CameraConstants.fCamName);
   //public CameraController bCam = new CameraController(CameraConstants.bCamName);
-
-  //public static final ShooterController shooter = new ShooterController();
-  //public static final IndexerController indexer = new IndexerController();
-  //public static final IntakeController intake = new IntakeController();
 
   //t public static CameraController cam = new CameraController("frontCamera","http://10.40.69.11:5800", "photonvision");
   public static final ShooterController shooter = new ShooterController();
   
-// public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
+  // public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
   public static final CameraIsAsCameraDoes FrontCamera = new CameraIsAsCameraDoes("limelight-front");
 
   public final PowerDistribution powerDistributionHub = new PowerDistribution();
@@ -99,8 +80,6 @@ public class RobotContainer {
 
   public SwerveDrivetrain drive = new SwerveDrivetrain();
   
-
-
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController Controller1 =
       new CommandXboxController(0);
@@ -114,13 +93,9 @@ public class RobotContainer {
        () -> 0.0, 
        () -> 0.0));
     
-    Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
-    //drive.coast();
-    
     //Controller1.a().onTrue(drive.sysIdDriveTestQuasistatic());
     //Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
 
-    //Controller1.x().onTrue(drive.sysIdDrivcameMotorCommand());
     //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
@@ -145,23 +120,24 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new Trigger(Controller2.y()).whileTrue(new SetShooterRotation(artShooter, Math.hypot(FrontCamera.getXDistanceToApriltag(8, 7), FrontCamera.getYDistanceToApriltag(7)), shooter));
-    new Trigger(Controller2.x()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
-    new Trigger(Controller2.a()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
-    new Trigger(Controller2.b()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
-    new Trigger(Controller2.leftStick()).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter, Math.hypot(FrontCamera.getXDistanceToApriltag(new int[]{8, 7}), FrontCamera.getYDistanceToApriltag(7)), shooter));
+    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
+    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
+    Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
+    Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
 
     //new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     //new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
-    new Trigger(Controller2.leftBumper()).whileTrue(new unIndexCOmmand(indexer));
+    Controller2.leftBumper().whileTrue(new unIndexCOmmand(indexer));
     
-    new Trigger(Controller2.rightBumper()).whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
+    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
    
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
-    new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
-    new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
+    Controller2.rightBumper().whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
+    Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
         
+    Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

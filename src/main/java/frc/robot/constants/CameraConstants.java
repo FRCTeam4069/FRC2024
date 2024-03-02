@@ -17,6 +17,9 @@ public class CameraConstants {
 
     public static boolean USE_VISION = true;
 
+    //simon fix this later idk what your cooking here
+    public static Transform3d robotToFrontCam;
+
     public static final double apriltagAmbiguityThreshold = 0.2;
     public static final double POSE_AMBIGUITY_SHIFTER = 0.2;
     public static final double POSE_AMBIGUITY_MULTIPLIER = 4;
