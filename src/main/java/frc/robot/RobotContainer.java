@@ -11,8 +11,11 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.hal.PowerDistributionFaults;
+import edu.wpi.first.hal.PowerDistributionStickyFaults;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -83,6 +86,8 @@ public class RobotContainer {
 // public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
   public static final CameraIsAsCameraDoes FrontCamera = new CameraIsAsCameraDoes("limelight-front");
 
+  public final PowerDistribution powerDistributionHub = new PowerDistribution();
+
   public static final IndexerController indexer = new IndexerController();
   public static final IntakeController intake = new IntakeController();
 
@@ -116,7 +121,6 @@ public class RobotContainer {
     //Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
 
     //Controller1.x().onTrue(drive.sysIdDrivcameMotorCommand());
-    
     //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
