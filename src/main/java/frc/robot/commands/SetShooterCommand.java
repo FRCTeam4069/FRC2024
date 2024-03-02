@@ -19,8 +19,8 @@ public class SetShooterCommand extends Command{
         addRequirements(s, r);
 
         if(positions == ShooterPositions.WALL_AREA){
-            velocity = 60; //60 from wall
-            angle = 43;    //35 from wall
+            velocity = 85; //60 from wall
+            angle = 71.5;    //35 from wall
         } 
         else if(positions == ShooterPositions.WHITE_LINE){
             velocity = 60;

@@ -34,7 +34,7 @@ import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.Limelight.CameraController;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.ShooterRotationController.shooterAngles;
-import frc.robot.subsystems.swerve.SwerveDrivetrain;
+import frc.robot.subsystems.Swerve.SwerveDrivetrain;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.Limelight.CameraHelper;
@@ -108,8 +108,8 @@ public class RobotContainer {
     //Controller1.a().onTrue(drive.sysIdSteerTest());
     //Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
 
-    //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
-    //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
+    intake.setDefaultCommand(new BringIntakeUpCommand(intake));
+    artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //intake.setDefaultCommand(new defaultArtCommand());
     
@@ -133,9 +133,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     Controller2.y().whileTrue(new SetShooterRotation(artShooter, Math.hypot(FrontCamera.getXDistanceToApriltag(new int[]{8, 7}), FrontCamera.getYDistanceToApriltag(7)), shooter));
-    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
+    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
-    Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
+    Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
 
     //new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
