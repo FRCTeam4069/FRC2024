@@ -81,7 +81,7 @@ public class RobotContainer {
   
   //public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
-  public SwerveDrivetrain drive = new SwerveDrivetrain();
+  public SwerveDrivetrain drive;
 
   public final SendableChooser<Command> autoChooser;
   
@@ -95,6 +95,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    drive = new SwerveDrivetrain();
+
     drive.setDefaultCommand(drive.teleopDriveCommand(
       () -> Controller1.getLeftY(), 
       () -> Controller1.getLeftX(), 
@@ -112,10 +114,10 @@ public class RobotContainer {
     //Controller1.a().onTrue(drive.sysIdSteerTest());
     //Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
 
-    intake.setDefaultCommand(new BringIntakeUpCommand(intake));
+    //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
-    //intake.setDefaultCommand(new defaultArtCommand());
+    intake.setDefaultCommand(new defaultArtCommand());
     
     // Configure the trigger bindings
 
@@ -136,9 +138,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller2.y().whileTrue(new SetShooterRotation(artShooter, Math.hypot(FrontCamera.getXDistanceToApriltag(new int[]{8, 7}), FrontCamera.getYDistanceToApriltag(7)), shooter));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter, FrontCamera.getXDistanceToApriltag(new int[]{8, 7}), shooter));
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
-    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
+    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
 
@@ -151,7 +153,7 @@ public class RobotContainer {
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
     Controller2.rightBumper().whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
-    Controller2.rightBumper().whileTrue(intake.driveFeed());
+    //Controller2.rightBumper().whileTrue(new RunCommand(() -> intake.driveFeed())).whileFalse(new InstantCommand(() -> intake.stopFeed()));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
         
   }

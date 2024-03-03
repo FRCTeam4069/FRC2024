@@ -3,6 +3,8 @@ package frc.robot.subsystems.swerve;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import javax.lang.model.util.ElementScanner14;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -72,9 +74,11 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     private SwerveModuleState[] desiredStates = new SwerveModuleState[4];
 
-    private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.rampRate, -100000000.0, 0.0);
-    private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.rampRate, -100000000.0, 0.0);
-    private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.headingRampRate, -1000000000.0, 0.0);
+    private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.rampRate, -10000000000.0, 0.0);
+    private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.rampRate, -10000000000.0, 0.0);
+    private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.headingRampRate, -100000000000.0, 0.0);
+
+    private double speedMultiplier = 1;
 
     private final SysIdRoutine driveRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -275,12 +279,18 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public Command teleopDriveCommand(DoubleSupplier xVelocity, DoubleSupplier yVelocity, DoubleSupplier angleVelocity, BooleanSupplier halfSpeed) {
-        var multiplier = halfSpeed.getAsBoolean() ? 0.1 : 1.0;
+        if (Math.abs(xVelocity.getAsDouble()) < 0.01 && Math.abs(yVelocity.getAsDouble()) < 0.01 && Math.abs(angleVelocity.getAsDouble()) < 0.01) {
+            speedMultiplier = 0;
+        } else if (halfSpeed.getAsBoolean()) {
+            speedMultiplier = 0.1;
+        } else {
+            speedMultiplier = 1;
+        }
         return run(() -> {
             fieldOrientedDrive(new ChassisSpeeds(
-                xSlewRateLimiter.calculate(Math.pow(xVelocity.getAsDouble(), 3)*multiplier * DrivebaseConstants.maxVelocity),
-                ySlewRateLimiter.calculate(Math.pow(yVelocity.getAsDouble(), 3)*multiplier * DrivebaseConstants.maxVelocity),
-                wSlewRateLimiter.calculate(Math.pow(angleVelocity.getAsDouble(), 3)*multiplier * DrivebaseConstants.maxAngularVelocity)));
+                (Math.pow(xVelocity.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                (Math.pow(yVelocity.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                (Math.pow(angleVelocity.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxAngularVelocity)));
         });
     }
 

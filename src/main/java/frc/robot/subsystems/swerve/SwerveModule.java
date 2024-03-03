@@ -60,7 +60,7 @@ public class SwerveModule {
         steer.setInverted(steerInverted);
 
         drive.setIdleMode(IdleMode.kBrake);
-        steer.setIdleMode(IdleMode.kCoast);
+        steer.setIdleMode(IdleMode.kBrake);
 
         drive.getEncoder().setPositionConversionFactor(DrivebaseConstants.driveConversionFactor);
         drive.getEncoder().setVelocityConversionFactor(DrivebaseConstants.driveConversionFactor);
