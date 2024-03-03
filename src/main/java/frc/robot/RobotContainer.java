@@ -93,10 +93,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    drive.setDefaultCommand(drive.driveCommand(
+    drive.setDefaultCommand(drive.teleopDriveCommand(
       () -> Controller1.getLeftY(), 
       () -> Controller1.getLeftX(), 
-      () -> Controller1.getRightX()));
+      () -> Controller1.getRightX(),
+      () -> Controller1.rightBumper().getAsBoolean()));
     
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));

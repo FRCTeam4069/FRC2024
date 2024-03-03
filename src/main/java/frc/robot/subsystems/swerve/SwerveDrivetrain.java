@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.StatusCode;
@@ -179,7 +180,8 @@ public class SwerveDrivetrain extends SubsystemBase {
             getModulePositions(),
             new Pose2d());
 
-        setPose(new Pose2d());
+
+        setPose(new Pose2d(0,0,Rotation2d.fromRadians(2*Math.PI)));
 
         publisher = NetworkTableInstance.getDefault()
             .getStructArrayTopic("/SwerveStates/currentStates", SwerveModuleState.struct).publish();
@@ -262,7 +264,15 @@ public class SwerveDrivetrain extends SubsystemBase {
             Math.pow(yVelocity.getAsDouble(), 3) * DrivebaseConstants.maxVelocity,
             Math.pow(angleVelocity.getAsDouble(), 3) * DrivebaseConstants.maxAngularVelocity));
         });
+    }
 
+    public Command teleopDriveCommand(DoubleSupplier xVelocity, DoubleSupplier yVelocity, DoubleSupplier angleVelocity, BooleanSupplier halfSpeed) {
+        var multiplier = halfSpeed.getAsBoolean() ? 0.5 : 1.0;
+        return run(() -> {
+            fieldOrientedDrive(new ChassisSpeeds(Math.pow(xVelocity.getAsDouble(), 3) * multiplier * DrivebaseConstants.maxVelocity,
+            Math.pow(yVelocity.getAsDouble(), 3) * multiplier * DrivebaseConstants.maxVelocity,
+            Math.pow(angleVelocity.getAsDouble(), 3) * multiplier * DrivebaseConstants.maxAngularVelocity));
+        });
     }
 
     public Pose2d getPose() {
@@ -314,10 +324,10 @@ public class SwerveDrivetrain extends SubsystemBase {
             SmartDashboard.putNumber("voltage", RobotController.getBatteryVoltage());
             SmartDashboard.putNumber("fl get", fl.getDriveSpeed());
 
-            // SmartDashboard.putNumber("FL drive pos", fl.getDrivePosition());
-            // SmartDashboard.putNumber("FR drive pos", fr.getDrivePosition());
-            // SmartDashboard.putNumber("BL drive pos", bl.getDrivePosition());
-            // SmartDashboard.putNumber("BR drive pos", br.getDrivePosition());
+            SmartDashboard.putNumber("FL drive pos", fl.getDrivePosition());
+            SmartDashboard.putNumber("FR drive pos", fr.getDrivePosition());
+            SmartDashboard.putNumber("BL drive pos", bl.getDrivePosition());
+            SmartDashboard.putNumber("BR drive pos", br.getDrivePosition());
 
             // SmartDashboard.putNumber("FL current mps", fl.getDriveVelocity());
             // SmartDashboard.putNumber("FR current mps", fr.getDriveVelocity());
@@ -389,7 +399,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public void resetGyro() {
-        setRadians(0.0);
+        setRadians(2*Math.PI);
     }
     public StatusCode setRadians(double rads) {
         return gyro.setYaw(Units.radiansToDegrees(rads));
