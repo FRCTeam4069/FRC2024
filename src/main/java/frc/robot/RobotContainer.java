@@ -151,6 +151,7 @@ public class RobotContainer {
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
     Controller2.rightBumper().whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
+    Controller2.rightBumper().whileTrue(intake.driveFeed());
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
         
   }
