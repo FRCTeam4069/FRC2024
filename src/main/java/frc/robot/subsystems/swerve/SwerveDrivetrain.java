@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -30,6 +31,7 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.units.Angle;
@@ -66,8 +68,13 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     private final StructArrayPublisher<SwerveModuleState> publisher;
     private final StructArrayPublisher<SwerveModuleState> desiredStatesPublisher;
+    //private final DoublePublisher headingPublisher;
 
     private SwerveModuleState[] desiredStates = new SwerveModuleState[4];
+
+    private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.rampRate, -100000000.0, 0.0);
+    private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.rampRate, -100000000.0, 0.0);
+    private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.headingRampRate, -1000000000.0, 0.0);
 
     private final SysIdRoutine driveRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -188,6 +195,7 @@ public class SwerveDrivetrain extends SubsystemBase {
         
         desiredStatesPublisher = NetworkTableInstance.getDefault()
             .getStructArrayTopic("/SwerveStates/desiredStates", SwerveModuleState.struct).publish();
+
         
         startPathPlanner();
     }
@@ -267,11 +275,12 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public Command teleopDriveCommand(DoubleSupplier xVelocity, DoubleSupplier yVelocity, DoubleSupplier angleVelocity, BooleanSupplier halfSpeed) {
-        var multiplier = halfSpeed.getAsBoolean() ? 0.5 : 1.0;
+        var multiplier = halfSpeed.getAsBoolean() ? 0.1 : 1.0;
         return run(() -> {
-            fieldOrientedDrive(new ChassisSpeeds(Math.pow(xVelocity.getAsDouble(), 3) * multiplier * DrivebaseConstants.maxVelocity,
-            Math.pow(yVelocity.getAsDouble(), 3) * multiplier * DrivebaseConstants.maxVelocity,
-            Math.pow(angleVelocity.getAsDouble(), 3) * multiplier * DrivebaseConstants.maxAngularVelocity));
+            fieldOrientedDrive(new ChassisSpeeds(
+                xSlewRateLimiter.calculate(Math.pow(xVelocity.getAsDouble(), 3)*multiplier * DrivebaseConstants.maxVelocity),
+                ySlewRateLimiter.calculate(Math.pow(yVelocity.getAsDouble(), 3)*multiplier * DrivebaseConstants.maxVelocity),
+                wSlewRateLimiter.calculate(Math.pow(angleVelocity.getAsDouble(), 3)*multiplier * DrivebaseConstants.maxAngularVelocity)));
         });
     }
 
@@ -401,6 +410,11 @@ public class SwerveDrivetrain extends SubsystemBase {
     public void resetGyro() {
         setRadians(2*Math.PI);
     }
+
+    public Command resetGyroCommand() {
+        return runOnce(() -> resetGyro());
+    }
+
     public StatusCode setRadians(double rads) {
         return gyro.setYaw(Units.radiansToDegrees(rads));
     }

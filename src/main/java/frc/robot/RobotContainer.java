@@ -90,6 +90,8 @@ public class RobotContainer {
       new CommandXboxController(0);
   private final CommandXboxController Controller2 = 
       new CommandXboxController(1);
+  private final CommandXboxController Controller3 = 
+      new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -101,6 +103,7 @@ public class RobotContainer {
     
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
+    Controller3.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
     
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -120,7 +123,7 @@ public class RobotContainer {
     //    () -> Controller2.leftBumper().getAsBoolean()
     //  ));
 
-    //configureBindings();
+    configureBindings();
   }
 
   /**
