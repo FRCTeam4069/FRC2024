@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
+//import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     m_robotContainer.FrontCamera.printNumbers();
+    //SmartDashboard.putNumber("Sensor", m_robotContainer.indexer.getPhotoReading());
     //SmartDashboard.putNumber("intake encoder", m_robotContainer.intake.getEncoder());
   //   SmartDashboard.putNumber("Angle", m_robotContainer.artShooter.getEncoder());
   //  SmartDashboard.putNumber("Sensor", m_robotContainer.indexer.getPhotoReading());

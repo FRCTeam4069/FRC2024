@@ -144,11 +144,10 @@ public class RobotContainer {
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
 
-    //new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
-    //new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
+    // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
+    // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     Controller2.leftBumper().whileTrue(new unIndexCOmmand(indexer));
-    
-    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
+    Controller2.rightBumper().and((() -> indexer.getPhotoReading() < 0.15)).or(() -> shooter.atSpeed()).whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
    
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     

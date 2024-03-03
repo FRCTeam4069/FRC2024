@@ -19,7 +19,7 @@ public class IndexerController extends SubsystemBase {
     }
 
     public void feedShooter(){
-        m1.set(0.445);
+        m1.set(0.7);
     }
 
     public void unFeedShooter(){
@@ -31,6 +31,14 @@ public class IndexerController extends SubsystemBase {
 
     public double getPhotoReading(){
         return pes.getVoltage();
+    }
+
+    public double getCurrent(){
+        return m1.getOutputCurrent();
+    }
+
+    public void slowFeed(){
+        m1.set(0.3);
     }
     
 }
