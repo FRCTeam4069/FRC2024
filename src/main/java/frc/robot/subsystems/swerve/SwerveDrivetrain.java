@@ -224,7 +224,7 @@ public class SwerveDrivetrain extends SubsystemBase {
                 //translation
                 new PIDConstants(0.0, 0.0, 0.0), 
                 //rotation
-                new PIDConstants(0.0, 0.0, 0.0), 
+                new PIDConstants(0.1, 0.0, 0.0), 
                 DrivebaseConstants.maxVelocity,
                 DrivebaseConstants.drivebaseRadius,
                 new ReplanningConfig()
@@ -248,6 +248,10 @@ public class SwerveDrivetrain extends SubsystemBase {
         };
     }
 
+    /**
+     * the original one
+     * @param moduleStates
+     */
     public void setModuleStates(SwerveModuleState[] moduleStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivebaseConstants.maxVelocity);
         fl.setDesiredState(moduleStates[0]);
@@ -272,7 +276,8 @@ public class SwerveDrivetrain extends SubsystemBase {
      * @param speeds
      */
     public void drive(ChassisSpeeds speeds) {
-        desiredStates = kinematics.toSwerveModuleStates(speeds);
+        var betterSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        desiredStates = kinematics.toSwerveModuleStates(betterSpeeds);
         setModuleStates(desiredStates);
     }
 
