@@ -32,13 +32,11 @@ import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
-import frc.robot.subsystems.Limelight.CameraController;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.ShooterRotationController.shooterAngles;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.constants.CameraConstants;
-import frc.robot.subsystems.Limelight.CameraHelper;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -145,11 +143,10 @@ public class RobotContainer {
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
 
-    //new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
-    //new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
+    // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
+    // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     Controller2.leftBumper().whileTrue(new unIndexCOmmand(indexer));
-    
-    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
+    Controller2.rightBumper().and((() -> indexer.getPhotoReading() < 0.15)).or(() -> shooter.atSpeed()).whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
    
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
