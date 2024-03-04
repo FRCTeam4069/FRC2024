@@ -19,18 +19,18 @@ public class IndexerController extends SubsystemBase {
     }
 
     public void feedShooter(){
-        m1.set(0.7);
+        m1.set(0.45);
     }
 
     public void unFeedShooter(){
-        m1.set(-0.7);
+        m1.set(-0.45);
     }
     public void stop(){
         m1.stopMotor();
     }
 
     public boolean getPhotoReading(){
-        if(pes.getVoltage() > 0.3) return true;
+        if(pes.getVoltage() > 0.7) return true;
         return false;
     }
 

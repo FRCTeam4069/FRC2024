@@ -159,6 +159,7 @@ public class RobotContainer {
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
     Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB));
+    //Controller2.pov(0).onTrue(getAutonomousCommand())
   }
 
     
