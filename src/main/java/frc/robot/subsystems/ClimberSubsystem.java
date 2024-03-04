@@ -33,11 +33,13 @@ public class ClimberSubsystem extends SubsystemBase {
     private static double pG = 0.1;
 
     public ClimberSubsystem() {
-        climber = new CANSparkMax(DeviceIDs.CLIMBER, MotorType.kBrushless);
+        climber = new CANSparkMax(25, MotorType.kBrushless);
 
         routine = new SysIdRoutine(
             new SysIdRoutine.Config(), 
             new SysIdRoutine.Mechanism(this::setClimber, this::logMotor, this));
+
+        climber.getEncoder().setPosition(0);
     }
 
     public void raiseClimber() {
@@ -70,6 +72,17 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return routine.dynamic(direction);
+    }
+
+    public void setPower(double speed){
+        climber.set(speed);
+    }
+
+    public double getEncoder(){
+        return climber.getEncoder().getPosition();
+    }
+    public double getPower(){
+        return climber.getAppliedOutput();
     }
 
 }

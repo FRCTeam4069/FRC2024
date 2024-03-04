@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BackIntakeCommand;
 import frc.robot.commands.BringIntakeUpCommand;
+import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.FieldCentricDrive;
@@ -74,7 +75,7 @@ public class RobotContainer {
   public static final IndexerController indexer = new IndexerController();
   public static final IntakeController intake = new IntakeController();
 
-  public static final ClimberSubsystem climber = new ClimberSubsystem();
+  //public static final ClimberSubsystem climber = new ClimberSubsystem();
 
   public static final ShooterRotationController artShooter = new ShooterRotationController();
   
@@ -92,6 +93,8 @@ public class RobotContainer {
   private final CommandXboxController Controller3 = 
       new CommandXboxController(2);
 
+  private ClimberSubsystem climber = new ClimberSubsystem();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     drive.setDefaultCommand(new FieldCentricDrive(
@@ -103,8 +106,6 @@ public class RobotContainer {
     
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
-    Controller1.b().onTrue(new InstantCommand(() -> drive.resetPose()));
-    Controller3.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
     
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -117,6 +118,9 @@ public class RobotContainer {
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     intake.setDefaultCommand(new defaultArtCommand());
+    climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
+
+    
     
     // Configure the trigger bindings
 
@@ -146,15 +150,17 @@ public class RobotContainer {
     // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     Controller2.leftBumper().whileTrue(new unIndexCOmmand(indexer));
-    Controller2.rightBumper().and((() -> indexer.getPhotoReading() < 0.15)).or(() -> shooter.atSpeed()).whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
+    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
    
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
     Controller2.rightBumper().whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
     //Controller2.rightBumper().whileTrue(new RunCommand(() -> intake.driveFeed())).whileFalse(new InstantCommand(() -> intake.stopFeed()));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
-        
+    //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
+    Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB));
   }
+
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     //new Trigger(Controller2.y()).whileTrue(new ShooterCommand(fCam.getDistanceToTarget(), fCam.getYaw()));

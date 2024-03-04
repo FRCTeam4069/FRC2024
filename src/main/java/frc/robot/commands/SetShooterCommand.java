@@ -18,23 +18,7 @@ public class SetShooterCommand extends Command{
 
         addRequirements(s, r);
 
-        if(positions == ShooterPositions.WALL_AREA){
-            velocity = 85; //60 from wall
-            angle = 71.5;    //35 from wall
-        } 
-        else if(positions == ShooterPositions.WHITE_LINE){
-            velocity = 60;
-            angle = 48.5;
-        }
-        else if(positions == ShooterPositions.AMP_AREA){
-            velocity = 9.85;
-            angle = 31;
-        }
-        else {
-            velocity = 80;
-            angle = 58;
-            //3.2m
-        }
+        
 
         //v from wall = 60
         //a from wall = 35
@@ -60,6 +44,28 @@ public class SetShooterCommand extends Command{
     }
 
     public void execute(){
+        if(positions == ShooterPositions.WALL_AREA){
+            velocity = 85; //60 from wall
+            angle = 71.5;    //35 from wall
+        } 
+        else if(positions == ShooterPositions.WHITE_LINE){
+            velocity = 60;
+            angle = 48.5;
+        }
+        else if(positions == ShooterPositions.AMP_AREA){
+            velocity = 9.85;
+            angle = 31;
+        }
+        else if(positions == ShooterPositions.CLIMB){
+            velocity = 0;
+            angle = 10;
+        }
+        else {
+            velocity = 80;
+            angle = 58;
+            //3.2m
+        }
+
         shooter.driveWithCustomSpeed(velocity, velocity/2);
         controller.setCustomAngle(angle);
     }

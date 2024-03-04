@@ -29,8 +29,9 @@ public class IndexerController extends SubsystemBase {
         m1.stopMotor();
     }
 
-    public double getPhotoReading(){
-        return pes.getVoltage();
+    public boolean getPhotoReading(){
+        if(pes.getVoltage() > 0.3) return true;
+        return false;
     }
 
     public double getCurrent(){
