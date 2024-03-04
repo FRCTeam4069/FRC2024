@@ -33,7 +33,7 @@ import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.ShooterRotationController.shooterAngles;
-import frc.robot.subsystems.Swerve.SwerveDrivetrain;
+import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.constants.CameraConstants;
 
@@ -79,7 +79,7 @@ public class RobotContainer {
   
   //public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
-  public SwerveDrivetrain drive = new SwerveDrivetrain();
+  public SwerveDrivetrain drive;
 
   public final SendableChooser<Command> autoChooser;
   
@@ -88,16 +88,22 @@ public class RobotContainer {
       new CommandXboxController(0);
   private final CommandXboxController Controller2 = 
       new CommandXboxController(1);
+  private final CommandXboxController Controller3 = 
+      new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    drive.setDefaultCommand(drive.driveCommand(
+    drive = new SwerveDrivetrain();
+
+    drive.setDefaultCommand(drive.teleopDriveCommand(
       () -> Controller1.getLeftY(), 
       () -> Controller1.getLeftX(), 
-      () -> Controller1.getRightX()));
+      () -> Controller1.getRightX(),
+      () -> Controller1.rightBumper().getAsBoolean()));
     
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
+    Controller3.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
     
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -106,10 +112,10 @@ public class RobotContainer {
     //Controller1.a().onTrue(drive.sysIdSteerTest());
     //Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
 
-    intake.setDefaultCommand(new BringIntakeUpCommand(intake));
+    //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
-    //intake.setDefaultCommand(new defaultArtCommand());
+    intake.setDefaultCommand(new defaultArtCommand());
     
     // Configure the trigger bindings
 
@@ -117,7 +123,7 @@ public class RobotContainer {
     //    () -> Controller2.leftBumper().getAsBoolean()
     //  ));
 
-    //configureBindings();
+    configureBindings();
   }
 
   /**
@@ -130,21 +136,21 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller2.y().whileTrue(new SetShooterRotation(artShooter, Math.hypot(FrontCamera.getXDistanceToApriltag(new int[]{8, 7}), FrontCamera.getYDistanceToApriltag(7)), shooter));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter, FrontCamera.getXDistanceToApriltag(new int[]{8, 7}), shooter));
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
-    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
+    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
 
-    //new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
-    //new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
+    // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
+    // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     Controller2.leftBumper().whileTrue(new unIndexCOmmand(indexer));
-    
-    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
+    Controller2.rightBumper().and((() -> indexer.getPhotoReading() < 0.15)).or(() -> shooter.atSpeed()).whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
    
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
     Controller2.rightBumper().whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
+    //Controller2.rightBumper().whileTrue(new RunCommand(() -> intake.driveFeed())).whileFalse(new InstantCommand(() -> intake.stopFeed()));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
         
   }
