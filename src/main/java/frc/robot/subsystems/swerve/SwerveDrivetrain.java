@@ -3,8 +3,6 @@ package frc.robot.subsystems.swerve;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import javax.lang.model.util.ElementScanner14;
-
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -36,6 +34,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
@@ -52,6 +51,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.DeviceIDs;
 import frc.robot.constants.DrivebaseConstants;
+import frc.robot.subsystems.Limelight.PoseEstimatorSubsystem;
 
 public class SwerveDrivetrain extends SubsystemBase {
     public SwerveModule fl, fr, bl, br;
@@ -70,6 +70,8 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     private final StructArrayPublisher<SwerveModuleState> publisher;
     private final StructArrayPublisher<SwerveModuleState> desiredStatesPublisher;
+    private final StructPublisher<Pose2d> posePublisher;
+
     //private final DoublePublisher headingPublisher;
 
     private SwerveModuleState[] desiredStates = new SwerveModuleState[4];
@@ -79,6 +81,8 @@ public class SwerveDrivetrain extends SubsystemBase {
     private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.headingRampRate, -100000000000.0, 0.0);
 
     private double speedMultiplier = 1;
+
+    // private PoseEstimatorSubsystem poseEstimator;
 
     private final SysIdRoutine driveRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -191,6 +195,9 @@ public class SwerveDrivetrain extends SubsystemBase {
             getModulePositions(),
             new Pose2d());
 
+        // poseEstimator = new PoseEstimatorSubsystem(
+        //     () -> Rotation2d.fromRadians(getRadians()),
+        //     () -> getModulePositions());
 
         setPose(new Pose2d(0,0,Rotation2d.fromRadians(2*Math.PI)));
 
@@ -200,11 +207,14 @@ public class SwerveDrivetrain extends SubsystemBase {
         desiredStatesPublisher = NetworkTableInstance.getDefault()
             .getStructArrayTopic("/SwerveStates/desiredStates", SwerveModuleState.struct).publish();
 
+        posePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("MyPose", Pose2d.struct).publish();
         
         startPathPlanner();
     }
 
     public void startPathPlanner() {
+        //setPose(new Pose2d(1.3, 5.55, Rotation2d.fromRadians(0.0)));
         AutoBuilder.configureHolonomic(
             this::getPose, 
             this::setPose, 
@@ -295,8 +305,13 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return odometry.getEstimatedPosition();
+        var pose = odometry.getEstimatedPosition();
+        return new Pose2d(pose.getX(), pose.getY(), pose.getRotation());
     }
+
+    // public Pose2d getCameraPose() {
+    //     return poseEstimator.getCurrentPose();
+    // }
 
     public ChassisSpeeds getRobotRelativeSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
@@ -334,6 +349,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
         publisher.set(getModuleStates());
         desiredStatesPublisher.set(desiredStates);
+        posePublisher.set(pose);
 
         try {
             var headings = getModuleHeadings();
@@ -418,7 +434,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public void resetGyro() {
-        setRadians(2*Math.PI);
+        setRadians(0.0);
     }
 
     public Command resetGyroCommand() {

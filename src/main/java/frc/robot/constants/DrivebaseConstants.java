@@ -20,7 +20,7 @@ public final class DrivebaseConstants {
         new Translation2d(-moduleOffset, -moduleOffset) //br
     );
     public static final Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
-    public static final double maxVelocity = Units.feetToMeters(22.0);
+    public static final double maxVelocity = Units.feetToMeters(19.3);
     public static final double maxAngularVelocity =
         maxVelocity / new Rotation2d(moduleOffset, moduleOffset).getRadians();
     public static final double rampRate = 1000.0;

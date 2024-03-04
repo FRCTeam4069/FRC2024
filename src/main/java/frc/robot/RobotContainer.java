@@ -17,6 +17,7 @@ import frc.robot.commands.BringIntakeUpCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.FeedIntakeCommand;
+import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.SetShooterCommand;
 import frc.robot.commands.SetShooterRotation;
 import frc.robot.commands.ShooterCommand;
@@ -32,13 +33,11 @@ import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
-import frc.robot.subsystems.Limelight.CameraController;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.ShooterRotationController.shooterAngles;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.constants.CameraConstants;
-import frc.robot.subsystems.Limelight.CameraHelper;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -82,7 +81,7 @@ public class RobotContainer {
   
   //public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
-  public SwerveDrivetrain drive;
+  public final SwerveDrivetrain drive = new SwerveDrivetrain();
 
   public final SendableChooser<Command> autoChooser;
   
@@ -92,23 +91,21 @@ public class RobotContainer {
   private final CommandXboxController Controller2 = 
       new CommandXboxController(1);
   private final CommandXboxController Controller3 = 
-      new CommandXboxController(1);
+      new CommandXboxController(2);
 
   private ClimberSubsystem climber = new ClimberSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    drive = new SwerveDrivetrain();
-
-    drive.setDefaultCommand(drive.teleopDriveCommand(
-      () -> Controller1.getLeftY(), 
-      () -> Controller1.getLeftX(), 
+    drive.setDefaultCommand(new FieldCentricDrive(
+      drive,
+      () -> -1*Controller1.getLeftY(), 
+      () -> -1*Controller1.getLeftX(), 
       () -> Controller1.getRightX(),
       () -> Controller1.rightBumper().getAsBoolean()));
     
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
-    //Controller3.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
     
     autoChooser = AutoBuilder.buildAutoChooser();
 

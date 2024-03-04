@@ -8,11 +8,14 @@ import java.util.function.Supplier;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 
+import com.pathplanner.lib.path.PathPlannerTrajectory;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
@@ -48,8 +51,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final Field2d field2d = new Field2d();
   private final PhotonRunnable rightEstimator = new PhotonRunnable(new PhotonCamera("frontCamera"),
       CameraConstants.robotCenterToFrontCam);
-  private final PhotonRunnable leftEstimator = new PhotonRunnable(new PhotonCamera("sideCamera"),
-      CameraConstants.robotCenterToSideCam);
+  private final PhotonRunnable leftEstimator = new PhotonRunnable(new PhotonCamera("rightCamera"),
+      CameraConstants.robotCenterToRightCam);
 
   private final Notifier allNotifier = new Notifier(() -> {
     rightEstimator.run();
@@ -136,6 +139,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     field2d.setRobotPose(dashboardPose);
   }
 
+  public Transform2d getSpeakerTransform() {
+    if (originPosition == kRedAllianceWallRightSide) {
+      // Find the transform from robot to speaker when red
+      return poseEstimator.getEstimatedPosition().minus(FieldConstants.poseRedSpeaker);
+    }
+    return poseEstimator.getEstimatedPosition().minus(FieldConstants.poseBlueSpeaker);
+    // Call this method periodically when needed to aim shooter
+  }
+
   private String getFomattedPose() {
     var pose = getCurrentPose();
     return String.format("(%.3f, %.3f) %.2f degrees",
@@ -183,6 +195,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         new Rotation2d(Math.PI)));
   }
 
+  // public void addTrajectory(PathPlannerTrajectory traj) {
+  //   field2d.getObject("Trajectory").setTrajectory(traj);
+  // }
+
   // public void resetPoseRating() {
   // xValues.clear();
   // yValues.clear();
@@ -224,6 +240,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
       if (originPosition == kRedAllianceWallRightSide) {
         pose2d = flipAlliance(pose2d);
       }
+      
       poseEstimator.addVisionMeasurement(pose2d, cameraPose.timestampSeconds,
           confidenceCalculator(cameraPose));
     }
