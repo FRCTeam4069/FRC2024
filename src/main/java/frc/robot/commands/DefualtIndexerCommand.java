@@ -22,17 +22,17 @@ public class DefualtIndexerCommand extends Command{
 
 
     public void execute(){
-       if(indexer.getCurrent() > startCurrent && indexer.getPhotoReading() < 0.15){
-            indexer.slowFeed();
-       }
+    //    if(indexer.getCurrent() < 6 || RobotContainer.shooter.isShooting()){
+    //         indexer.feedShooter();
+    //    }
+    //    else if(indexer.getCurrent() >= 6 && !indexer.getPhotoReading()){
+    //         indexer.slowFeed();
+    //    }   
+    //    else{
+    //     indexer.stop();
+    //    }    
 
-       if(indexer.getPhotoReading() > 0.2) {
-        indexer.stop();
-        this.end(false);
-       }
-        else{
-         indexer.feedShooter();
-       } 
+       SmartDashboard.putBoolean("Digital Test", indexer.getPhotoReading());
     }
 
     public void end(boolean interupted){

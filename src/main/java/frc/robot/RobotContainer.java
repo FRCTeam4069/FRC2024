@@ -118,8 +118,9 @@ public class RobotContainer {
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     intake.setDefaultCommand(new defaultArtCommand());
-
     climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
+
+    
     
     // Configure the trigger bindings
 
@@ -156,8 +157,10 @@ public class RobotContainer {
     Controller2.rightBumper().whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
     //Controller2.rightBumper().whileTrue(new RunCommand(() -> intake.driveFeed())).whileFalse(new InstantCommand(() -> intake.stopFeed()));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
-        
+    //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
+    Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB));
   }
+
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     //new Trigger(Controller2.y()).whileTrue(new ShooterCommand(fCam.getDistanceToTarget(), fCam.getYaw()));

@@ -99,11 +99,11 @@ public class ShooterController extends SubsystemBase {
     }
 
     public boolean isShooting(){
-        return talon1.getVelocity().getValueAsDouble() > 6;
+        return talon1.getVelocity().getValueAsDouble() > 3;
     }
 
     public double getFasterVelocity(){
-        return talon1.getVelocity().getValueAsDouble();
+        return talon2.getVelocity().getValueAsDouble();
     }
     public double getSlowerVelocity(){
         return talon2.getVelocity().getValueAsDouble();

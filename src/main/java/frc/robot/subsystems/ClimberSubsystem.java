@@ -38,6 +38,8 @@ public class ClimberSubsystem extends SubsystemBase {
         routine = new SysIdRoutine(
             new SysIdRoutine.Config(), 
             new SysIdRoutine.Mechanism(this::setClimber, this::logMotor, this));
+
+        climber.getEncoder().setPosition(0);
     }
 
     public void raiseClimber() {
@@ -74,6 +76,13 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public void setPower(double speed){
         climber.set(speed);
+    }
+
+    public double getEncoder(){
+        return climber.getEncoder().getPosition();
+    }
+    public double getPower(){
+        return climber.getAppliedOutput();
     }
 
 }
