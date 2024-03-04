@@ -224,6 +224,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
       if (originPosition == kRedAllianceWallRightSide) {
         pose2d = flipAlliance(pose2d);
       }
+      
       poseEstimator.addVisionMeasurement(pose2d, cameraPose.timestampSeconds,
           confidenceCalculator(cameraPose));
     }
