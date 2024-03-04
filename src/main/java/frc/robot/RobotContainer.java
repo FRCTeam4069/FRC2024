@@ -31,13 +31,11 @@ import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
-import frc.robot.subsystems.Limelight.CameraController;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.ShooterRotationController.shooterAngles;
 import frc.robot.subsystems.Swerve.SwerveDrivetrain;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.constants.CameraConstants;
-import frc.robot.subsystems.Limelight.CameraHelper;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
