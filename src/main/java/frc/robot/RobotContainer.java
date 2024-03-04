@@ -96,8 +96,8 @@ public class RobotContainer {
   public RobotContainer() {
     drive.setDefaultCommand(new FieldCentricDrive(
       drive,
-      () -> -1*Controller1.getLeftY(), 
-      () -> -1*Controller1.getLeftX(), 
+      () -> Controller1.getLeftY(), 
+      () -> Controller1.getLeftX(), 
       () -> Controller1.getRightX(),
       () -> Controller1.rightBumper().getAsBoolean()));
     
