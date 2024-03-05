@@ -27,8 +27,6 @@ import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
-import frc.robot.commands.drivebase.Rotate;
-import frc.robot.commands.drivebase.testAuto;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -47,7 +45,6 @@ import frc.robot.constants.CameraConstants;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -108,17 +105,13 @@ public class RobotContainer {
   public RobotContainer() {
     drive.setDefaultCommand(new FieldCentricDrive(
       drive,
-      FrontCamera,
       () -> Controller1.getLeftY(), 
       () -> Controller1.getLeftX(), 
       () -> Controller1.getRightX(),
-      () -> Controller1.rightBumper().getAsBoolean(),
-      () -> Controller1.y().getAsBoolean()));
+      () -> Controller1.rightBumper().getAsBoolean()));
     
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
-    Controller1.b().onTrue(new InstantCommand(() -> drive.resetPose()));
-    Controller1.x().whileTrue(new Rotate(drive, Units.degreesToRadians(30.0)));
     
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -161,7 +154,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller2.y().whileTrue(new SetShooterRotation(artShooter, FrontCamera.getXDistanceToApriltag(7, 1), shooter));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter, FrontCamera.getXDistanceToApriltag(7, 4), shooter));
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
@@ -215,8 +208,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return Autos.exampleAuto(m_exampleSubsystem);
-    return new testAuto(drive);
-    //return autoChooser.getSelected();
+    return autoChooser.getSelected();
     //return new PathPlannerAuto("Example Auto");
   }
 }
