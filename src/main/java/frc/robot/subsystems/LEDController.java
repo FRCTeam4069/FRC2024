@@ -14,6 +14,7 @@ public class LEDController extends SubsystemBase {
 
     public LEDController(){
         blinkin = new PWM(0);
+        blinkin.setPosition(0);
      }
 
      public Command HoldSetColour(){
@@ -47,7 +48,7 @@ public class LEDController extends SubsystemBase {
    private final int ErrorYellow = 17350;
    private final int greenAndWhitePattern = 17200;
    private final int ErroRed = 46000;
-   private final int CoolPatern = 53950;
+   private final int CoolPatern = 800;
 
    public enum Colours{
       RED,

@@ -5,10 +5,12 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.cscore.CameraServerJNI.TelemetryKind;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.DrivebaseConstants;
+import frc.robot.constants.DrivebaseConstants.AutoAlignConstants;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
@@ -20,6 +22,7 @@ public class FieldCentricDrive extends Command {
     private final BooleanSupplier halfSpeed;
     private final BooleanSupplier autoAlign;
     private PIDController headingPID;
+    private MedianFilter headingFilter;
     private final CameraIsAsCameraDoes cam;
     public FieldCentricDrive(SwerveDrivetrain drive, CameraIsAsCameraDoes cam, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign) {
         this.drive = drive;
@@ -33,6 +36,11 @@ public class FieldCentricDrive extends Command {
     }
     @Override
     public void initialize() {
+        headingPID = new PIDController(AutoAlignConstants.kP, AutoAlignConstants.kI, AutoAlignConstants.kD);
+        headingPID.setTolerance(AutoAlignConstants.positionTolerance, AutoAlignConstants.velocityTolerance);
+        headingPID.enableContinuousInput(-Math.PI, Math.PI);
+
+        headingFilter = new MedianFilter(10);
         
     }
 
@@ -47,18 +55,22 @@ public class FieldCentricDrive extends Command {
             speedMultiplier = 1.0;
         }
 
+        var targetAngle = headingFilter.calculate(cam.getTargetRotation().getY());
+        SmartDashboard.putNumber("camera target angle", targetAngle);
+
         if (!autoAlign.getAsBoolean()) {
             drive.fieldOrientedDrive(new ChassisSpeeds(
                 (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxAngularVelocity)));
         } else {
-            var translation = cam.getTargetTranslation(7);
-            var targetAngle = Math.atan2(translation.getY(), translation.getX());
+            //var translation = cam.getTargetTranslation(7);
+            //var targetAngle = Math.atan2(translation.getY(), translation.getX());
+            
             drive.fieldOrientedDrive(new ChassisSpeeds(
                 (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (headingPID.calculate(drive.getRadians(), targetAngle))));
+                (-headingPID.calculate(drive.getNormalizedRads(), -1*targetAngle))));
 
         }
 

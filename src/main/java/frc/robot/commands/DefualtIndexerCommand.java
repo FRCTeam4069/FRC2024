@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.IndexerController;
-import frc.robot.subsystems.LEDController.Colours;
 
 public class DefualtIndexerCommand extends Command{
     private IndexerController indexer = RobotContainer.indexer;

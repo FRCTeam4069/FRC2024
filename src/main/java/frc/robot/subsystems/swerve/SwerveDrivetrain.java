@@ -468,6 +468,10 @@ public class SwerveDrivetrain extends SubsystemBase {
         //return theta - (2*Math.PI) * Math.floor((theta + Math.PI) / 2*Math.PI);
     }
 
+    public Rotation2d getRotation2d() {
+        return Rotation2d.fromRadians(getRadians());
+    }
+
     public void coast() {
         fl.stop();
         fr.stop();

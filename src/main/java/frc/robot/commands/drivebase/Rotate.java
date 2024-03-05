@@ -4,7 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.DrivebaseConstants.AutoAlignConstants;
+import frc.robot.constants.DrivebaseConstants.AlignConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 public class Rotate extends Command {
@@ -14,9 +14,8 @@ public class Rotate extends Command {
 
     public Rotate(SwerveDrivetrain drive, double radians) {
         this.drive = drive;
-        pid = new PIDController(AutoAlignConstants.kP, AutoAlignConstants.kI, AutoAlignConstants.kD);
-        pid.setTolerance(AutoAlignConstants.positionTolerance);
-        pid.setTolerance(AutoAlignConstants.velocityTolerance);
+        pid = new PIDController(AlignConstants.kP, AlignConstants.kI, AlignConstants.kD);
+        pid.setTolerance(AlignConstants.positionTolerance, AlignConstants.velocityTolerance);
         pid.enableContinuousInput(-Math.PI, Math.PI);
         this.radians = radians;
         

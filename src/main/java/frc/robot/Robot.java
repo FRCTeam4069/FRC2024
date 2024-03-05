@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.ShooterTest;
-import frc.robot.subsystems.LEDController.Colours;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -39,8 +38,6 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.powerDistributionHub.clearStickyFaults();
 
-    m_robotContainer.led.setColour(Colours.STARTUPPATTERN);
-    
     DriverStation.silenceJoystickConnectionWarning(true);
 
     // m_robotContainer.intake.setBrakeState(1);
@@ -62,6 +59,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     m_robotContainer.FrontCamera.printNumbers();
+    //RobotContainer.led.setColour(Colours.BLUE);
     //SmartDashboard.putNumber("Sensor", m_robotContainer.indexer.getPhotoReading());
     //SmartDashboard.putNumber("intake encoder", m_robotContainer.intake.getEncoder());
   //   SmartDashboard.putNumber("Angle", m_robotContainer.artShooter.getEncoder());

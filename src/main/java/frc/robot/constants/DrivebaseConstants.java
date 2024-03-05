@@ -32,12 +32,20 @@ public final class DrivebaseConstants {
     public static final double KP = 0.40;
     public static final double KD = 0.00;
 
-    public static final class AutoAlignConstants {
-        public static final double kP = 2.00;
+    public static final class AlignConstants {
+        public static final double kP = 0.20;
         public static final double kI = 0.0;
-        public static final double kD = 0.0;
-        public static final double positionTolerance = 0.01;
-        public static final double velocityTolerance = 0.01;
+        public static final double kD = 0.001;
+        public static final double positionTolerance = Units.degreesToRadians(1);
+        public static final double velocityTolerance = 0.0005;
+    }
+
+    public static final class AutoAlignConstants {
+        public static final double kP = 0.16;
+        public static final double kI = 0.0;
+        public static final double kD = 0.005;
+        public static final double positionTolerance = Units.degreesToRadians(1);
+        public static final double velocityTolerance = 0.0005;
 
     }
 

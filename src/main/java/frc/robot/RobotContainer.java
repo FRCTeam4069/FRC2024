@@ -27,14 +27,15 @@ import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
+import frc.robot.commands.drivebase.Rotate;
 import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
-import frc.robot.subsystems.LEDController;
+//import frc.robot.subsystems.LEDController;
 import frc.robot.subsystems.IntakeController.positions;
-import frc.robot.subsystems.LEDController.Colours;
+//import frc.robot.subsystems.LEDController.Colours;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
@@ -45,6 +46,7 @@ import frc.robot.constants.CameraConstants;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -71,7 +73,7 @@ public class RobotContainer {
   //t public static CameraController cam = new CameraController("frontCamera","http://10.40.69.11:5800", "photonvision");
   public static final ShooterController shooter = new ShooterController();
 
-  public static final LEDController led = new LEDController();
+  //public static final LEDController led = new LEDController();
   
   // public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
   public static final CameraIsAsCameraDoes FrontCamera = new CameraIsAsCameraDoes("limelight-front");
@@ -105,10 +107,12 @@ public class RobotContainer {
   public RobotContainer() {
     drive.setDefaultCommand(new FieldCentricDrive(
       drive,
+      FrontCamera,
       () -> Controller1.getLeftY(), 
       () -> Controller1.getLeftX(), 
       () -> Controller1.getRightX(),
-      () -> Controller1.rightBumper().getAsBoolean()));
+      () -> Controller1.rightBumper().getAsBoolean(),
+      () -> Controller1.y().getAsBoolean()));
     
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
@@ -126,12 +130,7 @@ public class RobotContainer {
     //intake.setDefaultCommand(new defaultArtCommand());
     climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
     
-    led.setDefaultCommand(led.HoldSetColour());
     intake.setDefaultCommand(new defaultArtCommand());
-
-
-    
-    
     
     // Configure the trigger bindings
 
@@ -139,8 +138,6 @@ public class RobotContainer {
     //    () -> Controller2.leftBumper().getAsBoolean()
     //  ));
   
-    led.setColour(Colours.GREEN);
-
     configureBindings();
   }
 
@@ -183,9 +180,9 @@ public class RobotContainer {
 
     new Trigger(Controller2.rightTrigger(0.5)).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger()));
 
-    new Trigger(() -> shooter.atSpeed()).whileTrue(led.setColour(Colours.GREEN));
-
     Controller2.leftTrigger(0.5).whileTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()));
+
+    Controller1.x().whileTrue(new Rotate(drive, Units.degreesToRadians(-30.0)));
   }
 
     
