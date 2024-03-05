@@ -22,13 +22,10 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
 
     }
 
-    public double getXDistanceToApriltag(int [] tagNumbers) {
-//      for (int i : tagNumbers) {
-//             if (i == limeLight.getFiducialID(cameraName) && limeLight. >= 75) {
-//                 lastgoodX = filter.calculate(limeLight.getTargetPose3d_RobotSpace(cameraName).getZ());
-//              }
-//         return lastgoodX;
-//         }
+    public double getXDistanceToApriltag(int a, int b) {
+        if (a == limeLight.getFiducialID(cameraName) || b == limeLight.getFiducialID(cameraName)) {
+                lastgoodX = filter.calculate(limeLight.getTargetPose3d_RobotSpace(cameraName).getZ());
+        }
         return lastgoodX;
     }
 

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.ShooterTest;
+import frc.robot.subsystems.LEDController.Colours;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -37,6 +38,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     m_robotContainer.powerDistributionHub.clearStickyFaults();
+
+    m_robotContainer.led.setColour(Colours.STARTUPPATTERN);
     
     DriverStation.silenceJoystickConnectionWarning(true);
 
@@ -74,7 +77,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    //m_robotContainer.led.setColour(Colours.COOL_PATTERN);
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -117,7 +122,7 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("2", values[2]);
     //SmartDashboard.putNumber("3", values[3]);
     
-
+    m_robotContainer.led.setColour(Colours.BLUE);
   }
 
   //private ShooterTest t;

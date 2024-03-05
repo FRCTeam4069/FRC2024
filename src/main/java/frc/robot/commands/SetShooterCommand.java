@@ -45,24 +45,24 @@ public class SetShooterCommand extends Command{
 
     public void execute(){
         if(positions == ShooterPositions.WALL_AREA){
-            velocity = 85; //60 from wall
-            angle = 71.5;    //35 from wall
+            velocity = 60; //60 from wall
+            angle = 35;    //35 from wall
         } 
-        else if(positions == ShooterPositions.WHITE_LINE){
-            velocity = 60;
-            angle = 48.5;
-        }
-        else if(positions == ShooterPositions.AMP_AREA){
-            velocity = 9.85;
-            angle = 31;
+        // else if(positions == ShooterPositions.WHITE_LINE){
+        //     velocity = 60;
+        //     angle = 48.5;
+        // }
+        else if(positions == ShooterPositions.SAFE_ZONE){
+            velocity = 80;
+            angle = 60;
         }
         else if(positions == ShooterPositions.CLIMB){
             velocity = 0;
-            angle = 10;
+            angle = 3;
         }
         else {
             velocity = 80;
-            angle = 58;
+            angle = 62;
             //3.2m
         }
 
