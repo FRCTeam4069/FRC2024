@@ -38,6 +38,10 @@ public class IndexerController extends SubsystemBase {
         return m1.getOutputCurrent();
     }
 
+    public void setCustomSpeed(double speed){
+        m1.set(speed);
+    }
+
     public void slowFeed(){
         m1.set(0.3);
     }

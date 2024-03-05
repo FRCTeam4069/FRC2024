@@ -23,7 +23,7 @@ public class ShooterRotationController extends SubsystemBase {
     private final double kP = 4.5, kI = 0, kD = 0.01;
     private PIDController controller;
 
-    private boolean isClimbing;
+    private boolean isClimbing = false;
 
     public ShooterRotationController(){
         left = new CANSparkMax(5 , MotorType.kBrushless);

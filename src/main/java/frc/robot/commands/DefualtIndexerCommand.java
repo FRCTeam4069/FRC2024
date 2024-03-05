@@ -1,7 +1,9 @@
 package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,7 +14,8 @@ import frc.robot.subsystems.LEDController.Colours;
 public class DefualtIndexerCommand extends Command{
     private IndexerController indexer = RobotContainer.indexer;
     boolean shooting, speed;
-    private boolean isLoaded = false;;
+    private boolean isLoaded = false;
+    private DoubleSupplier rt, lt;
 
     private double start = 0;
 
@@ -21,10 +24,12 @@ public class DefualtIndexerCommand extends Command{
     boolean something = false; // quinn's name not mine
 
 
-    public DefualtIndexerCommand(BooleanSupplier requested){
+    public DefualtIndexerCommand(BooleanSupplier requested, DoubleSupplier l, DoubleSupplier r){
         //isLoaded = requested.getAsBoolean();
         addRequirements(RobotContainer.indexer);
         startCurrent = indexer.getCurrent();
+        lt = l;
+        rt = r;
     }
     int i = 0;
 
@@ -39,52 +44,30 @@ public class DefualtIndexerCommand extends Command{
     //    else{
     //     indexer.stop();
     //    }   
-    
-        if(something){
-            indexer.stop();
-        }
-        
-        if(RobotContainer.shooter.isShooting()){
-            isLoaded = false;
-            something = false;
-        }
-
-        if(!something){
-            if(isLoaded){
-            something = true;
-            
-            
-        }
-        else{
-            indexer.feedShooter();
-        }
-        }
-
-        
-        
-
-        
-
         isLoaded = indexer.getPhotoReading();
+
         if(isLoaded){
             something = true;
-            RobotContainer.led.setColour(Colours.GREEN_WHITE_PATTERN);
+        }
+        if(RobotContainer.shooter.isShooting()){
+            indexer.setCustomSpeed(-rt.getAsDouble());
+            //something = false;
         }
 
-        if(something){
-       
+        if(!isLoaded){ 
+            indexer.feedShooter();
         }
-
-    else{
-        indexer.stop();
-        i = 0;
-        this.end(false);
-    }
+        if(isLoaded){
+            indexer.setCustomSpeed(lt.getAsDouble()/8);
+           // RobotContainer.led.setColour(Colours.STARTUPPATTERN);
+            //i = 0;
+        //this.end(false);
+        }   
         // else{
         //     something = false;
         // }
        SmartDashboard.putBoolean("Digital Test", isLoaded);
-       SmartDashboard.putBoolean("Digital Something", something);
+       //SmartDashboard.putBoolean("Digital Something", something);
     }
 
     public void end(boolean interupted){

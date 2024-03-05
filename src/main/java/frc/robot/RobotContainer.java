@@ -92,7 +92,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController Controller1 =
       new CommandXboxController(0);
-  private final CommandXboxController Controller2 = 
+  public static final CommandXboxController Controller2 = 
       new CommandXboxController(1);
   private final CommandXboxController Controller3 = 
       new CommandXboxController(2);
@@ -121,10 +121,13 @@ public class RobotContainer {
     //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
-    intake.setDefaultCommand(new defaultArtCommand());
+    //intake.setDefaultCommand(new defaultArtCommand());
     climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
     
     led.setDefaultCommand(led.HoldSetColour());
+    intake.setDefaultCommand(new defaultArtCommand());
+
+    
     
     
     // Configure the trigger bindings
@@ -146,27 +149,32 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller2.y().whileTrue(new SetShooterRotation(artShooter, FrontCamera.getXDistanceToApriltag(new int[]{8, 7}), shooter));
-    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
-    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter, FrontCamera.getXDistanceToApriltag(7, 1), shooter));
+    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
+    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
 
     // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     Controller2.leftBumper().whileTrue(new unIndexCOmmand(indexer));
-    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting()));                                                       
+    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getLeftTriggerAxis(), () -> Controller2.getRightTriggerAxis()));                                                       
    
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
-    Controller2.rightBumper().onTrue(intake.setPosition(positions.LOWER));
+    //Controller2.rightBumper().onTrue(intake.setPosition(positions.LOWER));
     //Controller2.rightBumper().whileTrue(new RunCommand(() -> intake.driveFeed())).whileFalse(new InstantCommand(() -> intake.stopFeed()));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
     Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB)).onTrue(artShooter.changeClimbStatus());
 
-    Controller2.pov(0).onTrue(intake.setPosition(positions.UPPER));
-    Controller2.pov(180).onTrue(intake.setPosition(positions.LOWER));
+    // new Trigger(Controller2.pov(0).onTrue(new InstantCommand( () -> intake.setPosition(positions.UPPER))));
+    // new Trigger(Controller2.pov(180).onTrue(new InstantCommand(() -> intake.setPosition(positions.LOWER))));
+    
+      new Trigger(Controller2.pov(0).onTrue(intake.setPosition(positions.UPPER)));
+    new Trigger(Controller2.pov(180).onTrue(intake.setPosition(positions.LOWER)));
+    
+    Controller2.rightBumper().whileTrue(new FeedIntakeCommand());
 
     new Trigger(() -> shooter.atSpeed()).whileTrue(led.setColour(Colours.GREEN));
   }

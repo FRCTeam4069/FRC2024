@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    m_robotContainer.led.setColour(Colours.COOL_PATTERN);
+    //m_robotContainer.led.setColour(Colours.COOL_PATTERN);
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -122,7 +122,7 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("2", values[2]);
     //SmartDashboard.putNumber("3", values[3]);
     
-
+    m_robotContainer.led.setColour(Colours.BLUE);
   }
 
   //private ShooterTest t;

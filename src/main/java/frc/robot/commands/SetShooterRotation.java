@@ -22,7 +22,7 @@ public class SetShooterRotation extends Command {
 
     public void execute(){
             
-            double angle = 190.478 * Math.pow(((RobotContainer.FrontCamera.getXDistanceToApriltag(new int[]{7, 8})) * 100 / 2.54), 0.0787374) - 219.781;
+            double angle = 190.478 * Math.pow(((RobotContainer.FrontCamera.getXDistanceToApriltag(7, 1)) * 100 / 2.54), 0.0787374) - 219.781;
             SmartDashboard.putNumber("Set Angle", angle);
             controller.setCustomAngle(angle);
             if(angle > 75){
