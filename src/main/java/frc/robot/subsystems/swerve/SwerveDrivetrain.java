@@ -361,6 +361,8 @@ public class SwerveDrivetrain extends SubsystemBase {
             var steerHeadings = getModuleSteerHeadings();
 
             SmartDashboard.putNumber("robot heading", getDegrees());
+            SmartDashboard.putNumber("robot adjusted radians", getNormalizedRads());
+            SmartDashboard.putNumber("robot radians", getRadians());
             SmartDashboard.putNumber("voltage", RobotController.getBatteryVoltage());
             SmartDashboard.putNumber("fl get", fl.getDriveSpeed());
 
@@ -457,6 +459,13 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     public double getRadians() {
         return Units.degreesToRadians(getDegrees());
+
+    }
+
+    public double getNormalizedRads() {
+        var theta = getRadians();
+        return Math.IEEEremainder(theta, 2*Math.PI);
+        //return theta - (2*Math.PI) * Math.floor((theta + Math.PI) / 2*Math.PI);
     }
 
     public void coast() {

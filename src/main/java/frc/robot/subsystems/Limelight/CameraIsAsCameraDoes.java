@@ -2,6 +2,7 @@ package frc.robot.subsystems.Limelight;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -14,6 +15,7 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
 
     LinearFilter filter = LinearFilter.movingAverage(10);
     double lastgoodX = 0; // initial
+    double lastgoodY = 0; // initial
 
     public CameraIsAsCameraDoes(String camName) {
         cameraName = camName;
@@ -27,11 +29,26 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
         return lastgoodX;
     }
 
+    public double getXDistanceToApriltag(int tagNumber) {
+        if (LimelightHelpers.getFiducialID(cameraName) == tagNumber) {
+            lastgoodX = LimelightHelpers.getTargetPose3d_RobotSpace(cameraName).getZ();
+        } 
+        return lastgoodX;
+
+    }
+
     public double getYDistanceToApriltag(int tagNumber) {
-        if (limeLight.getFiducialID(cameraName) == tagNumber) {
-            return limeLight.getTargetPose3d_RobotSpace(cameraName).getX();
-        } else
-            return 0;
+        if (LimelightHelpers.getFiducialID(cameraName) == tagNumber) {
+            lastgoodY = LimelightHelpers.getTargetPose3d_RobotSpace(cameraName).getX();
+        } 
+        return lastgoodY;
+    }
+
+    public Translation2d getTargetTranslation(int tagNumber) {
+        var y = getYDistanceToApriltag(tagNumber);
+        var x = getXDistanceToApriltag(tagNumber);
+        return new Translation2d(x, y);
+
     }
 
     public Pose2d getRobotPose2d() {
