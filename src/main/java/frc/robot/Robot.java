@@ -122,9 +122,7 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("2", values[2]);
     //SmartDashboard.putNumber("3", values[3]);
     
-    m_robotContainer.led.setColour(Colours.BLUE);
   }
-
   //private ShooterTest t;
   @Override
   public void testInit() {

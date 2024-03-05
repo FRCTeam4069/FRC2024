@@ -19,6 +19,7 @@ import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.DefualtShooter;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.FieldCentricDrive;
+import frc.robot.commands.REverseIndexerCommand;
 import frc.robot.commands.SetShooterCommand;
 import frc.robot.commands.SetShooterRotation;
 import frc.robot.commands.ShooterCommand;
@@ -137,6 +138,8 @@ public class RobotContainer {
     //  indexer.setDefaultCommand(new DefualtIndexerCommand(
     //    () -> Controller2.leftBumper().getAsBoolean()
     //  ));
+  
+    led.setColour(Colours.GREEN);
 
     configureBindings();
   }
@@ -155,12 +158,12 @@ public class RobotContainer {
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
-    Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
+    Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
 
     // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     Controller2.leftBumper().whileTrue(new unIndexCOmmand(indexer));
-    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getLeftTriggerAxis(), () -> Controller2.getRightTriggerAxis()));                                                       
+    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller2.getRightTriggerAxis()));                                                       
    
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
@@ -178,9 +181,11 @@ public class RobotContainer {
     
     Controller2.rightBumper().whileTrue(new FeedIntakeCommand());
 
-    new Trigger(Controller2.leftTrigger(0.5)).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.leftTrigger(0.5)));
+    new Trigger(Controller2.rightTrigger(0.5)).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger()));
 
     new Trigger(() -> shooter.atSpeed()).whileTrue(led.setColour(Colours.GREEN));
+
+    Controller2.leftTrigger(0.5).whileTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()));
   }
 
     

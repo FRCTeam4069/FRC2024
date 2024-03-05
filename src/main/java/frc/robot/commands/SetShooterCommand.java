@@ -48,10 +48,10 @@ public class SetShooterCommand extends Command{
             velocity = 60; //60 from wall
             angle = 35;    //35 from wall
         } 
-        // else if(positions == ShooterPositions.WHITE_LINE){
-        //     velocity = 60;
-        //     angle = 48.5;
-        // }
+        else if(positions == ShooterPositions.WHITE_LINE){
+            velocity = 65;
+            angle = 45;
+        }
         else if(positions == ShooterPositions.SAFE_ZONE){
             velocity = 80;
             angle = 60;

@@ -43,6 +43,10 @@ public class ClimberSubsystem extends SubsystemBase {
 
         climber.getEncoder().setPosition(0);
         climber.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        climber.setSoftLimit(SoftLimitDirection.kForward, 233);
+
+        climber.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        climber.enableSoftLimit(SoftLimitDirection.kForward, true);
     }
 
     public void raiseClimber() {
@@ -87,5 +91,7 @@ public class ClimberSubsystem extends SubsystemBase {
     public double getPower(){
         return climber.getAppliedOutput();
     }
+
+
 
 }

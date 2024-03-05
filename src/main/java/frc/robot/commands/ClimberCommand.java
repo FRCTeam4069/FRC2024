@@ -23,7 +23,7 @@ public class ClimberCommand extends Command{
 
     public void execute(){
          
-        
+        SmartDashboard.putNumber("Climber Value", c.getEncoder());
         if(Math.abs(CSpeed.getAsDouble()) > 0.5){
            
             c.setPower(CSpeed.getAsDouble());
