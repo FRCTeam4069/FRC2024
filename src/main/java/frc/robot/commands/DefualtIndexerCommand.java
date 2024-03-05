@@ -52,7 +52,7 @@ public class DefualtIndexerCommand extends Command{
         if(!something){
             if(isLoaded){
             something = true;
-            start = Timer.getFPGATimestamp();
+            
             
         }
         else{
@@ -68,7 +68,7 @@ public class DefualtIndexerCommand extends Command{
         isLoaded = indexer.getPhotoReading();
         if(isLoaded){
             something = true;
-            RobotContainer.led.setColour(Colours.ERROR_YELLOw);
+            RobotContainer.led.setColour(Colours.GREEN_WHITE_PATTERN);
         }
 
         if(something){

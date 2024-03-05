@@ -60,6 +60,10 @@ public class IntakeController extends SubsystemBase {
         return artMotor1.getEncoder().getPosition();
     }
 
+    public double getFeedSpeed(){
+        return feedMotor.getAppliedOutput();
+    }
+
     
 
     
