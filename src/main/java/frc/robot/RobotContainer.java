@@ -30,7 +30,9 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
+import frc.robot.subsystems.LEDController;
 import frc.robot.subsystems.IntakeController.positions;
+import frc.robot.subsystems.LEDController.Colours;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
@@ -66,6 +68,8 @@ public class RobotContainer {
 
   //t public static CameraController cam = new CameraController("frontCamera","http://10.40.69.11:5800", "photonvision");
   public static final ShooterController shooter = new ShooterController();
+
+  public static final LEDController led = new LEDController();
   
   // public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
   public static final CameraIsAsCameraDoes FrontCamera = new CameraIsAsCameraDoes("limelight-front");
@@ -119,7 +123,8 @@ public class RobotContainer {
     //artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     intake.setDefaultCommand(new defaultArtCommand());
     climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
-
+    
+    led.setDefaultCommand(led.HoldSetColour());
     
     
     // Configure the trigger bindings
@@ -154,12 +159,15 @@ public class RobotContainer {
    
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
-    Controller2.rightBumper().whileTrue(intake.setPosition(positions.LOWER)).whileFalse(intake.setPosition(positions.UPPER));
+    Controller2.rightBumper().onTrue(intake.setPosition(positions.LOWER));
     //Controller2.rightBumper().whileTrue(new RunCommand(() -> intake.driveFeed())).whileFalse(new InstantCommand(() -> intake.stopFeed()));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
     Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB));
-    //Controller2.pov(0).onTrue(getAutonomousCommand())
+    Controller2.pov(0).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.pov(180).onTrue(intake.setPosition(positions.LOWER));
+
+    new Trigger(() -> shooter.atSpeed()).whileTrue(led.setColour(Colours.GREEN));
   }
 
     

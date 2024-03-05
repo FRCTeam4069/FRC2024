@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.IndexerController;
+import frc.robot.subsystems.LEDController.Colours;
 
 public class DefualtIndexerCommand extends Command{
     private IndexerController indexer = RobotContainer.indexer;
@@ -67,15 +68,11 @@ public class DefualtIndexerCommand extends Command{
         isLoaded = indexer.getPhotoReading();
         if(isLoaded){
             something = true;
-
+            RobotContainer.led.setColour(Colours.ERROR_YELLOw);
         }
 
         if(something){
-            if(Timer.getFPGATimestamp() - start  > 0.25){
-                indexer.unFeedShooter();// go backward until i is 3
-            }
-            
-
+       
         }
 
     else{
