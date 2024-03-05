@@ -16,6 +16,7 @@ import frc.robot.commands.BackIntakeCommand;
 import frc.robot.commands.BringIntakeUpCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DefualtIndexerCommand;
+import frc.robot.commands.DefualtShooter;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.FieldCentricDrive;
 import frc.robot.commands.SetShooterCommand;
@@ -127,6 +128,7 @@ public class RobotContainer {
     led.setDefaultCommand(led.HoldSetColour());
     intake.setDefaultCommand(new defaultArtCommand());
 
+
     
     
     
@@ -171,10 +173,12 @@ public class RobotContainer {
     // new Trigger(Controller2.pov(0).onTrue(new InstantCommand( () -> intake.setPosition(positions.UPPER))));
     // new Trigger(Controller2.pov(180).onTrue(new InstantCommand(() -> intake.setPosition(positions.LOWER))));
     
-      new Trigger(Controller2.pov(0).onTrue(intake.setPosition(positions.UPPER)));
+    new Trigger(Controller2.pov(0).onTrue(intake.setPosition(positions.UPPER)));
     new Trigger(Controller2.pov(180).onTrue(intake.setPosition(positions.LOWER)));
     
     Controller2.rightBumper().whileTrue(new FeedIntakeCommand());
+
+    new Trigger(Controller2.leftTrigger(0.5)).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.leftTrigger(0.5)));
 
     new Trigger(() -> shooter.atSpeed()).whileTrue(led.setColour(Colours.GREEN));
   }
