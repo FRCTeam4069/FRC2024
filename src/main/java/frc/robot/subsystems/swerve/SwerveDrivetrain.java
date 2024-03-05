@@ -224,7 +224,7 @@ public class SwerveDrivetrain extends SubsystemBase {
                 //translation
                 new PIDConstants(0.0, 0.0, 0.0), 
                 //rotation
-                new PIDConstants(0.0, 0.0, 0.0), 
+                new PIDConstants(0.1, 0.0, 0.0), 
                 DrivebaseConstants.maxVelocity,
                 DrivebaseConstants.drivebaseRadius,
                 new ReplanningConfig()
@@ -248,6 +248,10 @@ public class SwerveDrivetrain extends SubsystemBase {
         };
     }
 
+    /**
+     * the original one
+     * @param moduleStates
+     */
     public void setModuleStates(SwerveModuleState[] moduleStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivebaseConstants.maxVelocity);
         fl.setDesiredState(moduleStates[0]);
@@ -272,7 +276,8 @@ public class SwerveDrivetrain extends SubsystemBase {
      * @param speeds
      */
     public void drive(ChassisSpeeds speeds) {
-        desiredStates = kinematics.toSwerveModuleStates(speeds);
+        var betterSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        desiredStates = kinematics.toSwerveModuleStates(betterSpeeds);
         setModuleStates(desiredStates);
     }
 
@@ -356,6 +361,8 @@ public class SwerveDrivetrain extends SubsystemBase {
             var steerHeadings = getModuleSteerHeadings();
 
             SmartDashboard.putNumber("robot heading", getDegrees());
+            SmartDashboard.putNumber("robot adjusted radians", getNormalizedRads());
+            SmartDashboard.putNumber("robot radians", getRadians());
             SmartDashboard.putNumber("voltage", RobotController.getBatteryVoltage());
             SmartDashboard.putNumber("fl get", fl.getDriveSpeed());
 
@@ -420,7 +427,9 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     public void angleModules(Rotation2d angle) {
         SmartDashboard.putNumber("input angle", angle.getDegrees());
-        fl.setDesiredState(new SwerveModuleState(0.00, angle));
+        fl.setDesiredState(new
+        
+        SwerveModuleState(0.00, angle));
         fr.setDesiredState(new SwerveModuleState(0.00, angle));
         bl.setDesiredState(new SwerveModuleState(0.00, angle));
         br.setDesiredState(new SwerveModuleState(0.00, angle));
@@ -450,6 +459,13 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     public double getRadians() {
         return Units.degreesToRadians(getDegrees());
+
+    }
+
+    public double getNormalizedRads() {
+        var theta = getRadians();
+        return Math.IEEEremainder(theta, 2*Math.PI);
+        //return theta - (2*Math.PI) * Math.floor((theta + Math.PI) / 2*Math.PI);
     }
 
     public void coast() {

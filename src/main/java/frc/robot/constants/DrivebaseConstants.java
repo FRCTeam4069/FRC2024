@@ -1,5 +1,6 @@
 package frc.robot.constants;
 
+import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -7,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.PubSub;
 
 public final class DrivebaseConstants {
     public static final double driveConversionFactor = 0.05215454470665408;
@@ -19,7 +21,7 @@ public final class DrivebaseConstants {
         new Translation2d(-moduleOffset, moduleOffset), //bl
         new Translation2d(-moduleOffset, -moduleOffset) //br
     );
-    public static final Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
+    public static final Pigeon2Configuration gyroConfig = new Pigeon2Configuration().withMountPose(new MountPoseConfigs().withMountPoseYaw(0.0));
     public static final double maxVelocity = Units.feetToMeters(19.3);
     public static final double maxAngularVelocity =
         maxVelocity / new Rotation2d(moduleOffset, moduleOffset).getRadians();
@@ -29,6 +31,15 @@ public final class DrivebaseConstants {
     public static final double KV = 0.15;
     public static final double KP = 0.40;
     public static final double KD = 0.00;
+
+    public static final class AutoAlignConstants {
+        public static final double kP = 2.00;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double positionTolerance = 0.01;
+        public static final double velocityTolerance = 0.01;
+
+    }
 
     public static class ModuleCoefficient {
         public double kS = 0.29966;

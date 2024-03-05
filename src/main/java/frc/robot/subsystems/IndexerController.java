@@ -6,11 +6,14 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.constants.DeviceIDs;
 
 public class IndexerController extends SubsystemBase {
     CANSparkMax m1;
     private final edu.wpi.first.wpilibj.AnalogInput pes;
+
+    boolean past = false;
 
     public IndexerController(){
         m1 = new CANSparkMax(DeviceIDs.FEEDER, MotorType.kBrushless);
@@ -18,27 +21,45 @@ public class IndexerController extends SubsystemBase {
         m1.setIdleMode(IdleMode.kBrake);
     }
 
+    public void periodic(){
+        if(getPhotoReading()){
+            past = true;
+        }
+        if(RobotContainer.shooter.isShooting()){
+            past = false;
+        }
+    }
+
     public void feedShooter(){
-        m1.set(0.7);
+        m1.set(0.45);
     }
 
     public void unFeedShooter(){
-        m1.set(-0.7);
+        m1.set(-0.45);
     }
     public void stop(){
         m1.stopMotor();
     }
 
-    public double getPhotoReading(){
-        return pes.getVoltage();
+    public boolean getPhotoReading(){
+        if(pes.getVoltage() > 0.7) return true;
+        return false;
     }
 
     public double getCurrent(){
         return m1.getOutputCurrent();
     }
 
+    public void setCustomSpeed(double speed){
+        m1.set(speed);
+    }
+
     public void slowFeed(){
-        m1.set(0.3);
+        m1.set(-0.2);
+    }
+
+    public boolean pastSensor(){
+        return past;
     }
     
 }

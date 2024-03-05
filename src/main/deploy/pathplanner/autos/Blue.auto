@@ -16,6 +16,24 @@
           "data": {
             "pathName": "go to first ring"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "go to second ring"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "go to third ring"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "go to fourth ring"
+          }
         }
       ]
     }

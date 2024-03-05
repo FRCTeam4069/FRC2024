@@ -22,13 +22,7 @@ public class defaultArtCommand extends Command {
 
     public void execute(){
         intake.driveArt(controller.calculate(intake.getEncoder(), intake.getPositionValue()));
-        
-        if(intake.getPosition() == positions.LOWER){
-            intake.driveFeed();
-        }
-        else{
-            intake.stopFeed();
-        }
+    
     }
 
     public void end(boolean interupted){

@@ -94,16 +94,17 @@ public class ShooterController extends SubsystemBase {
 
 
     public boolean atSpeed(){
+        if(talon1.getVelocity().getValueAsDouble() < 5) return false;
         if(talon1.getVelocity().getValueAsDouble() >= 75 && talon1.getVelocity().getValueAsDouble() <= 85) return true;
-        else return false;
+        return false;
     }
 
     public boolean isShooting(){
-        return talon1.getVelocity().getValueAsDouble() > 6;
+        return talon1.getVelocity().getValueAsDouble() > 3;
     }
 
     public double getFasterVelocity(){
-        return talon1.getVelocity().getValueAsDouble();
+        return talon2.getVelocity().getValueAsDouble();
     }
     public double getSlowerVelocity(){
         return talon2.getVelocity().getValueAsDouble();

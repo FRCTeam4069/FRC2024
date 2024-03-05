@@ -10,10 +10,12 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch.Direction;
 
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
@@ -38,6 +40,13 @@ public class ClimberSubsystem extends SubsystemBase {
         routine = new SysIdRoutine(
             new SysIdRoutine.Config(), 
             new SysIdRoutine.Mechanism(this::setClimber, this::logMotor, this));
+
+        climber.getEncoder().setPosition(0);
+        climber.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        climber.setSoftLimit(SoftLimitDirection.kForward, 233);
+
+        climber.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        climber.enableSoftLimit(SoftLimitDirection.kForward, true);
     }
 
     public void raiseClimber() {
@@ -73,7 +82,16 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void setPower(double speed){
-        climber.set(speed);
+        climber.set(-speed);
     }
+
+    public double getEncoder(){
+        return climber.getEncoder().getPosition();
+    }
+    public double getPower(){
+        return climber.getAppliedOutput();
+    }
+
+
 
 }
