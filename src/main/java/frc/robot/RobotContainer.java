@@ -163,7 +163,8 @@ public class RobotContainer {
     //Controller2.rightBumper().whileTrue(new RunCommand(() -> intake.driveFeed())).whileFalse(new InstantCommand(() -> intake.stopFeed()));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
-    Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB));
+    Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB)).onTrue(artShooter.changeClimbStatus());
+
     Controller2.pov(0).onTrue(intake.setPosition(positions.UPPER));
     Controller2.pov(180).onTrue(intake.setPosition(positions.LOWER));
 

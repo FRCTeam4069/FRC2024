@@ -58,7 +58,7 @@ public class SetShooterCommand extends Command{
         }
         else if(positions == ShooterPositions.CLIMB){
             velocity = 0;
-            angle = 10;
+            angle = 3;
         }
         else {
             velocity = 80;

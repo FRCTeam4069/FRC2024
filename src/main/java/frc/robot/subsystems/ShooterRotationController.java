@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkBase;
@@ -21,6 +22,8 @@ public class ShooterRotationController extends SubsystemBase {
 
     private final double kP = 4.5, kI = 0, kD = 0.01;
     private PIDController controller;
+
+    private boolean isClimbing;
 
     public ShooterRotationController(){
         left = new CANSparkMax(5 , MotorType.kBrushless);
@@ -110,5 +113,12 @@ public class ShooterRotationController extends SubsystemBase {
         }
         
     }
-    
+
+    public boolean isClimbing(){
+        return isClimbing;
+    }
+
+    public Command changeClimbStatus(){
+        return this.runOnce(() -> isClimbing = true);
+    }
 }
