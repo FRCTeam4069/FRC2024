@@ -11,6 +11,7 @@ public class LEDController extends SubsystemBase {
 
     private PWM blinkin;
     private Colours setColour;
+    
 
     public LEDController(){
         blinkin = new PWM(0);
@@ -19,6 +20,10 @@ public class LEDController extends SubsystemBase {
 
      public Command HoldSetColour(){
         return this.runOnce(() -> blinkin.setPosition(TranslateColour(setColour)));
+     }
+
+     public void periodic(){
+         HoldSetColour();
      }
 
      private int TranslateColour(Colours colour){
@@ -37,18 +42,19 @@ public class LEDController extends SubsystemBase {
          else return 0;   
      }
 
-   private final int red = 1300;
-   private final int blue = 800;
-   private final int StartUpPatern = 33600;
-   private final int yellow = 9700;
-   private final int purple = 21600;
-   private final int green  = 42350;
-   private final int FlashingPrple = 35350;
-   private final int FlashingBlue = 5050;
-   private final int ErrorYellow = 17350;
-   private final int greenAndWhitePattern = 17200;
-   private final int ErroRed = 46000;
-   private final int CoolPatern = 800;
+   private final int red = 1075;
+   private final int blue = 1085;
+   private final int StartUpPatern = 1305;
+   private final int yellow = 1835;
+   private final int purple = 1955;
+   private final int green  = 1855;
+   private final int FlashingPrple = 1975;
+   private final int FlashingBlue = 1295;
+   private final int ErrorYellow = 1465;
+   private final int greenAndWhitePattern = 1205;
+   private final int ErroRed = 1185;
+   private final int CoolPatern = 1115;
+
 
    public enum Colours{
       RED,
