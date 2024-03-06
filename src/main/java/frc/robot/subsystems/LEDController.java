@@ -24,7 +24,8 @@ public class LEDController extends SubsystemBase {
      }
 
      public void periodic(){
-         HoldSetColour().execute();
+        SmartDashboard.putNumber("color", TranslateColour(setColour));
+        HoldSetColour().execute();
      }
 
      private int TranslateColour(Colours colour){

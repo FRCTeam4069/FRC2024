@@ -7,10 +7,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.CameraConstants;
+import frc.robot.constants.FieldConstants;
 
 public class CameraIsAsCameraDoes extends SubsystemBase {
 
@@ -22,7 +24,7 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
     double lastgoodY = 0; // initial
     Rotation3d lastgoodHeading = new Rotation3d(); // initial
     double tx = 0;
-    LinearFilter txFilter = LinearFilter.movingAverage(5);
+    LinearFilter txFilter = LinearFilter.movingAverage(10);
 
     public CameraIsAsCameraDoes(String camName) {
         cameraName = camName;
@@ -52,13 +54,39 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
         return lastgoodY;
     }
 
+    /**
+     * 
+     * @param a
+     * @param b
+     * @return radians
+     */
     public double getTX(int a, int b) {
         var id = LimelightHelpers.getFiducialID(cameraName);
 
         if (id == a || id == b) {
-            tx = txFilter.calculate(LimelightHelpers.getTX(cameraName));
+            if (tx == 0.0 && Math.abs(tx) > 10) {} else {
+                tx = txFilter.calculate(LimelightHelpers.getTX(cameraName));
+            }
         }
-        return tx;
+        return Units.degreesToRadians(tx);
+    }
+
+    /**
+     * @return radians
+     */
+    public double getAngleDifferently() {
+        var pose = LimelightHelpers.getBotPose2d_wpiBlue(cameraName);
+        var diff = pose.minus(FieldConstants.poseBlueSpeaker);
+        var angle = Math.atan2(diff.getY(), diff.getX());
+        SmartDashboard.putNumber("angle from speaker", angle);
+        SmartDashboard.putNumber("angle from speaker(deg)", Units.radiansToDegrees(angle));
+        SmartDashboard.putNumber("field pose x", pose.getX());
+        SmartDashboard.putNumber("field pose y", pose.getY());
+        SmartDashboard.putNumber("robotospeaker pose x", diff.getX());
+        SmartDashboard.putNumber("robotospeaker pose y", diff.getY());
+
+        return angle;
+
     }
 
     // public Translation2d getTargetTranslation(int tagNumber) {

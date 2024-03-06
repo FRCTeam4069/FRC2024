@@ -7,6 +7,8 @@ import edu.wpi.first.cscore.CameraServerJNI.TelemetryKind;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.DrivebaseConstants;
@@ -25,6 +27,8 @@ public class FieldCentricDrive extends Command {
     private PIDController headingPID;
     private MedianFilter headingFilter;
     private DoubleSupplier angle;
+    private double lastTimestamp;
+    private double angleBuffer;
     public FieldCentricDrive(SwerveDrivetrain drive, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign, DoubleSupplier angleToAlign) {
         this.drive = drive;
         this.turnSpeed = turnSpeed;
@@ -44,10 +48,12 @@ public class FieldCentricDrive extends Command {
 
         headingFilter = new MedianFilter(10);
         
+        lastTimestamp = Timer.getFPGATimestamp();
     }
 
     @Override
     public void execute() {
+        var currentTime = Timer.getFPGATimestamp();
         var speedMultiplier = 1.0;
         // if (Math.abs(forwardSpeed.getAsDouble()) < 0.01 && Math.abs(strafeSpeed.getAsDouble()) < 0.01 && Math.abs(turnSpeed.getAsDouble()) < 0.01) {
             // speedMultiplier = 0;
@@ -57,9 +63,14 @@ public class FieldCentricDrive extends Command {
             speedMultiplier = 1.0;
         }
 
+        if (currentTime-lastTimestamp > 0.5) {
+            angleBuffer = angle.getAsDouble();
+            lastTimestamp = Timer.getFPGATimestamp();
+        }
 
         //var targetAngle = headingFilter.calculate(cam.getTargetRotation().getY());
         SmartDashboard.putNumber("camera target angle", angle.getAsDouble());
+        SmartDashboard.putNumber("camera target angle buffer", angleBuffer);
 
         if (!autoAlign.getAsBoolean()) {
             drive.fieldOrientedDrive(new ChassisSpeeds(
@@ -69,8 +80,15 @@ public class FieldCentricDrive extends Command {
         } else {
             // var translation = cam.getTargetTranslation(7);
             // var targetAngle = Math.atan2(translation.getY(), translation.getX());
-            var power = headingPID.calculate(angle.getAsDouble(), 0.0);
+            //var power = headingPID.calculate(drive.getDegrees(), angle.getAsDouble());
+
+            var power = headingPID.calculate(drive.getRadians(), angleBuffer);
             power = power + DrivebaseConstants.AutoAlignConstants.kS*Math.signum(power);
+            
+            if (power > AutoAlignConstants.powerLimit || power < -AutoAlignConstants.powerLimit) {
+                power = AutoAlignConstants.powerLimit*Math.signum(power);
+            }
+            SmartDashboard.putNumber("align power", power);
             
             drive.fieldOrientedDrive(new ChassisSpeeds(
                 (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
