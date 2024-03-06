@@ -450,6 +450,10 @@ public class SwerveDrivetrain extends SubsystemBase {
         return runOnce(() -> resetGyro());
     }
 
+    public Rotation2d getGyroscropeRotation(){
+        return gyro.getRotation2d();
+    }
+
     public StatusCode setRadians(double rads) {
         return gyro.setYaw(Units.radiansToDegrees(rads));
     }

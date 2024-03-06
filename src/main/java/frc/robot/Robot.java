@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_robotContainer.FrontCamera.printNumbers();
+    RobotContainer.poseEstimator.addDashboardWidgets(RobotContainer.autoTab);
     //RobotContainer.led.setColour(Colours.BLUE);
     //SmartDashboard.putNumber("Sensor", m_robotContainer.indexer.getPhotoReading());
     //SmartDashboard.putNumber("intake encoder", m_robotContainer.intake.getEncoder());
