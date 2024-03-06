@@ -99,7 +99,7 @@ public class RobotContainer {
   public static final SwerveDrivetrain drive = new SwerveDrivetrain();
 
   // public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive.getGyroscropeRotation(), drive.getModulePositions());
-  public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getGyroscropeRotation, drive::getModulePositions);
+  // public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getGyroscropeRotation, drive::getModulePositions);
 
   //public final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getRotation2d, drive::getModulePositions);
 

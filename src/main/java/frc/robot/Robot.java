@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     //SmartDashboard.putNumber("Distance", m_robotContainer.FrontCamera.getXDistanceToApriltag(4, 7));
-    m_robotContainer.FrontCamera.printNumbers();
+    // m_robotContainer.FrontCamera.printNumbers();
 
     // var res = cam.getLatestResult();
     // SmartDashboard.putBoolean("has targets", cam.getLatestResult().hasTargets());
