@@ -91,4 +91,8 @@ public class IntakeController extends SubsystemBase {
         if(index == 1) artMotor1.setIdleMode(IdleMode.kCoast);
         else artMotor1.setIdleMode(IdleMode.kBrake);
     }
+
+    public void ResetEncoder(){
+        artMotor1.getEncoder().setPosition(UPPER);
+    }
 }

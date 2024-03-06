@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.IntakeController;
@@ -13,18 +14,23 @@ public class AutoLowerIntake extends Command{
     private PIDController controller = new PIDController(kP, kI, kD);
 
     public AutoLowerIntake(IntakeController in){
+        
         i = in;
         i.setPosition(positions.LOWER);
+        i.ResetEncoder();
     }
 
     public void execute(){
-        i.driveArt(controller.calculate(i.getEncoder(), i.getPositionValue()));
+        i.driveArt(controller.calculate(i.getEncoder(), 6));
+        SmartDashboard.putNumber("intake pos" , i.getEncoder());
+        SmartDashboard.putNumber("Intake Target", 6);
+        SmartDashboard.putNumber("Intake Difference", i.getEncoder() - i.getPositionValue());
     }
     public void end(boolean interrupted){
         i.stopArt();
     }
     public boolean isFinished(){
-        return i.getEncoder() - i.getPositionValue() < 3;
+        return i.getEncoder() - (6) < 3;
     }
     
 }
