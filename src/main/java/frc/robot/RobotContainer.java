@@ -118,13 +118,17 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // var camX = FrontCamera.getXDistanceToApriltag(7, 4);
+    // var camY = FrontCamera.getYDistanceToApriltag(4, 7);
+    // var angle = Math.atan2(camY, camX);
     drive.setDefaultCommand(new FieldCentricDrive(
       drive,
       () -> Controller1.getLeftY(), 
       () -> Controller1.getLeftX(), 
       () -> Controller1.getRightX(),
       () -> Controller1.getHID().getRightBumper(),
-      () -> Controller1.getHID().getYButton()));
+      () -> Controller1.getHID().getYButton(),
+      () -> FrontCamera.getTX(7, 4)));
     
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));

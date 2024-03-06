@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Limelight;
 
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -20,6 +21,8 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
     double lastgoodX = 0; // initial
     double lastgoodY = 0; // initial
     Rotation3d lastgoodHeading = new Rotation3d(); // initial
+    double tx = 0;
+    LinearFilter txFilter = LinearFilter.movingAverage(5);
 
     public CameraIsAsCameraDoes(String camName) {
         cameraName = camName;
@@ -47,6 +50,15 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
         }
 
         return lastgoodY;
+    }
+
+    public double getTX(int a, int b) {
+        var id = LimelightHelpers.getFiducialID(cameraName);
+
+        if (id == a || id == b) {
+            tx = txFilter.calculate(LimelightHelpers.getTX(cameraName));
+        }
+        return tx;
     }
 
     // public Translation2d getTargetTranslation(int tagNumber) {

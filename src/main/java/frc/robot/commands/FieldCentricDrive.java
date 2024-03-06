@@ -40,7 +40,7 @@ public class FieldCentricDrive extends Command {
     public void initialize() {
         headingPID = new PIDController(AutoAlignConstants.kP, AutoAlignConstants.kI, AutoAlignConstants.kD);
         headingPID.setTolerance(AutoAlignConstants.positionTolerance, AutoAlignConstants.velocityTolerance);
-        headingPID.enableContinuousInput(-Math.PI, Math.PI);
+        headingPID.enableContinuousInput(-180.0, 180.0);
 
         headingFilter = new MedianFilter(10);
         
@@ -57,8 +57,9 @@ public class FieldCentricDrive extends Command {
             speedMultiplier = 1.0;
         }
 
+
         //var targetAngle = headingFilter.calculate(cam.getTargetRotation().getY());
-        //SmartDashboard.putNumber("camera target angle", targetAngle);
+        SmartDashboard.putNumber("camera target angle", angle.getAsDouble());
 
         if (!autoAlign.getAsBoolean()) {
             drive.fieldOrientedDrive(new ChassisSpeeds(
@@ -68,11 +69,13 @@ public class FieldCentricDrive extends Command {
         } else {
             // var translation = cam.getTargetTranslation(7);
             // var targetAngle = Math.atan2(translation.getY(), translation.getX());
+            var power = headingPID.calculate(angle.getAsDouble(), 0.0);
+            power = power + DrivebaseConstants.AutoAlignConstants.kS*Math.signum(power);
             
             drive.fieldOrientedDrive(new ChassisSpeeds(
                 (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (-headingPID.calculate(drive.getNormalizedRads(), angle.getAsDouble()))));
+                (-1*power)));
 
         }
 
