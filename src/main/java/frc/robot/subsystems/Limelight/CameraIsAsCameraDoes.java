@@ -41,19 +41,18 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
 
     }
 
-    public double getYDistanceToApriltag(int tagNumber) {
-        if (LimelightHelpers.getFiducialID(cameraName) == tagNumber) {
-            lastgoodY = LimelightHelpers.getTargetPose3d_RobotSpace(cameraName).getX();
-        } 
+    public double getYDistanceToApriltag(int a, int b) {
+       if (a == limeLight.getFiducialID(cameraName) || b == limeLight.getFiducialID(cameraName)) {
+                lastgoodY = filter.calculate(limeLight.getTargetPose3d_RobotSpace(cameraName).getX());
+        }
+
         return lastgoodY;
     }
 
-    public Translation2d getTargetTranslation(int tagNumber) {
-        var y = getYDistanceToApriltag(tagNumber);
-        var x = getXDistanceToApriltag(tagNumber);
-        return new Translation2d(x, y);
+    // public Translation2d getTargetTranslation(int tagNumber) {
 
-    }
+    //    re
+    // }
 
     public Rotation3d getTargetRotation() {
         if (LimelightHelpers.getFiducialID(cameraName) == 7) {

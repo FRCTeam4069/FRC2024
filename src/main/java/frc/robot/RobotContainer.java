@@ -80,7 +80,7 @@ public class RobotContainer {
   //public static final LEDController led = new LEDController();
   
   // public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
-  public static final CameraIsAsCameraDoes FrontCamera = new CameraIsAsCameraDoes("limelight-front");
+  public static final CameraIsAsCameraDoes  FrontCamera = new CameraIsAsCameraDoes("limelight-front");
   // public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(null, null);
 
   public static final ShuffleboardTab autoTab = Shuffleboard.getTab("auto");
@@ -162,7 +162,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    //Controller2.y().whileTrue(new SetShooterRotation(artShooter, FrontCamera.getXDistanceToApriltag(7, 4), shooter));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter, Math.hypot(FrontCamera.getXDistanceToApriltag(7, 4), FrontCamera.getYDistanceToApriltag(4, 7)), shooter));
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
@@ -216,7 +216,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     //return Autos.exampleAuto(m_exampleSubsystem);
     //return autoChooser.getSelected();
-    return new testAuto(drive);
+    return new testAuto(drive, intake);
     //return new PathPlannerAuto("Example Auto");
   }
 }
