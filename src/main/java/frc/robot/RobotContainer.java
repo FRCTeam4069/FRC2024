@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.reduxrobotics.sensors.canandcolor.Canandcolor.ColorPeriod;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,8 +36,10 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
+import frc.robot.subsystems.LEDController;
 //import frc.robot.subsystems.LEDController;
 import frc.robot.subsystems.IntakeController.positions;
+import frc.robot.subsystems.LEDController.Colours;
 //import frc.robot.subsystems.LEDController.Colours;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
@@ -85,6 +88,8 @@ public class RobotContainer {
 
   public static final ShuffleboardTab autoTab = Shuffleboard.getTab("auto");
 
+
+  public static LEDController led = new LEDController();
 
   public final PowerDistribution powerDistributionHub = new PowerDistribution();
 
@@ -147,6 +152,9 @@ public class RobotContainer {
     intake.setDefaultCommand(new defaultArtCommand());
     climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
     
+    //led.setDefaultCommand(led.HoldSetColour());
+    led.setDefaultCommand(led.setColour(Colours.STARTUPPATTERN));
+
     // Configure the trigger bindings
 
     //  indexer.setDefaultCommand(new DefualtIndexerCommand(
@@ -167,10 +175,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     Controller2.y().whileTrue(new SetShooterRotation(artShooter, Math.hypot(FrontCamera.getXDistanceToApriltag(7, 4), FrontCamera.getYDistanceToApriltag(4, 7)), shooter));
-    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
-    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA));
-    Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE));
-    Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
+    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
 
     // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
@@ -196,7 +204,8 @@ public class RobotContainer {
     new Trigger(Controller2.rightTrigger(0.5)).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger()));
 
     Controller2.leftTrigger(0.5).whileTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()));
-
+    new Trigger(() -> indexer.getPhotoReading()).whileTrue(led.setColour(Colours.GREEN));
+    new Trigger(() -> shooter.atSpeed()).whileTrue(led.setColour(Colours.ERROR_YELLOw));
   }
 
     
