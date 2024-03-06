@@ -1,10 +1,7 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -20,12 +17,14 @@ public class LEDController extends SubsystemBase {
      }
 
      public Command HoldSetColour(){
+        SmartDashboard.putNumber("set color", TranslateColour(setColour));
+        SmartDashboard.putNumber("real color", blinkin.getPosition());
         return this.runOnce(() -> blinkin.setPosition(TranslateColour(setColour)));
      }
 
      public void periodic(){
-        SmartDashboard.putNumber("color", TranslateColour(setColour));
-        HoldSetColour().execute();
+        //  HoldSetColour().execute();
+        blinkin.setPosition(TranslateColour(setColour));
      }
 
      private int TranslateColour(Colours colour){
@@ -74,7 +73,6 @@ public class LEDController extends SubsystemBase {
    }
 
    public Command setColour(Colours c){
-        SmartDashboard.putNumber("color", TranslateColour(c));
         return this.runOnce(() -> setColour = c);
    }
 
