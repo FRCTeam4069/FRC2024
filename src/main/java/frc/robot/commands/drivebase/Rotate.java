@@ -29,7 +29,9 @@ public class Rotate extends Command {
     }
     @Override
     public void execute() {
-        drive.fieldOrientedDrive(new ChassisSpeeds(0, 0, -1*pid.calculate(drive.getNormalizedRads(), radians)));
+        var speed = -1*pid.calculate(drive.getNormalizedRads(), radians);
+        speed = speed + Math.abs(AlignConstants.kS)*Math.signum(speed);
+        drive.fieldOrientedDrive(new ChassisSpeeds(0, 0, speed));
         SmartDashboard.putBoolean("align", true);
         SmartDashboard.putNumber("align target", radians);
     }

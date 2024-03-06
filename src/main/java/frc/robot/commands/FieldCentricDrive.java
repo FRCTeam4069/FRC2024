@@ -24,13 +24,16 @@ public class FieldCentricDrive extends Command {
     private final BooleanSupplier autoAlign;
     private PIDController headingPID;
     private MedianFilter headingFilter;
-    public FieldCentricDrive(SwerveDrivetrain drive, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign) {
+    private DoubleSupplier angle;
+    public FieldCentricDrive(SwerveDrivetrain drive, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign, DoubleSupplier angleToAlign) {
         this.drive = drive;
         this.turnSpeed = turnSpeed;
         this.forwardSpeed = forwardSpeed;
         this.strafeSpeed = strafeSpeed;
         this.halfSpeed = halfSpeed;
         this.autoAlign = autoAlign;
+        this.angle = angleToAlign;
+
         addRequirements(drive);
     }
     @Override
@@ -63,13 +66,13 @@ public class FieldCentricDrive extends Command {
                 (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxAngularVelocity)));
         } else {
-            //var translation = cam.getTargetTranslation(7);
-            //var targetAngle = Math.atan2(translation.getY(), translation.getX());
+            // var translation = cam.getTargetTranslation(7);
+            // var targetAngle = Math.atan2(translation.getY(), translation.getX());
             
-            // drive.fieldOrientedDrive(new ChassisSpeeds(
-            //     (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-            //     (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-            //     (-headingPID.calculate(drive.getNormalizedRads(), -1*targetAngle))));
+            drive.fieldOrientedDrive(new ChassisSpeeds(
+                (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                (-headingPID.calculate(drive.getNormalizedRads(), angle.getAsDouble()))));
 
         }
 

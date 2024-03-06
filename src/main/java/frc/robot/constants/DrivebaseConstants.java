@@ -36,6 +36,8 @@ public final class DrivebaseConstants {
         public static final double kP = 0.20;
         public static final double kI = 0.0;
         public static final double kD = 0.001;
+        public static final double kS = 0.005;
+
         public static final double positionTolerance = Units.degreesToRadians(1);
         public static final double velocityTolerance = 0.0005;
     }
