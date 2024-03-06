@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.DrivebaseConstants;
 import frc.robot.constants.DrivebaseConstants.AutoAlignConstants;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
+import frc.robot.subsystems.Limelight.PoseEstimatorSubsystem;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 public class FieldCentricDrive extends Command {
@@ -23,15 +24,13 @@ public class FieldCentricDrive extends Command {
     private final BooleanSupplier autoAlign;
     private PIDController headingPID;
     private MedianFilter headingFilter;
-    private final CameraIsAsCameraDoes cam;
-    public FieldCentricDrive(SwerveDrivetrain drive, CameraIsAsCameraDoes cam, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign) {
+    public FieldCentricDrive(SwerveDrivetrain drive, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign) {
         this.drive = drive;
         this.turnSpeed = turnSpeed;
         this.forwardSpeed = forwardSpeed;
         this.strafeSpeed = strafeSpeed;
         this.halfSpeed = halfSpeed;
         this.autoAlign = autoAlign;
-        this.cam = cam;
         addRequirements(drive);
     }
     @Override
@@ -55,8 +54,8 @@ public class FieldCentricDrive extends Command {
             speedMultiplier = 1.0;
         }
 
-        var targetAngle = headingFilter.calculate(cam.getTargetRotation().getY());
-        SmartDashboard.putNumber("camera target angle", targetAngle);
+        //var targetAngle = headingFilter.calculate(cam.getTargetRotation().getY());
+        //SmartDashboard.putNumber("camera target angle", targetAngle);
 
         if (!autoAlign.getAsBoolean()) {
             drive.fieldOrientedDrive(new ChassisSpeeds(
@@ -67,10 +66,10 @@ public class FieldCentricDrive extends Command {
             //var translation = cam.getTargetTranslation(7);
             //var targetAngle = Math.atan2(translation.getY(), translation.getX());
             
-            drive.fieldOrientedDrive(new ChassisSpeeds(
-                (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (-headingPID.calculate(drive.getNormalizedRads(), -1*targetAngle))));
+            // drive.fieldOrientedDrive(new ChassisSpeeds(
+            //     (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+            //     (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+            //     (-headingPID.calculate(drive.getNormalizedRads(), -1*targetAngle))));
 
         }
 

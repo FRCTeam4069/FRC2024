@@ -121,6 +121,9 @@ public class PPHolonomicDriveController implements PathFollowingController {
     double xFF = targetState.velocityMps * targetState.heading.getCos();
     double yFF = targetState.velocityMps * targetState.heading.getSin();
 
+    currentPose = new Pose2d(currentPose.getTranslation(), Rotation2d.fromRadians(-1*currentPose.getRotation().getRadians()));
+    targetState.heading = new Rotation2d(targetState.heading.getRadians()*-1);
+
     this.translationError = currentPose.getTranslation().minus(targetState.positionMeters);
 
     if (!this.isEnabled) {
@@ -159,7 +162,7 @@ public class PPHolonomicDriveController implements PathFollowingController {
         targetState.holonomicAngularVelocityRps.orElse(rotationController.getSetpoint().velocity);
 
     return ChassisSpeeds.fromFieldRelativeSpeeds(
-        xFF + xFeedback, yFF + yFeedback, rotationFF + rotationFeedback, currentPose.getRotation());
+        xFF + xFeedback, yFF + yFeedback, -1*(rotationFF + rotationFeedback), currentPose.getRotation());
   }
 
   /**

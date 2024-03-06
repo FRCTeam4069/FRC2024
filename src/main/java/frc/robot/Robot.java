@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 //import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,7 +28,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  ShooterRotationController c;
+  // private PhotonCamera cam;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -39,6 +43,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.powerDistributionHub.clearStickyFaults();
 
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    // cam = new PhotonCamera("frontCamera");
 
     // m_robotContainer.intake.setBrakeState(1);
 
@@ -58,7 +64,18 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_robotContainer.FrontCamera.printNumbers();
+
+    // var res = cam.getLatestResult();
+    // SmartDashboard.putBoolean("has targets", cam.getLatestResult().hasTargets());
+    // if (res.hasTargets()) {
+    //   for (PhotonTrackedTarget target : res.targets) {
+    //     SmartDashboard.putNumber(Integer.toString(target.getFiducialId()), target.getSkew());
+    //   }
+    //   SmartDashboard.putNumber("cam x", res.getMultiTagResult().estimatedPose.best.getX());
+    //   SmartDashboard.putNumber("cam y", res.getMultiTagResult().estimatedPose.best.getY());
+    //   SmartDashboard.putNumber("cam yes", res.getBestTarget().getYaw());
+    // }
+    //m_robotContainer.FrontCamera.printNumbers();
     //RobotContainer.led.setColour(Colours.BLUE);
     //SmartDashboard.putNumber("Sensor", m_robotContainer.indexer.getPhotoReading());
     //SmartDashboard.putNumber("intake encoder", m_robotContainer.intake.getEncoder());

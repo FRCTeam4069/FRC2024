@@ -3,6 +3,9 @@ package frc.robot.subsystems.swerve;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -10,9 +13,11 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -49,6 +54,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.constants.BetterCameraConstants;
 import frc.robot.constants.DeviceIDs;
 import frc.robot.constants.DrivebaseConstants;
 import frc.robot.subsystems.Limelight.PoseEstimatorSubsystem;
@@ -82,7 +88,35 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     private double speedMultiplier = 1;
 
+    //private PhotonCamera cam;
     // private PoseEstimatorSubsystem poseEstimator;
+    private Pose3d camPose = new Pose3d();
+
+    private SwerveDriveOdometry inversedOdo;
+
+    public void updateOdometry(SwerveModulePosition[] positions) {
+        odometry.update(gyro.getRotation2d(), positions);
+
+        // var res = cam.getLatestResult();
+        // SmartDashboard.putBoolean("hasTargets", res.hasTargets());
+        // if (res.hasTargets()) {
+        //     var imageCaptureTime = res.getTimestampSeconds();
+        //     var camToTargetTrans = res.getBestTarget().getBestCameraToTarget();
+            
+        //     //var camToTargetTrans = res.getTargets().get(7).getBestCameraToTarget();
+        //     camPose = BetterCameraConstants.kTargetPose.transformBy(camToTargetTrans.inverse());
+        //     SmartDashboard.putNumber("cam x", camToTargetTrans.getX());
+        //     SmartDashboard.putNumber("cam y", camToTargetTrans.getY());
+        //     SmartDashboard.putNumber("cam heading", camToTargetTrans.getRotation().getZ());
+        //     SmartDashboard.putNumber("cam id", res.getBestTarget().getFiducialId());
+        //     SmartDashboard.putNumber("cam id", res.getBestTarget().getYaw());
+
+
+        //     odometry.addVisionMeasurement(
+        //             camPose.transformBy(BetterCameraConstants.kCameraToRobot).toPose2d(), imageCaptureTime);
+        // }
+
+    }
 
     private final SysIdRoutine driveRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -188,6 +222,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
         gyro = new Pigeon2(0, "rio");
         gyro.getConfigurator().apply(DrivebaseConstants.gyroConfig);
+        // cam = new PhotonCamera("frontCamera");
         
         odometry = new SwerveDrivePoseEstimator(
             kinematics, 
@@ -199,6 +234,8 @@ public class SwerveDrivetrain extends SubsystemBase {
         //     () -> Rotation2d.fromRadians(getRadians()),
         //     () -> getModulePositions());
 
+        inversedOdo = new SwerveDriveOdometry(kinematics, Rotation2d.fromRadians(getRadians()), getInversedModulePositions());
+
         setPose(new Pose2d(0,0,Rotation2d.fromRadians(2*Math.PI)));
 
         publisher = NetworkTableInstance.getDefault()
@@ -208,7 +245,7 @@ public class SwerveDrivetrain extends SubsystemBase {
             .getStructArrayTopic("/SwerveStates/desiredStates", SwerveModuleState.struct).publish();
 
         posePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("MyPose", Pose2d.struct).publish();
+            .getStructTopic("InversedPose", Pose2d.struct).publish();
         
         startPathPlanner();
     }
@@ -245,6 +282,15 @@ public class SwerveDrivetrain extends SubsystemBase {
             fr.getPosition(),
             bl.getPosition(),
             br.getPosition(),
+        };
+    }
+
+    public SwerveModulePosition[] getInversedModulePositions() {
+        return new SwerveModulePosition[] {
+            new SwerveModulePosition(fl.getPosition().distanceMeters*-1, fl.getRotation2d()),
+            new SwerveModulePosition(fr.getPosition().distanceMeters*-1, fl.getRotation2d()),
+            new SwerveModulePosition(bl.getPosition().distanceMeters*-1, fl.getRotation2d()),
+            new SwerveModulePosition(br.getPosition().distanceMeters*-1, fl.getRotation2d()),
         };
     }
 
@@ -348,13 +394,15 @@ public class SwerveDrivetrain extends SubsystemBase {
         bl.update();
         br.update();
 
-        odometry.update(new Rotation2d(getRadians()), getModulePositions());
+        //odometry.update(new Rotation2d(getRadians()), getModulePositions());
+        updateOdometry(getModulePositions());
+        inversedOdo.update(getRotation2d(), getInversedModulePositions());
 
         var pose = getPose();
 
         publisher.set(getModuleStates());
         desiredStatesPublisher.set(desiredStates);
-        posePublisher.set(pose);
+        posePublisher.set(inversedOdo.getPoseMeters());
 
         try {
             var headings = getModuleHeadings();
