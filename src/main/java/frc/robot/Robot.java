@@ -76,6 +76,7 @@ public class Robot extends TimedRobot {
     //   SmartDashboard.putNumber("cam yes", res.getBestTarget().getYaw());
     // }
     //m_robotContainer.FrontCamera.printNumbers();
+    //RobotContainer.poseEstimator.addDashboardWidgets(RobotContainer.autoTab);
     //RobotContainer.led.setColour(Colours.BLUE);
     //SmartDashboard.putNumber("Sensor", m_robotContainer.indexer.getPhotoReading());
     //SmartDashboard.putNumber("intake encoder", m_robotContainer.intake.getEncoder());

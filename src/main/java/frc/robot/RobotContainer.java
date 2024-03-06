@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -49,6 +51,8 @@ import frc.robot.constants.CameraConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -77,6 +81,9 @@ public class RobotContainer {
   
   // public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
   public static final CameraIsAsCameraDoes FrontCamera = new CameraIsAsCameraDoes("limelight-front");
+  // public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(null, null);
+
+  public static final ShuffleboardTab autoTab = Shuffleboard.getTab("auto");
 
 
   public final PowerDistribution powerDistributionHub = new PowerDistribution();
@@ -90,7 +97,10 @@ public class RobotContainer {
   
   //public SwerveSubsystem drive = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
-  public final SwerveDrivetrain drive = new SwerveDrivetrain();
+  public static final SwerveDrivetrain drive = new SwerveDrivetrain();
+
+  // public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive.getGyroscropeRotation(), drive.getModulePositions());
+  public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getGyroscropeRotation, drive::getModulePositions);
 
   //public final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getRotation2d, drive::getModulePositions);
 
