@@ -7,7 +7,7 @@ package frc.robot;
 
 
 import com.pathplanner.lib.auto.AutoBuilder;
-
+import com.revrobotics.REVLibError;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,9 +37,10 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.LEDController;
+import frc.robot.subsystems.RevBlinkinPatterns;
 //import frc.robot.subsystems.LEDController;
 import frc.robot.subsystems.IntakeController.positions;
-import frc.robot.subsystems.LEDController.Colours;
+
 //import frc.robot.subsystems.LEDController.Colours;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
@@ -147,7 +148,7 @@ public class RobotContainer {
     climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
     
     //led.setDefaultCommand(led.HoldSetColour());
-    led.setDefaultCommand(led.setColour(Colours.STARTUPPATTERN));
+    //led.setDefaultCommand(led.setPattern(RevBlinkinPatterns.TWINKLES_LAVA_PALETTE));
 
     // Configure the trigger bindings
 
@@ -187,7 +188,7 @@ public class RobotContainer {
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
     Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB)).onTrue(artShooter.changeClimbStatus());
-    Controller2.start().onTrue(led.setColour(Colours.RED));
+    Controller2.start().onTrue(led.setPattern(RevBlinkinPatterns.STROBE_GOLD));
     // new Trigger(Controller2.pov(0).onTrue(new InstantCommand( () -> intake.setPosition(positions.UPPER))));
     // new Trigger(Controller2.pov(180).onTrue(new InstantCommand(() -> intake.setPosition(positions.LOWER))));
     
@@ -199,8 +200,8 @@ public class RobotContainer {
     new Trigger(Controller2.rightTrigger(0.5)).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger()));
 
     Controller2.leftTrigger(0.5).whileTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()));
-    new Trigger(() -> indexer.getPhotoReading()).whileTrue(led.setColour(Colours.GREEN));
-    new Trigger(() -> shooter.atSpeed()).whileTrue(led.setColour(Colours.ERROR_YELLOw));
+    new Trigger(() -> indexer.getPhotoReading()).whileTrue(led.setPattern(RevBlinkinPatterns.STROBE_YELLOW));
+    new Trigger(() -> shooter.atSpeed()).whileTrue(led.setPattern(RevBlinkinPatterns.STROBE_GREEN));
 
   }
 
