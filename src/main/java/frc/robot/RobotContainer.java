@@ -109,7 +109,7 @@ public class RobotContainer {
 
   //public final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getRotation2d, drive::getModulePositions);
 
-  public final SendableChooser<Command> autoChooser;
+  public final SendableChooser<Command> autoChooser = new SendableChooser<>();
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController Controller1 =
@@ -151,7 +151,10 @@ public class RobotContainer {
     Controller1.rightBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), 1.0, () -> FrontCamera.hasTarget(7, 4)));
     Controller1.leftBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), -1.0, () -> FrontCamera.hasTarget(7, 4)));
     
-    autoChooser = AutoBuilder.buildAutoChooser();
+    //autoChooser = AutoBuilder.buildAutoChooser();
+
+    
+    autoChooser.setDefaultOption("blue auto", new testAuto(drive, intake, indexer, shooter, artShooter));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -247,8 +250,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return Autos.exampleAuto(m_exampleSubsystem);
-    //return autoChooser.getSelected();
-    return new testAuto(drive, intake, indexer, shooter, artShooter);
+    return autoChooser.getSelected();
+    //return new testAuto(drive, intake, indexer, shooter, artShooter);
     //return new PathPlannerAuto("Example Auto");
   }
 }
