@@ -62,9 +62,10 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
      */
     public double getTX(int a, int b) {
         var id = LimelightHelpers.getFiducialID(cameraName);
+        var newTX = LimelightHelpers.getTX(cameraName);
 
         if (id == a || id == b) {
-            if (tx == 0.0 && Math.abs(tx) > 10) {} else {
+            if (!(newTX == 0.0 && Math.abs(tx) > 10)) {
                 tx = txFilter.calculate(LimelightHelpers.getTX(cameraName));
             }
         }

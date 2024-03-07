@@ -44,7 +44,7 @@ public class FieldCentricDrive extends Command {
     public void initialize() {
         headingPID = new PIDController(AutoAlignConstants.kP, AutoAlignConstants.kI, AutoAlignConstants.kD);
         headingPID.setTolerance(AutoAlignConstants.positionTolerance, AutoAlignConstants.velocityTolerance);
-        headingPID.enableContinuousInput(-180.0, 180.0);
+        headingPID.enableContinuousInput(-Math.PI, Math.PI);
 
         headingFilter = new MedianFilter(10);
         
@@ -63,8 +63,8 @@ public class FieldCentricDrive extends Command {
             speedMultiplier = 1.0;
         }
 
-        if (currentTime-lastTimestamp > 0.5) {
-            angleBuffer = angle.getAsDouble();
+        if (currentTime-lastTimestamp > 1.0) {
+            angleBuffer = angle.getAsDouble() + drive.getRadians();
             lastTimestamp = Timer.getFPGATimestamp();
         }
 
@@ -73,11 +73,13 @@ public class FieldCentricDrive extends Command {
         SmartDashboard.putNumber("camera target angle buffer", angleBuffer);
 
         if (!autoAlign.getAsBoolean()) {
+            drive.setInputLimit(true);
             drive.fieldOrientedDrive(new ChassisSpeeds(
                 (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxAngularVelocity)));
         } else {
+            drive.setInputLimit(false);
             // var translation = cam.getTargetTranslation(7);
             // var targetAngle = Math.atan2(translation.getY(), translation.getX());
             //var power = headingPID.calculate(drive.getDegrees(), angle.getAsDouble());
@@ -105,6 +107,11 @@ public class FieldCentricDrive extends Command {
     @Override
     public boolean isFinished() {
         return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drive.setInputLimit(true);
     }
     
 }

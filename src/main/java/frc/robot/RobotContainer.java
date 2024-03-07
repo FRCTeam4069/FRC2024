@@ -82,9 +82,6 @@ public class RobotContainer {
 
   public static final ShuffleboardTab autoTab = Shuffleboard.getTab("auto");
 
-
-  // public static LEDController led = new LEDController();
-
   public final PowerDistribution powerDistributionHub = new PowerDistribution();
 
   public static final IndexerController indexer = new IndexerController();
