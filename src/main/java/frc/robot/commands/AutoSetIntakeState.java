@@ -12,7 +12,7 @@ public class AutoSetIntakeState extends Command {
    public AutoSetIntakeState(IntakeController i, State s){
         intake = i;
         state = s;
-        intake.setPosition(positions.LOWER);
+        //intake.setPosition(positions.LOWER);
    }
 
     private final double kP = 0.0155, kI = 0, kD = 0;
@@ -20,7 +20,7 @@ public class AutoSetIntakeState extends Command {
 
    @Override
    public void execute(){
-        intake.driveArt(controller.calculate(intake.getEncoder(), intake.getPositionValue()));
+        //intake.driveArt(controller.calculate(intake.getEncoder(), intake.getPositionValue()));
         if(state == State.ON) intake.driveFeed();
         else intake.stopFeed();
    }

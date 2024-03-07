@@ -23,18 +23,19 @@ public class ClimberCommand extends Command{
 
     public void execute(){
          
-        SmartDashboard.putNumber("Climber Value", c.getEncoder());
+        //SmartDashboard.putNumber("Climber Value", c.getEncoder());
+        SmartDashboard.putNumber("Climber Current", c.getCurrent());
         if(Math.abs(CSpeed.getAsDouble()) > 0.5){
            
             c.setPower(CSpeed.getAsDouble());
-            SmartDashboard.putNumber("Climber Speed", CSpeed.getAsDouble());
-            SmartDashboard.putNumber("Climber Pos", c.getEncoder());
+            // SmartDashboard.putNumber("Climber Speed", CSpeed.getAsDouble());
+            // SmartDashboard.putNumber("Climber Pos", c.getEncoder());
             //fs.setCustomAngle(0);
         }
         else{
             c.setPower(0);
-            SmartDashboard.putNumber("Climber Speed",c.getPower());
-            SmartDashboard.putNumber("Climber Pos", c.getEncoder());
+            // SmartDashboard.putNumber("Climber Speed",c.getPower());
+            // SmartDashboard.putNumber("Climber Pos", c.getEncoder());
         }
        
     }

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,44 +34,21 @@ public class AutoShooterCommand extends Command {
 
     @Override
     public void execute(){
-        if(positions == ShooterPositions.WALL_AREA){
-            velocity = 60; //60 from wall
-            angle = 35;    //35 from wall
-        } 
-        else if(positions == ShooterPositions.WHITE_LINE){
-            velocity = 65;
-            angle = 45;
-        }
-        else if(positions == ShooterPositions.SAFE_ZONE){
-            velocity = 0;
-            angle = 45;
-        }
-        else{
-            velocity = 0;
-            angle = 50;
-        }
-        // else if(positions == ShooterPositions.CLIMB){
-        //     velocity = 0;
-        //     angle = 3;
-        // }
-        // else {
-        //     velocity = 80;
-        //     angle = 62;
-        //     //3.2m
-        // }
-
-        s.driveWithCustomSpeed(velocity, velocity/2);
-        controller.setCustomAngle(angle);
+        
+        controller.setCustomAngle(57);;
+        SmartDashboard.putNumber("SHooter Hell: ", angle);
+        SmartDashboard.putNumber("Fucking Shooter angle", controller.getAngle());
     }
 
     @Override
     public void end(boolean interrupted){
         //controller.goToAngle
         //indexer.feedShooter();
+        controller.stop();
     }
 
     @Override
     public boolean isFinished(){
-        return Timer.getFPGATimestamp() - startTime > 2;
+        return MathUtil.isNear(Math.toRadians(57), controller.getAngle(), 0.05);
     }
 }

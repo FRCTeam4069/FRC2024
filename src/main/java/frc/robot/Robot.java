@@ -137,6 +137,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+
     //double values[] = m_robotContainer.drive.getEncoderValues();
     //SmartDashboard.putNumberArray("modules", values);
     //SmartDashboard.putNumber("1", values[1]);
