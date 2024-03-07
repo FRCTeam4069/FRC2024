@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.AutoShooterCommand;
+import frc.robot.commands.ShooterPositions;
 import frc.robot.constants.DeviceIDs;
 import frc.robot.constants.IntakeConstants;
 
@@ -70,8 +72,10 @@ public class ShooterRotationController extends SubsystemBase {
     // }
 
     public void goToAngle(){
+
         right.set(controller.calculate(getAngle(), Math.toRadians(70)));
         left.set(-controller.calculate(getAngle(), Math.toRadians(70)));
+
         // right.set(0.1);
         // left.set(-0.1);
     }
@@ -109,14 +113,18 @@ public class ShooterRotationController extends SubsystemBase {
 
     public void setCustomAngle(double angdeg){
         deg = angdeg;
-        if(angdeg > 0){
-            right.set(controller.calculate(getAngle(), Math.toRadians(angdeg)));
-            left.set(-controller.calculate(getAngle(), Math.toRadians(angdeg)));    
+
+        var speed = 0.0;
+        if (angdeg < 90 && angdeg > 0) {
+            speed = controller.calculate(getAngle(), Math.toRadians(angdeg));
         }
-        else{
+        else {
             right.set(0);
             left.set(0);
         }
+
+        right.set(speed);
+        left.set(-speed);   
         
     }
 
@@ -125,7 +133,7 @@ public class ShooterRotationController extends SubsystemBase {
     }
 
     public boolean atPosition(){
-        if (Math.abs(getAngle() - deg) < 2) return true;
+        if (Math.abs(getAngle() - Math.toRadians(deg)) < 5) return true;
         return false;
     }
 
