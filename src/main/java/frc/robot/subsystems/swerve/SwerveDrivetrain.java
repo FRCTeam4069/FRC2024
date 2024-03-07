@@ -364,6 +364,13 @@ public class SwerveDrivetrain extends SubsystemBase {
     //     return poseEstimator.getCurrentPose();
     // }
 
+    public void setInputLimit(boolean a) {
+        fl.setInputLimit(a);
+        fr.setInputLimit(a);
+        bl.setInputLimit(a);
+        br.setInputLimit(a);
+    }
+
     public ChassisSpeeds getRobotRelativeSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
     }

@@ -27,6 +27,7 @@ public class SwerveModule {
     private double drivePower = 0.0;
     private double steerPower = 0.0;
     private double heading = 0.0;
+    private boolean limitInput = true;
 
     /**
      * Create swerve module
@@ -140,8 +141,12 @@ public class SwerveModule {
         return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getRadians()));
     }
 
+    public void setInputLimit(boolean help) {
+        limitInput = help;
+    }
+
     public void setDesiredState(SwerveModuleState state) {
-        if (Math.abs(state.speedMetersPerSecond) < 0.01) {
+        if (limitInput && Math.abs(state.speedMetersPerSecond) < 0.01) {
             stop();
             return;
         }
