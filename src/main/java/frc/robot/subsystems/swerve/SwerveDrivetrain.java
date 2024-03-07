@@ -245,7 +245,7 @@ public class SwerveDrivetrain extends SubsystemBase {
             .getStructArrayTopic("/SwerveStates/desiredStates", SwerveModuleState.struct).publish();
 
         posePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("InversedPose", Pose2d.struct).publish();
+            .getStructTopic("MyPose", Pose2d.struct).publish();
         
         startPathPlanner();
     }
@@ -409,7 +409,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
         publisher.set(getModuleStates());
         desiredStatesPublisher.set(desiredStates);
-        posePublisher.set(inversedOdo.getPoseMeters());
+        posePublisher.set(pose);
 
         try {
             var headings = getModuleHeadings();

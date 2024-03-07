@@ -19,9 +19,9 @@ public class testAuto extends SequentialCommandGroup {
         drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(180.0)));
         addCommands(
             
-            new AutoLowerIntake(intake),
-            new FollowPath(drive, "go to first ring"),
-            new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON)
+            //new AutoLowerIntake(intake),
+            new FollowPath(drive, "one")
+            //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON)
             
             //new FollowPath(drive, "go to second ring")
             // new FollowPathHolonomic(

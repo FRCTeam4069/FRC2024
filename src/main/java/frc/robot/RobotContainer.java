@@ -52,6 +52,8 @@ import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -131,6 +133,8 @@ public class RobotContainer {
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
     Controller1.b().onTrue(new InstantCommand(() -> drive.resetPose()));
+    Controller1.leftBumper().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, new Rotation2d()))));
+
     Controller1.x().whileTrue(new Rotate(drive, Units.degreesToRadians(-8.0)));
     Controller1.rightBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), 1.0, () -> FrontCamera.hasTarget(7, 4)));
     
