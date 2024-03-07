@@ -30,6 +30,7 @@ import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
 import frc.robot.commands.drivebase.Rotate;
+import frc.robot.commands.drivebase.StrafeUntilCam;
 import frc.robot.commands.drivebase.testAuto;
 
 import frc.robot.subsystems.ClimberSubsystem;
@@ -130,6 +131,7 @@ public class RobotContainer {
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
     Controller1.b().onTrue(new InstantCommand(() -> drive.resetPose()));
     Controller1.x().whileTrue(new Rotate(drive, Units.degreesToRadians(-8.0)));
+    Controller1.rightBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), 1.0, () -> FrontCamera.hasTarget(7, 4)));
     
     autoChooser = AutoBuilder.buildAutoChooser();
 

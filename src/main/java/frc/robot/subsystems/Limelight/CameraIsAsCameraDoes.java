@@ -72,6 +72,12 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
         return Units.degreesToRadians(tx);
     }
 
+    public boolean hasTarget(int a, int b) {
+        var id = LimelightHelpers.getFiducialID(cameraName);
+        return (id == a || id == b);
+
+    }
+
     /**
      * @return radians
      */

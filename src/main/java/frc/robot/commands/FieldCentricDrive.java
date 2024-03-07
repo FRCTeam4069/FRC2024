@@ -43,7 +43,7 @@ public class FieldCentricDrive extends Command {
     @Override
     public void initialize() {
         headingPID = new PIDController(AutoAlignConstants.kP, AutoAlignConstants.kI, AutoAlignConstants.kD);
-        headingPID.setTolerance(AutoAlignConstants.positionTolerance, AutoAlignConstants.velocityTolerance);
+        headingPID.setTolerance(AutoAlignConstants.positionTolerance);
         headingPID.enableContinuousInput(-Math.PI, Math.PI);
 
         headingFilter = new MedianFilter(10);
@@ -71,6 +71,7 @@ public class FieldCentricDrive extends Command {
         //var targetAngle = headingFilter.calculate(cam.getTargetRotation().getY());
         SmartDashboard.putNumber("camera target angle", angle.getAsDouble());
         SmartDashboard.putNumber("camera target angle buffer", angleBuffer);
+        SmartDashboard.putBoolean("isAligned", false);
 
         if (!autoAlign.getAsBoolean()) {
             drive.setInputLimit(true);
@@ -79,23 +80,35 @@ public class FieldCentricDrive extends Command {
                 (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxAngularVelocity)));
         } else {
-            drive.setInputLimit(false);
+            var power = headingPID.calculate(drive.getNormalizedRads(), 0.0);
+            power += Math.abs(AutoAlignConstants.kS)*Math.signum(power);
+            SmartDashboard.putBoolean("isAligned", angle.getAsDouble() < Units.degreesToRadians(5));
+            var xSpeed = forwardSpeed.getAsDouble();
+            var ySpeed = strafeSpeed.getAsDouble();
+            if (xSpeed > 0.2 || ySpeed > 0.2) {
+                power = power * 250;
+            }
+
+
+            //drive.setInputLimit(false);
             // var translation = cam.getTargetTranslation(7);
             // var targetAngle = Math.atan2(translation.getY(), translation.getX());
             //var power = headingPID.calculate(drive.getDegrees(), angle.getAsDouble());
 
-            var power = headingPID.calculate(drive.getRadians(), angleBuffer);
-            power = power + DrivebaseConstants.AutoAlignConstants.kS*Math.signum(power);
+            // var power = headingPID.calculate(drive.getRadians(), angleBuffer);
+            // power = power + DrivebaseConstants.AutoAlignConstants.kS*Math.signum(power);
             
-            if (power > AutoAlignConstants.powerLimit || power < -AutoAlignConstants.powerLimit) {
-                power = AutoAlignConstants.powerLimit*Math.signum(power);
-            }
-            SmartDashboard.putNumber("align power", power);
+            // if (power > AutoAlignConstants.powerLimit || power < -AutoAlignConstants.powerLimit) {
+            //     power = AutoAlignConstants.powerLimit*Math.signum(power);
+            // }
+            // SmartDashboard.putNumber("align power", power);
+            if (Math.abs(drive.getRadians()) < Units.degreesToRadians(3)) power = 0;
+            if (Math.abs(power)>1) power=Math.signum(power);
             
             drive.fieldOrientedDrive(new ChassisSpeeds(
                 (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (-1*power)));
+                (-1*power)*DrivebaseConstants.maxAngularVelocity));
 
         }
 
