@@ -19,7 +19,7 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
     String cameraName;
     LimelightHelpers limeLight = new LimelightHelpers();
 
-    LinearFilter filter = LinearFilter.movingAverage(10);
+    LinearFilter filter = LinearFilter.movingAverage(15);
     double lastgoodX = 0; // initial
     double lastgoodY = 0; // initial
     Rotation3d lastgoodHeading = new Rotation3d(); // initial
@@ -122,22 +122,25 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
 
     public void printNumbers() {
         SmartDashboard.putNumber(cameraName + " fiducial ID: ", limeLight.getFiducialID(cameraName));
+        SmartDashboard.putNumber("Limelight X", getXDistanceToApriltag(4, 7));
+        SmartDashboard.putNumber("Limelight Y", getYDistanceToApriltag(4, 7));
+        //SmartDashboard.putNumber(cameraName, lastgoodX)
 
-        SmartDashboard.putNumber(cameraName + " X from center of field(meter): ",
-                limeLight.getLatestResults(cameraName).targetingResults.getBotPose2d().getX());
-        SmartDashboard.putNumber(cameraName + " Y from center of field(meter): ",
-                limeLight.getLatestResults(cameraName).targetingResults.getBotPose2d().getY());
-        SmartDashboard.putNumber(cameraName + " Rotation from tag(degrees): ",
-                limeLight.getLatestResults(cameraName).targetingResults.getBotPose2d().getRotation().getDegrees());
+        // SmartDashboard.putNumber(cameraName + " X from center of field(meter): ",
+        //         limeLight.getLatestResults(cameraName).targetingResults.getBotPose2d().getX());
+        // SmartDashboard.putNumber(cameraName + " Y from center of field(meter): ",
+        //         limeLight.getLatestResults(cameraName).targetingResults.getBotPose2d().getY());
+        // SmartDashboard.putNumber(cameraName + " Rotation from tag(degrees): ",
+        //         limeLight.getLatestResults(cameraName).targetingResults.getBotPose2d().getRotation().getDegrees());
 
-        SmartDashboard.putNumber(cameraName + " Z from april tag(meter)",
-                limeLight.getTargetPose3d_RobotSpace(cameraName).getZ());
-        SmartDashboard.putNumber(cameraName + " X from april tag(meters)",
-                limeLight.getTargetPose3d_RobotSpace(cameraName).getX());
+        // SmartDashboard.putNumber(cameraName + " Z from april tag(meter)",
+        //         limeLight.getTargetPose3d_RobotSpace(cameraName).getZ());
+        // SmartDashboard.putNumber(cameraName + " X from april tag(meters)",
+        //         limeLight.getTargetPose3d_RobotSpace(cameraName).getX());
 
-        SmartDashboard.putNumber(cameraName + " X from center of blue alliance side(meter): ",
-                limeLight.getLatestResults(cameraName).targetingResults.getBotPose3d_wpiBlue().getX());
-        SmartDashboard.putNumber(cameraName + " Y from center of blue alliance side(meter): ",
-                limeLight.getLatestResults(cameraName).targetingResults.getBotPose3d_wpiBlue().getY());
+        // SmartDashboard.putNumber(cameraName + " X from center of blue alliance side(meter): ",
+        //         limeLight.getLatestResults(cameraName).targetingResults.getBotPose3d_wpiBlue().getX());
+        // SmartDashboard.putNumber(cameraName + " Y from center of blue alliance side(meter): ",
+        //         limeLight.getLatestResults(cameraName).targetingResults.getBotPose3d_wpiBlue().getY());
     }
 }

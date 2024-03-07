@@ -5,24 +5,34 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoLowerIntake;
 import frc.robot.commands.AutoSetIntakeState;
+import frc.robot.commands.AutoShooterCommand;
+import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
+import frc.robot.subsystems.ShooterController;
+import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 public class testAuto extends SequentialCommandGroup {
     private SwerveDrivetrain drive;
     private IntakeController intake;
-    public testAuto(SwerveDrivetrain drive, IntakeController i) {
+    private IndexerController indexer;
+    private ShooterController shooter;
+    private ShooterRotationController rotShoot;
+    public testAuto(SwerveDrivetrain drive, IntakeController i, IndexerController index, ShooterController shooter, ShooterRotationController rot) {
         this.drive = drive;
         intake = i;
-        addRequirements(drive, intake);
+        indexer = index;
+        this.shooter = shooter;
+        this.rotShoot = rot;
+        addRequirements(drive, intake, shooter, rot, index);
 
         drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(180.0)));
         addCommands(
             
-            //new AutoLowerIntake(intake),
-            new FollowPath(drive, "one")
-            //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON)
-            
+            new AutoLowerIntake(intake),
+            new FollowPath(drive, "one"),
+            new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON)
+            //new AutoShooterCommand(rot, shooter, index)
             //new FollowPath(drive, "go to second ring")
             // new FollowPathHolonomic(
             //     PathPlannerPath.fromPathFile("go to first ring"), 

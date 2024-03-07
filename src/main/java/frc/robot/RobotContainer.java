@@ -149,7 +149,7 @@ public class RobotContainer {
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     intake.setDefaultCommand(new defaultArtCommand());
     climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
-    
+    led.setPattern(RevBlinkinPatterns.FIRE_LARGE);
     //led.setDefaultCommand(led.HoldSetColour());
 
     // Configure the trigger bindings
@@ -171,7 +171,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller2.y().whileTrue(new SetShooterRotation(artShooter,-Math.abs(FrontCamera.getXDistanceToApriltag(7, 4)), shooter)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter,(FrontCamera.getXDistanceToApriltag(4, 7
+    )), shooter)).onTrue(intake.setPosition(positions.UPPER));
 
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA)).onTrue(intake.setPosition(positions.UPPER));
@@ -234,7 +235,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     //return Autos.exampleAuto(m_exampleSubsystem);
     //return autoChooser.getSelected();
-    return new testAuto(drive, intake);
+    return new testAuto(drive, intake, indexer, shooter, artShooter);
     //return new PathPlannerAuto("Example Auto");
   }
 }
