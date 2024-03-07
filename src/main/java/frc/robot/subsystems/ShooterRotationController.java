@@ -105,7 +105,10 @@ public class ShooterRotationController extends SubsystemBase {
         NEG_NINTEY
     }
 
+    double deg = 0;
+
     public void setCustomAngle(double angdeg){
+        deg = angdeg;
         if(angdeg > 0){
             right.set(controller.calculate(getAngle(), Math.toRadians(angdeg)));
             left.set(-controller.calculate(getAngle(), Math.toRadians(angdeg)));    
@@ -121,7 +124,17 @@ public class ShooterRotationController extends SubsystemBase {
         return isClimbing;
     }
 
+    public boolean atPosition(){
+        if (Math.abs(getAngle() - deg) < 2) return true;
+        return false;
+    }
+
     public Command changeClimbStatus(){
         return this.runOnce(() -> isClimbing = true);
+    }
+
+    public void stop(){
+        left.stopMotor();
+        right.stopMotor();
     }
 }

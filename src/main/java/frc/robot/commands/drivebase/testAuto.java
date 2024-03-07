@@ -52,21 +52,23 @@ public class testAuto extends SequentialCommandGroup {
                 ),
 
                 //new AutoStopShooter(shooter),
+                new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE), 
                 
                 new FollowPath(drive, "one"),
 
-                new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE), 
-                new IndexWithTime(index, 2.0),
+                
+                new IndexWithTime(index, 1.0),
+                new AutoStopShooter(shooter, rot),
 
-                new WaitCommand(5),
+                new WaitCommand(5)
 
-                new ParallelCommandGroup(
-                    new AutoShooterCommand(rot, shooter, index, ShooterPositions.WALL_AREA),
-                    new SequentialCommandGroup(
-                        new WaitCommand(1),
-                        new IndexShooter(index)
-                    )
-                )
+                // new ParallelCommandGroup(
+                //     new AutoShooterCommand(rot, shooter, index, ShooterPositions.WALL_AREA),
+                //     new SequentialCommandGroup(
+                //         new WaitCommand(1),
+                //         new IndexShooter(index)
+                //     )
+                
                
                 //new AutoShooterCommand(rot, shooter, index, null)
 

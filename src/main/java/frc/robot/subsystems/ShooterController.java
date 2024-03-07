@@ -8,20 +8,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.units.Angle;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.MutableMeasure;
-import static edu.wpi.first.units.MutableMeasure.mutable;
-import edu.wpi.first.units.Velocity;
-import edu.wpi.first.units.Voltage;
-import static edu.wpi.first.units.Units.Volts;
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
-import edu.wpi.first.wpilibj2.command.Command;
+
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -34,10 +22,7 @@ public class ShooterController extends SubsystemBase {
     final VelocityVoltage v = new VelocityVoltage(0);
     Slot0Configs config = new Slot0Configs();
 
-    private final MutableMeasure<Voltage> appliedVoltage = mutable(Volts.of(0));
-    private final MutableMeasure<Angle> angle = mutable(Rotations.of(0));
-    private final MutableMeasure<Velocity<Angle>> velo = mutable(RotationsPerSecond.of(0));
-
+    
     SysIdRoutine routine;
 
     //private DutyCycleEncoder encoder;

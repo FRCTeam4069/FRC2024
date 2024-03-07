@@ -94,6 +94,9 @@ public class ClimberSubsystem extends SubsystemBase {
     public double getPower(){
         return climber.getAppliedOutput();
     }
+    public double getCurrent(){
+        return climber.getOutputCurrent();
+    }
 
 
 

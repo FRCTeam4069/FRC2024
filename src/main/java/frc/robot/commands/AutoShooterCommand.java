@@ -43,7 +43,7 @@ public class AutoShooterCommand extends Command {
         }
         else if(positions == ShooterPositions.SAFE_ZONE){
             velocity = 0;
-            angle = 45;
+            angle = 60;
         }
         else{
             velocity = 0;
@@ -71,6 +71,6 @@ public class AutoShooterCommand extends Command {
 
     @Override
     public boolean isFinished(){
-        return Timer.getFPGATimestamp() - startTime > 2;
+        return controller.atPosition();
     }
 }
