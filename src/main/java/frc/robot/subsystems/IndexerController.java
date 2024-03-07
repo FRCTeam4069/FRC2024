@@ -55,7 +55,7 @@ public class IndexerController extends SubsystemBase {
     }
 
     public void slowFeed(){
-        m1.set(-0.2);
+        m1.set(-0.02);
     }
 
     public boolean pastSensor(){

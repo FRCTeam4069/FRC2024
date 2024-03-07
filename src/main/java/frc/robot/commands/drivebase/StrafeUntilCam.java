@@ -45,10 +45,10 @@ public class StrafeUntilCam extends Command {
         angleBuffer = angle.getAsDouble();
         if (hasTarget.getAsBoolean()) {
             power = pid.calculate(angleBuffer, 0.0);
-            power += (0.0001)*Math.signum(power);
+            power += (0.001)*Math.signum(power);
         } else if (hadTargets){
             power = pid.calculate(angleBuffer, 0.0);
-            power += (0.0001)*Math.signum(power);
+            power += (0.001)*Math.signum(power);
         } else {
             power = direction;
         }

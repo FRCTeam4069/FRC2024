@@ -20,17 +20,22 @@ public class AutoLowerIntake extends Command{
         i.ResetEncoder();
     }
 
+    @Override
     public void execute(){
         i.driveArt(controller.calculate(i.getEncoder(), 6));
         SmartDashboard.putNumber("intake pos" , i.getEncoder());
         SmartDashboard.putNumber("Intake Target", 6);
         SmartDashboard.putNumber("Intake Difference", i.getEncoder() - i.getPositionValue());
     }
+
+    @Override
     public void end(boolean interrupted){
         i.stopArt();
     }
+
+    @Override
     public boolean isFinished(){
-        return i.getEncoder() - (6) < 3;
+        return i.getEncoder() - (6) < 5;
     }
     
 }

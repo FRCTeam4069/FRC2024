@@ -6,10 +6,13 @@ package frc.robot;
 
 
 
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.REVLibError;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -31,6 +34,7 @@ import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
 import frc.robot.commands.drivebase.Rotate;
 import frc.robot.commands.drivebase.StrafeUntilCam;
+import frc.robot.commands.drivebase.Toggle;
 import frc.robot.commands.drivebase.testAuto;
 
 import frc.robot.subsystems.ClimberSubsystem;
@@ -52,6 +56,7 @@ import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -116,11 +121,15 @@ public class RobotContainer {
 
   private ClimberSubsystem climber = new ClimberSubsystem();
 
+  private Toggle toggle;
+
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // var camX = FrontCamera.getXDistanceToApriltag(7, 4);
     // var camY = FrontCamera.getYDistanceToApriltag(4, 7);
     // var angle = Math.atan2(camY, camX);
+    toggle = new Toggle(() -> Controller1.getHID().getStartButton(), () -> Controller1.getHID().getBackButton());
     drive.setDefaultCommand(new FieldCentricDrive(
       drive,
       () -> Controller1.getLeftY(), 
@@ -128,15 +137,19 @@ public class RobotContainer {
       () -> Controller1.getRightX(),
       () -> Controller1.getHID().getRightBumper(),
       () -> Controller1.getHID().getYButton(),
-      () -> FrontCamera.getTX(7, 4)));
-    
+      () -> FrontCamera.getTX(7, 4),
+      () -> toggle.getState()
+    ));
+
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
-    Controller1.b().onTrue(new InstantCommand(() -> drive.resetPose()));
-    Controller1.leftBumper().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, new Rotation2d()))));
+    Controller1.start().onTrue(new InstantCommand(() -> drive.resetPose()));
+    //Controller1.leftBumper().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, new Rotation2d()))));
 
-    Controller1.x().whileTrue(new Rotate(drive, Units.degreesToRadians(-8.0)));
+    Controller1.x().whileTrue(new Rotate(drive, Units.degreesToRadians(-15.0)));
+    Controller1.b().whileTrue(new Rotate(drive, Units.degreesToRadians(15.0)));
     Controller1.rightBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), 1.0, () -> FrontCamera.hasTarget(7, 4)));
+    Controller1.leftBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), -1.0, () -> FrontCamera.hasTarget(7, 4)));
     
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -149,7 +162,7 @@ public class RobotContainer {
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     intake.setDefaultCommand(new defaultArtCommand());
     climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
-    led.setPattern(RevBlinkinPatterns.FIRE_LARGE);
+    //led.setDefaultCommand(led.setPattern(RevBlinkinPatterns.WHITE));
     //led.setDefaultCommand(led.HoldSetColour());
 
     // Configure the trigger bindings
@@ -171,13 +184,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller2.y().whileTrue(new SetShooterRotation(artShooter,(FrontCamera.getXDistanceToApriltag(4, 7
-    )), shooter)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter,-Math.abs(FrontCamera.getXDistanceToApriltag(7, 4)), shooter)).onTrue(intake.setPosition(positions.UPPER));
 
-    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
+    //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA)).onTrue(intake.setPosition(positions.UPPER));
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
-    Controller2.leftStick().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
 
     // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
@@ -192,24 +204,25 @@ public class RobotContainer {
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
     Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB)).onTrue(artShooter.changeClimbStatus());
 
-    Controller2.start().onTrue(led.setPattern(RevBlinkinPatterns.STROBE_GOLD));
+    Controller2.start().onTrue(led.setPattern(RevBlinkinPatterns.GOLD));
 
     //Controller2.start().onTrue(led.setColour(Colours.RED));
 
     // new Trigger(Controller2.pov(0).onTrue(new InstantCommand( () -> intake.setPosition(positions.UPPER))));
     // new Trigger(Controller2.pov(180).onTrue(new InstantCommand(() -> intake.setPosition(positions.LOWER))));
+
     
     new Trigger(Controller2.pov(0).onTrue(intake.setPosition(positions.UPPER)));
     new Trigger(Controller2.pov(180).onTrue(intake.setPosition(positions.LOWER)));
     
     Controller2.rightBumper().whileTrue(new FeedIntakeCommand());
 
-    new Trigger(Controller2.rightTrigger(0.5)).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger()));
+    Controller2.rightTrigger(0.2).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger(0.2)));
 
-    Controller2.leftTrigger(0.5).whileTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()));
+    Controller2.leftTrigger(0.2).whileTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()));
 
-    new Trigger(() -> indexer.getPhotoReading()).whileTrue(led.setPattern(RevBlinkinPatterns.STROBE_YELLOW));
-    new Trigger(() -> shooter.atSpeed()).whileTrue(led.setPattern(RevBlinkinPatterns.STROBE_GREEN));
+    new Trigger(() -> indexer.getPhotoReading()).onFalse(led.setPattern(RevBlinkinPatterns.WHITE)).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
+    new Trigger(() -> shooter.atSpeed()).onTrue(led.setPattern(RevBlinkinPatterns.GREEN)).onFalse(led.setPattern(RevBlinkinPatterns.WHITE));
 
 
   }

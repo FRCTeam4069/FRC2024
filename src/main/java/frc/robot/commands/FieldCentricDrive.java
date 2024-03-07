@@ -4,14 +4,19 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.cscore.CameraServerJNI.TelemetryKind;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.DrivebaseConstants;
+import frc.robot.constants.DrivebaseConstants.AlignConstants;
 import frc.robot.constants.DrivebaseConstants.AutoAlignConstants;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.Limelight.PoseEstimatorSubsystem;
@@ -29,7 +34,9 @@ public class FieldCentricDrive extends Command {
     private DoubleSupplier angle;
     private double lastTimestamp;
     private double angleBuffer;
-    public FieldCentricDrive(SwerveDrivetrain drive, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign, DoubleSupplier angleToAlign) {
+    private ShuffleboardTab tab;
+    private BooleanSupplier fieldCentric;
+    public FieldCentricDrive(SwerveDrivetrain drive, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign, DoubleSupplier angleToAlign, BooleanSupplier fieldCentric) {
         this.drive = drive;
         this.turnSpeed = turnSpeed;
         this.forwardSpeed = forwardSpeed;
@@ -37,6 +44,7 @@ public class FieldCentricDrive extends Command {
         this.halfSpeed = halfSpeed;
         this.autoAlign = autoAlign;
         this.angle = angleToAlign;
+        this.fieldCentric = fieldCentric;
 
         addRequirements(drive);
     }
@@ -49,6 +57,8 @@ public class FieldCentricDrive extends Command {
         headingFilter = new MedianFilter(10);
         
         lastTimestamp = Timer.getFPGATimestamp();
+
+        tab = Shuffleboard.getTab("rotation");
     }
 
     @Override
@@ -71,23 +81,30 @@ public class FieldCentricDrive extends Command {
         //var targetAngle = headingFilter.calculate(cam.getTargetRotation().getY());
         SmartDashboard.putNumber("camera target angle", angle.getAsDouble());
         SmartDashboard.putNumber("camera target angle buffer", angleBuffer);
-        SmartDashboard.putBoolean("isAligned", false);
+        SmartDashboard.putBoolean("isAligned", MathUtil.isNear(0.0, angle.getAsDouble(), Units.degreesToRadians(3)));
 
+        var outputSpeeds = new ChassisSpeeds();
         if (!autoAlign.getAsBoolean()) {
             drive.setInputLimit(true);
+            outputSpeeds = new ChassisSpeeds(
+                (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                (Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxAngularVelocity));
             drive.fieldOrientedDrive(new ChassisSpeeds(
                 (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxAngularVelocity)));
         } else {
             var power = headingPID.calculate(drive.getNormalizedRads(), 0.0);
-            power += Math.abs(AutoAlignConstants.kS)*Math.signum(power);
-            SmartDashboard.putBoolean("isAligned", angle.getAsDouble() < Units.degreesToRadians(5));
+            var voltage = (12.7 - RobotController.getBatteryVoltage()) * AlignConstants.kV;
+            power += Math.abs(AutoAlignConstants.kS)*Math.signum(power) + voltage*Math.signum(power);
             var xSpeed = forwardSpeed.getAsDouble();
             var ySpeed = strafeSpeed.getAsDouble();
+
             if (xSpeed > 0.2 || ySpeed > 0.2) {
-                power = power * 250;
+                power = power * 200;
             }
+
 
 
             //drive.setInputLimit(false);
@@ -109,8 +126,22 @@ public class FieldCentricDrive extends Command {
                 (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (-1*power)*DrivebaseConstants.maxAngularVelocity));
+            
+            outputSpeeds = new ChassisSpeeds(
+                (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                (-1*power)*DrivebaseConstants.maxAngularVelocity);
 
         }
+
+        if (fieldCentric.getAsBoolean()) {
+            drive.fieldOrientedDrive(outputSpeeds);
+
+        } else {
+            drive.drive(outputSpeeds);
+        }
+
+
 
         SmartDashboard.putString("teleop running", "yes");
 
@@ -125,6 +156,7 @@ public class FieldCentricDrive extends Command {
     @Override
     public void end(boolean interrupted) {
         drive.setInputLimit(true);
+        SmartDashboard.putBoolean("isAligned", false);
     }
     
 }

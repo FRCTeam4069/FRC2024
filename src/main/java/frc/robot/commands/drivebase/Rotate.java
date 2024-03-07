@@ -2,6 +2,7 @@ package frc.robot.commands.drivebase;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.DrivebaseConstants.AlignConstants;
@@ -30,7 +31,8 @@ public class Rotate extends Command {
     @Override
     public void execute() {
         var speed = -1*pid.calculate(drive.getNormalizedRads(), radians);
-        speed = speed + Math.abs(AlignConstants.kS)*Math.signum(speed);
+        var voltage = (12 - RobotController.getBatteryVoltage()) * AlignConstants.kV * Math.signum(speed);
+        speed = speed + Math.abs(AlignConstants.kS)*Math.signum(speed) + voltage;
         drive.fieldOrientedDrive(new ChassisSpeeds(0, 0, speed));
         SmartDashboard.putBoolean("align", true);
         SmartDashboard.putNumber("align target", radians);

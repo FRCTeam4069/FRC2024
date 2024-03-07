@@ -47,6 +47,9 @@ public class ClimberSubsystem extends SubsystemBase {
 
         climber.enableSoftLimit(SoftLimitDirection.kReverse, true);
         climber.enableSoftLimit(SoftLimitDirection.kForward, true);
+
+        //climber.setSmartCurrentLimit(60);
+        
     }
 
     public void raiseClimber() {

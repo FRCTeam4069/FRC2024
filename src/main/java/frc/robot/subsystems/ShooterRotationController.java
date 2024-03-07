@@ -6,6 +6,7 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -36,7 +37,9 @@ public class ShooterRotationController extends SubsystemBase {
         left.setInverted(false);
         right.setInverted(false);
 
+        //left.setSoftLimit(SoftLimitDirection.kForward,(float) (0.541));
         
+        //left.enableSoftLimit(SoftLimitDirection.kForward, true);
 
         //encoder.reset();
 
