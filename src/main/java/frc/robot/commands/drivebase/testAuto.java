@@ -89,7 +89,7 @@ public class testAuto extends SequentialCommandGroup {
 
                 new InstantCommand(() -> SmartDashboard.putString("auto location", "In hell")),
 
-                new WaitCommand(1),
+                new WaitCommand(5),
                 new DisableSubsystems(rot, shooter, index, i)
 
                 //new WaitCommand(5)

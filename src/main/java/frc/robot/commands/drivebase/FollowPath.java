@@ -20,8 +20,8 @@ public class FollowPath extends SequentialCommandGroup {
                 drive::getRobotRelativeSpeeds, 
                 drive::drive, 
                 new HolonomicPathFollowerConfig(
-                    new PIDConstants(0.4, 0.0, 0.0), //translation
-                    new PIDConstants(0.0, 0.0, 0.0), //rotation
+                    new PIDConstants(0.9, 0.0, 0.0), //translation
+                    new PIDConstants(1.0, 0.0, 0.0), //rotation
                     DrivebaseConstants.maxVelocity-3.0, 
                     DrivebaseConstants.drivebaseRadius, 
                     new ReplanningConfig()
