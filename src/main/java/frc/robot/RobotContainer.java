@@ -32,6 +32,7 @@ import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
+import frc.robot.commands.drivebase.FrontAuto;
 import frc.robot.commands.drivebase.Rotate;
 import frc.robot.commands.drivebase.SideAuto;
 import frc.robot.commands.drivebase.StrafeUntilCam;
@@ -157,6 +158,7 @@ public class RobotContainer {
     
     autoChooser.setDefaultOption("one", new testAuto(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("side auto", new SideAuto(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("front auto", new FrontAuto(drive, intake, indexer, shooter, artShooter));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 

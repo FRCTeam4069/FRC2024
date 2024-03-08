@@ -318,8 +318,8 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     /**
-     * mps
-     * @param speeds
+     * robot relative
+     * @param speeds mps
      */
     public void drive(ChassisSpeeds speeds) {
         var betterSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);

@@ -1,7 +1,5 @@
 package frc.robot.commands.drivebase;
 
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,13 +21,13 @@ import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
-public class testAuto extends SequentialCommandGroup {
+public class ShootFirstRing extends SequentialCommandGroup {
     private SwerveDrivetrain drive;
     private IntakeController intake;
     private IndexerController indexer;
     private ShooterController shooter;
     private ShooterRotationController rotShoot;
-    public testAuto(SwerveDrivetrain drive, IntakeController i, IndexerController index, ShooterController shooter, ShooterRotationController rot) {
+    public ShootFirstRing(SwerveDrivetrain drive, IntakeController i, IndexerController index, ShooterController shooter, ShooterRotationController rot) {
         this.drive = drive;
         intake = i;
         indexer = index;
@@ -39,31 +37,31 @@ public class testAuto extends SequentialCommandGroup {
 
         drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(180.0)));
 
-        //PathPlannerPath.fromPathFile("one").getGoalEndState()
-
         addCommands(
             new SequentialCommandGroup(
-                new InstantCommand(() -> drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(180.0)))),
-                new ShootFirstRing(drive, i, index, shooter, rot),
-                
-                new FollowPath(drive, "one"),
+                new ParallelCommandGroup(
+                    new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA),
+                    new SequentialCommandGroup(
+                        new WaitCommand(1),
+                        new IndexWithTime(index, 1.0),
+                        new WaitCommand(0.5),
+                        new DisableIndexCommand(index)
+                    ),
+                    new InstantCommand(() -> SmartDashboard.putString("auto location", "first parallel"))
+                ),
+                new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
 
-                new InstantCommand(() -> SmartDashboard.putString("auto location", "end path")),
-                new WaitCommand(2.5),
+                new ParallelCommandGroup(
+                    new AutoLowerIntake(intake),
+                    new InstantCommand(() -> SmartDashboard.putString("auto location", "second parallel"))
+                ),
 
-                // new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(155.0)))),
-                //new InstantCommand(() -> drive.setPose(new Pose2d(2.388, 4.392, Rotation2d.fromRadians(-drive.getRadians())))),
+                new InstantCommand(() -> SmartDashboard.putString("auto location", "start path")),
 
-                new Rotate(drive, 0),
-                new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(drive.getDegrees())))),
-                new BadPIDCommand(drive, new Pose2d(-0.5, 0.0, Rotation2d.fromDegrees(drive.getDegrees()))),
-                new BadPIDCommand(drive, new Pose2d(-0.5, 1.45, Rotation2d.fromDegrees(drive.getDegrees()))),
-                new BadPIDCommand(drive, new Pose2d(0.0, 1.45, Rotation2d.fromDegrees(drive.getDegrees()))),
-
-                //new FollowPath(drive, "bad two"),
-                new WaitCommand(4),
-
-                new DisableSubsystems(rot, shooter, index, i)
+                new ParallelCommandGroup(
+                    new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
+                    new IndexWithTime(index, 1.4)
+                )
 
             )
         );
