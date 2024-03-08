@@ -14,6 +14,7 @@ import frc.robot.commands.AutoShooterCommand;
 import frc.robot.commands.AutoStopShooter;
 import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.DisableIndexCommand;
+import frc.robot.commands.DisableSubsystems;
 import frc.robot.commands.IndexShooter;
 import frc.robot.commands.IndexWithSensorCommand;
 import frc.robot.commands.IndexWithTime;
@@ -71,12 +72,14 @@ public class testAuto extends SequentialCommandGroup {
                 
                 new InstantCommand(() -> SmartDashboard.putString("auto location", "start path")),
 
-                new FollowPath(drive, "one"),
-
                 new ParallelCommandGroup(
                     new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
-                    new IndexWithTime(index, 1)
+                    new IndexWithTime(index, 1.4)
                 ),
+                
+                new FollowPath(drive, "one"),
+
+                
 
                 new InstantCommand(() -> SmartDashboard.putString("auto location", "end path")),
 
@@ -86,7 +89,8 @@ public class testAuto extends SequentialCommandGroup {
 
                 new InstantCommand(() -> SmartDashboard.putString("auto location", "In hell")),
 
-                new WaitCommand(1)
+                new WaitCommand(1),
+                new DisableSubsystems(rot, shooter, index, i)
 
                 //new WaitCommand(5)
 

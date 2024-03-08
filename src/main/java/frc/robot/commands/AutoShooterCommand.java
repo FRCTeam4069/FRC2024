@@ -35,7 +35,7 @@ public class AutoShooterCommand extends Command {
     @Override
     public void execute(){
         
-        controller.setCustomAngle(57);;
+        controller.setCustomAngle(50);;
         SmartDashboard.putNumber("SHooter Hell: ", angle);
         SmartDashboard.putNumber("Fucking Shooter angle", controller.getAngle());
     }
@@ -49,6 +49,6 @@ public class AutoShooterCommand extends Command {
 
     @Override
     public boolean isFinished(){
-        return MathUtil.isNear(Math.toRadians(57), controller.getAngle(), 0.05);
+        return MathUtil.isNear(Math.toRadians(50), controller.getAngle(), 0.05);
     }
 }
