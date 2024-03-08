@@ -155,7 +155,7 @@ public class RobotContainer {
     //autoChooser = AutoBuilder.buildAutoChooser();
 
     
-    autoChooser.setDefaultOption("blue auto", new testAuto(drive, intake, indexer, shooter, artShooter));
+    autoChooser.setDefaultOption("one", new testAuto(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("side auto", new SideAuto(drive, intake, indexer, shooter, artShooter));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
