@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -54,12 +55,19 @@ public class testAuto extends SequentialCommandGroup {
                 // new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(155.0)))),
                 //new InstantCommand(() -> drive.setPose(new Pose2d(2.388, 4.392, Rotation2d.fromRadians(-drive.getRadians())))),
 
-                new Rotate(drive, 0),
+                new Rotate(drive, 0).withTimeout(2),
                 new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(drive.getDegrees())))),
                 new BadPIDCommand(drive, new Pose2d(-0.5, 0.0, Rotation2d.fromDegrees(drive.getDegrees()))),
-                new BadPIDCommand(drive, new Pose2d(-0.5, 1.45, Rotation2d.fromDegrees(drive.getDegrees()))),
-                new BadPIDCommand(drive, new Pose2d(0.0, 1.45, Rotation2d.fromDegrees(drive.getDegrees()))),
+                new BadPIDCommand(drive, new Pose2d(-0.5, 1.17, Rotation2d.fromDegrees(drive.getDegrees()))),
+                new BadPIDCommand(drive, new Pose2d(0.3, 1.17, Rotation2d.fromDegrees(drive.getDegrees()))),
+                new WaitCommand(4),
 
+                new BadPIDCommand(drive, new Pose2d(-0.5, 1.17, Rotation2d.fromDegrees(drive.getDegrees()))),
+                new BadPIDCommand(drive, new Pose2d(-0.5, 2.50, Rotation2d.fromDegrees(drive.getDegrees()))),
+                new Rotate(drive, Units.degreesToRadians(20)).withTimeout(2),
+
+                new BadPIDCommand(drive, new Pose2d(-0.5, 2.50, Rotation2d.fromDegrees(200.0))),
+                new BadPIDCommand(drive, new Pose2d(0.3, 2.50, Rotation2d.fromDegrees(200.0))),
                 //new FollowPath(drive, "bad two"),
                 new WaitCommand(4),
 
