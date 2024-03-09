@@ -33,6 +33,7 @@ import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
 import frc.robot.commands.drivebase.FrontAuto;
+import frc.robot.commands.drivebase.OneNote;
 import frc.robot.commands.drivebase.Rotate;
 import frc.robot.commands.drivebase.SideAuto;
 import frc.robot.commands.drivebase.StrafeUntilCam;
@@ -159,6 +160,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("one", new testAuto(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("side auto", new SideAuto(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("front auto", new FrontAuto(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("no move auto", new OneNote(drive, intake, indexer, shooter, artShooter));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -211,7 +213,7 @@ public class RobotContainer {
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
     Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB)).onTrue(artShooter.changeClimbStatus());
 
-    Controller2.start().onTrue(led.setPattern(RevBlinkinPatterns.GOLD));
+    Controller2.start().onTrue(led.setPattern(RevBlinkinPatterns.VIOLET));
 
     //Controller2.start().onTrue(led.setColour(Colours.RED));
 
@@ -226,7 +228,7 @@ public class RobotContainer {
 
     Controller2.rightTrigger(0.2).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger(0.2)));
 
-    Controller2.leftTrigger(0.2).whileTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()));
+    Controller2.leftTrigger(0.2).onTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()));
 
     new Trigger(() -> indexer.getPhotoReading()).onFalse(led.setPattern(RevBlinkinPatterns.WHITE)).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
     new Trigger(() -> shooter.atSpeed()).onTrue(led.setPattern(RevBlinkinPatterns.GREEN)).onFalse(led.setPattern(RevBlinkinPatterns.WHITE));

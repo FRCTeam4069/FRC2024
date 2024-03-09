@@ -24,7 +24,16 @@ public class REverseIndexerCommand extends Command{
         }
         else{
             i.stop();
+            this.end(false);
         }
         
+    }
+
+    public void end(boolean interrupted){
+        i.stop();
+    }
+
+    public boolean isFinished(){
+        return i.getPhotoReading();
     }
 }
