@@ -12,6 +12,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.REVLibError;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,8 +39,11 @@ import frc.robot.commands.drivebase.Rotate;
 import frc.robot.commands.drivebase.SideAuto;
 import frc.robot.commands.drivebase.StrafeUntilCam;
 import frc.robot.commands.drivebase.Toggle;
+import frc.robot.commands.drivebase.TwoNote;
 import frc.robot.commands.drivebase.testAuto;
-
+import frc.robot.commands.drivebase.test.testAutov2;
+import frc.robot.commands.drivebase.test.testAutov3;
+import frc.robot.commands.drivebase.test.testAutov4;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
@@ -139,15 +143,19 @@ public class RobotContainer {
       () -> Controller1.getLeftX(), 
       () -> Controller1.getRightX(),
       () -> Controller1.getHID().getRightBumper(),
-      () -> Controller1.getHID().getYButton(),
+      () -> Controller1.getHID().getAButton(),
       () -> FrontCamera.getTX(7, 4),
       () -> toggle.getState()
     ));
 
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
-    Controller1.a().onTrue(new InstantCommand(() -> drive.resetGyro()));
+    Controller1.y().onTrue(new InstantCommand(() -> drive.resetGyro()));
     //Controller1.povUp().onTrue(new InstantCommand(() -> drive.resetPose()));
     Controller1.povUp().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, new Rotation2d()))));
+
+    new Trigger(() -> MathUtil.isNear(0.0, FrontCamera.getTX(7, 4), Units.degreesToRadians(3)))
+      .whileTrue(new InstantCommand(() -> Controller1.getHID().setRumble(RumbleType.kBothRumble, 0.1)))
+      .onFalse(new InstantCommand(() -> Controller1.getHID().setRumble(RumbleType.kBothRumble, 0)));
 
     Controller1.x().whileTrue(new Rotate(drive, Units.degreesToRadians(-15.0)));
     Controller1.b().whileTrue(new Rotate(drive, Units.degreesToRadians(15.0)));
@@ -158,9 +166,13 @@ public class RobotContainer {
 
     
     autoChooser.setDefaultOption("one", new testAuto(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("onev2", new testAutov2(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("onev3", new testAutov3(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("onev4", new testAutov4(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("side auto", new SideAuto(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("front auto", new FrontAuto(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("no move auto", new OneNote(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("two ring on angle", new TwoNote(drive, intake, indexer, shooter, artShooter));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -232,7 +244,11 @@ public class RobotContainer {
 
     new Trigger(() -> indexer.getPhotoReading()).onFalse(led.setPattern(RevBlinkinPatterns.WHITE)).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
     new Trigger(() -> shooter.atSpeed()).onTrue(led.setPattern(RevBlinkinPatterns.GREEN)).onFalse(led.setPattern(RevBlinkinPatterns.WHITE));
-
+    new Trigger(() -> shooter.atSpeed()).whileTrue(new InstantCommand(() -> Controller2.getHID().setRumble(RumbleType.kBothRumble, 0.1))).onFalse(new InstantCommand(() -> Controller2.getHID().setRumble(RumbleType.kBothRumble, 0)));
+    
+    
+      
+    
 
   }
 

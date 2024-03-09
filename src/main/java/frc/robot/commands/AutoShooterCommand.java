@@ -35,7 +35,7 @@ public class AutoShooterCommand extends Command {
     @Override
     public void execute(){
         
-        controller.setCustomAngle(50);;
+        controller.setCustomAngle(49);
         SmartDashboard.putNumber("SHooter Hell: ", angle);
         SmartDashboard.putNumber("Fucking Shooter angle", controller.getAngle());
     }

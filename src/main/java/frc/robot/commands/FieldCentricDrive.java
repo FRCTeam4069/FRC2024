@@ -51,7 +51,7 @@ public class FieldCentricDrive extends Command {
     @Override
     public void initialize() {
         headingPID = new PIDController(AutoAlignConstants.kP, AutoAlignConstants.kI, AutoAlignConstants.kD);
-        headingPID.setTolerance(AutoAlignConstants.positionTolerance);
+        headingPID.setTolerance(AutoAlignConstants.positionTolerance, AlignConstants.velocityTolerance);
         headingPID.enableContinuousInput(-Math.PI, Math.PI);
 
         headingFilter = new MedianFilter(10);
@@ -96,13 +96,13 @@ public class FieldCentricDrive extends Command {
                 (Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxAngularVelocity)));
         } else {
             var power = headingPID.calculate(drive.getNormalizedRads(), 0.0);
-            var voltage = (12.7 - RobotController.getBatteryVoltage()) * AlignConstants.kV;
+            var voltage = (12 - RobotController.getBatteryVoltage()) * AutoAlignConstants.kV * Math.signum(power);
             power += Math.abs(AutoAlignConstants.kS)*Math.signum(power) + voltage*Math.signum(power);
             var xSpeed = forwardSpeed.getAsDouble();
             var ySpeed = strafeSpeed.getAsDouble();
 
             if (xSpeed > 0.2 || ySpeed > 0.2) {
-                power = power * 200;
+                power = power * 180;
             }
 
 

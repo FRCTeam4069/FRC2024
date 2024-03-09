@@ -37,6 +37,7 @@ public class AutoCustomAngle extends Command {
             velocity = 0;
             angle = 60;
         }
+
         else{
             velocity = 0;
             angle = 50;

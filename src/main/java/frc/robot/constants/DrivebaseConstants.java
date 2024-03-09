@@ -40,14 +40,15 @@ public final class DrivebaseConstants {
         public static final double kV = 0.01;
 
         public static final double positionTolerance = Units.degreesToRadians(2);
-        public static final double velocityTolerance = 0.07;
+        public static final double velocityTolerance = 0.06;
     }
 
     public static final class AutoAlignConstants {
-        public static final double kP = 0.0115;
+        public static final double kP = 0.19;
         public static final double kI = 0.0;
-        public static final double kD = 0.00001;
-        public static final double kS = 0.00260;
+        public static final double kD = 0.020;
+        public static final double kS = 0.004;
+        public static final double kV = 0.01;
         //public static final double powerLimit = 0.75;
         public static final double positionTolerance = Units.degreesToRadians(2);
         //public static final double velocityTolerance = 0.005;
