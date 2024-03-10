@@ -25,7 +25,7 @@ public final class DrivebaseConstants {
     public static final double maxVelocity = Units.feetToMeters(19.3);
     public static final double maxAngularVelocity =
         maxVelocity / new Rotation2d(moduleOffset, moduleOffset).getRadians();
-    public static final double rampRate = 1000.0;
+    public static final double rampRate = 0.17;
     public static final double headingRampRate = 10000.0;
     public static final double KS = 0.01;
     public static final double KV = 0.15;

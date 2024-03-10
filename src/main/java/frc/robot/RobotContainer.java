@@ -44,6 +44,7 @@ import frc.robot.commands.drivebase.testAuto;
 import frc.robot.commands.drivebase.test.testAutov2;
 import frc.robot.commands.drivebase.test.testAutov3;
 import frc.robot.commands.drivebase.test.testAutov4;
+import frc.robot.commands.drivebase.test.testAutov5;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
@@ -173,6 +174,8 @@ public class RobotContainer {
     autoChooser.addOption("front auto", new FrontAuto(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("no move auto", new OneNote(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("two ring on angle", new TwoNote(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("new pid auto", new testAutov5(drive, intake, indexer, shooter, artShooter));
+    
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.DisableSubsystems;
+import frc.robot.constants.DrivebaseConstants;
 import frc.robot.subsystems.RevBlinkinPatterns;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.ShooterTest;
@@ -114,6 +115,9 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer.intake.setBrakeState(0);
+
+    m_robotContainer.drive.setOpenLoopRampRate(DrivebaseConstants.rampRate);
+    m_robotContainer.drive.setSmartCurrentLimit(30);
   }
 
   /** This function is called periodically during autonomous. */
@@ -131,11 +135,13 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.intake.setBrakeState(0);
 
-        m_robotContainer.artShooter.stop();
-        m_robotContainer.shooter.stop();
-        m_robotContainer.intake.stopFeed();
-        m_robotContainer.indexer.stop();
+    m_robotContainer.artShooter.stop();
+    m_robotContainer.shooter.stop();
+    m_robotContainer.intake.stopFeed();
+    m_robotContainer.indexer.stop();
     
+    m_robotContainer.drive.setOpenLoopRampRate(0.0);
+    m_robotContainer.drive.setSmartCurrentLimit(80, 60);
 
     
 

@@ -66,6 +66,7 @@ public class SwerveModule {
         drive.getEncoder().setPositionConversionFactor(DrivebaseConstants.driveConversionFactor);
         drive.getEncoder().setVelocityConversionFactor(DrivebaseConstants.driveConversionFactor);
         drive.setSmartCurrentLimit(30);
+        drive.setOpenLoopRampRate(DrivebaseConstants.rampRate);
         steer.getEncoder().setPositionConversionFactor(DrivebaseConstants.steerConversionFactor);
         steer.getEncoder().setVelocityConversionFactor(DrivebaseConstants.steerConversionFactor);
 
@@ -78,6 +79,18 @@ public class SwerveModule {
         steerPIDController = new PIDController(moduleCoefficient.kP, moduleCoefficient.kI, moduleCoefficient.kD);
         steerPIDController.enableContinuousInput(0.0, Math.PI*2);
 
+    }
+
+    public void setSmartCurrentLimit(int free, int stall) {
+        drive.setSmartCurrentLimit(free, stall);
+    }
+
+    public void setSmartCurrentLimit(int limit) {
+        drive.setSmartCurrentLimit(limit);
+    }
+
+    public void setOpenLoopRampRate(double rate) {
+        drive.setOpenLoopRampRate(rate);
     }
 
     /**

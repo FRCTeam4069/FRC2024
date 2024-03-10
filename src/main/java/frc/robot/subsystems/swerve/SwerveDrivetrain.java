@@ -82,9 +82,9 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     private SwerveModuleState[] desiredStates = new SwerveModuleState[4];
 
-    private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.rampRate, -10000000000.0, 0.0);
-    private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.rampRate, -10000000000.0, 0.0);
-    private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(DrivebaseConstants.headingRampRate, -100000000000.0, 0.0);
+    // private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(0.05, -10000000000.0, 0.0);
+    // private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(0.05, -10000000000.0, 0.0);
+    // private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(0.05, -100000000000.0, 0.0);
 
     private double speedMultiplier = 1;
 
@@ -219,6 +219,7 @@ public class SwerveDrivetrain extends SubsystemBase {
             DeviceIDs.STEER_BR, true, 
             DeviceIDs.ENCODER_BR, -62.621/360, true, 
             DrivebaseConstants.BACK_RIGHT);
+        
 
         gyro = new Pigeon2(0, "rio");
         gyro.getConfigurator().apply(DrivebaseConstants.gyroConfig);
@@ -274,6 +275,27 @@ public class SwerveDrivetrain extends SubsystemBase {
                 return false;
             }, 
             this);
+    }
+
+    public void setSmartCurrentLimit(int free, int stall) {
+        fl.setSmartCurrentLimit(free, stall);
+        fr.setSmartCurrentLimit(free, stall);
+        bl.setSmartCurrentLimit(free, stall);
+        br.setSmartCurrentLimit(free, stall);
+    }
+
+    public void setSmartCurrentLimit(int limit) {
+        fl.setSmartCurrentLimit(limit);
+        fr.setSmartCurrentLimit(limit);
+        bl.setSmartCurrentLimit(limit);
+        br.setSmartCurrentLimit(limit);
+    }
+
+    public void setOpenLoopRampRate(double rate) {
+        fl.setOpenLoopRampRate(rate);
+        fr.setOpenLoopRampRate(rate);
+        bl.setOpenLoopRampRate(rate);
+        br.setOpenLoopRampRate(rate);
     }
 
     public SwerveModulePosition[] getModulePositions() {

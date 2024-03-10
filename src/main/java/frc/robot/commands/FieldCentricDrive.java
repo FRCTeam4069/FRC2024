@@ -7,6 +7,7 @@ import edu.wpi.first.cscore.CameraServerJNI.TelemetryKind;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
@@ -36,6 +37,9 @@ public class FieldCentricDrive extends Command {
     private double angleBuffer;
     private ShuffleboardTab tab;
     private BooleanSupplier fieldCentric;
+    private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(0.5, -0.8, 0.0);
+    private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(0.5, -0.8, 0.0);
+    private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(0.8, -0.8, 0.0);
     public FieldCentricDrive(SwerveDrivetrain drive, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign, DoubleSupplier angleToAlign, BooleanSupplier fieldCentric) {
         this.drive = drive;
         this.turnSpeed = turnSpeed;
@@ -46,10 +50,12 @@ public class FieldCentricDrive extends Command {
         this.angle = angleToAlign;
         this.fieldCentric = fieldCentric;
 
+
         addRequirements(drive);
     }
     @Override
     public void initialize() {
+
         headingPID = new PIDController(AutoAlignConstants.kP, AutoAlignConstants.kI, AutoAlignConstants.kD);
         headingPID.setTolerance(AutoAlignConstants.positionTolerance, AlignConstants.velocityTolerance);
         headingPID.enableContinuousInput(-Math.PI, Math.PI);
@@ -87,13 +93,9 @@ public class FieldCentricDrive extends Command {
         if (!autoAlign.getAsBoolean()) {
             drive.setInputLimit(true);
             outputSpeeds = new ChassisSpeeds(
-                (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity));
-            drive.fieldOrientedDrive(new ChassisSpeeds(
-                (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity)));
+                xSlewRateLimiter.calculate(Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                ySlewRateLimiter.calculate(Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                wSlewRateLimiter.calculate(Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity));
         } else {
             var power = headingPID.calculate(drive.getNormalizedRads(), 0.0);
             var voltage = (12 - RobotController.getBatteryVoltage()) * AutoAlignConstants.kV * Math.signum(power);
@@ -122,15 +124,10 @@ public class FieldCentricDrive extends Command {
             if (Math.abs(drive.getRadians()) < Units.degreesToRadians(3)) power = 0;
             if (Math.abs(power)>1) power=Math.signum(power);
             
-            drive.fieldOrientedDrive(new ChassisSpeeds(
-                (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (-1*power)*DrivebaseConstants.maxAngularVelocity));
-            
             outputSpeeds = new ChassisSpeeds(
-                (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (-1*power)*DrivebaseConstants.maxAngularVelocity);
+                xSlewRateLimiter.calculate(Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                ySlewRateLimiter.calculate(Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                wSlewRateLimiter.calculate(-1*power)*DrivebaseConstants.maxAngularVelocity);
 
         }
 
