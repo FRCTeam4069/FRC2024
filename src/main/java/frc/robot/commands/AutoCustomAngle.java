@@ -39,7 +39,7 @@ public class AutoCustomAngle extends Command {
         }
         else if(positions == ShooterPositions.CLIMB){
             velocity = 70;
-            angle = 49;
+            angle = 49.75;
         }
 
         else{
