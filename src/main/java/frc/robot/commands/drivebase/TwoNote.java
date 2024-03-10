@@ -4,9 +4,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoCustomAngle;
+import frc.robot.commands.AutoShooterCommand;
 import frc.robot.commands.DisableSubsystems;
 import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.drivebase.BadPIDCommand;
@@ -43,11 +45,15 @@ public class TwoNote extends SequentialCommandGroup {
                 new ShootFirstRing(drive, i, index, shooter, rot),
 
                 new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))),
-                
-                new BadPIDCommand(drive, new Pose2d(1.25, 0.0, Rotation2d.fromDegrees(0.0))),
 
-                new WaitCommand(2.5),
+                new ParallelCommandGroup(
 
+                    new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+
+                    new BadPIDCommand(drive, new Pose2d(1.25, 0.0, Rotation2d.fromDegrees(0.0))),
+                    new WaitCommand(2.5)
+
+                ),
                 new DisableSubsystems(rot, shooter, index, i)
 
             )

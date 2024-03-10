@@ -40,6 +40,8 @@ import frc.robot.commands.drivebase.SideAuto;
 import frc.robot.commands.drivebase.StrafeUntilCam;
 import frc.robot.commands.drivebase.Toggle;
 import frc.robot.commands.drivebase.TwoNote;
+import frc.robot.commands.drivebase.TwoNoteNew;
+import frc.robot.commands.drivebase.TwoNoteNewBlue;
 import frc.robot.commands.drivebase.testAuto;
 import frc.robot.commands.drivebase.test.testAutov2;
 import frc.robot.commands.drivebase.test.testAutov3;
@@ -175,6 +177,8 @@ public class RobotContainer {
     autoChooser.addOption("no move auto", new OneNote(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("two ring on angle", new TwoNote(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("new pid auto", new testAutov5(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("new two ring on the side auto", new TwoNoteNew(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("BLUE new two ring on the side auto BLUE", new TwoNoteNewBlue(drive, intake, indexer, shooter, artShooter));
     
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
