@@ -88,6 +88,7 @@ public class FieldCentricDrive extends Command {
         SmartDashboard.putNumber("camera target angle", angle.getAsDouble());
         SmartDashboard.putNumber("camera target angle buffer", angleBuffer);
         SmartDashboard.putBoolean("isAligned", MathUtil.isNear(0.0, angle.getAsDouble(), Units.degreesToRadians(3)));
+        
 
         var outputSpeeds = new ChassisSpeeds();
         if (!autoAlign.getAsBoolean()) {

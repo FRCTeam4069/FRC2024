@@ -139,6 +139,7 @@ public class RobotContainer {
     // var camX = FrontCamera.getXDistanceToApriltag(7, 4);
     // var camY = FrontCamera.getYDistanceToApriltag(4, 7);
     // var angle = Math.atan2(camY, camX);
+    /*
     toggle = new Toggle(() -> Controller1.getHID().getStartButton(), () -> Controller1.getHID().getBackButton());
     drive.setDefaultCommand(new FieldCentricDrive(
       drive,
@@ -164,6 +165,7 @@ public class RobotContainer {
     Controller1.b().whileTrue(new Rotate(drive, Units.degreesToRadians(15.0)));
     Controller1.rightBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), 1.0, () -> FrontCamera.hasTarget(7, 4)));
     Controller1.leftBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), -1.0, () -> FrontCamera.hasTarget(7, 4)));
+    */
     
     //autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -183,8 +185,8 @@ public class RobotContainer {
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    //Controller1.a().onTrue(drive.sysIdSteerTest());
-    //Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
+    Controller1.a().onTrue(drive.sysIdSteerTest());
+    Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
 
     //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));

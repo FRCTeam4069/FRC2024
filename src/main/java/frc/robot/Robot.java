@@ -140,7 +140,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.intake.stopFeed();
     m_robotContainer.indexer.stop();
     
-    m_robotContainer.drive.setOpenLoopRampRate(0.25);
+    m_robotContainer.drive.setOpenLoopRampRate(0.0);
     m_robotContainer.drive.setSmartCurrentLimit(40, 60);
 
     
