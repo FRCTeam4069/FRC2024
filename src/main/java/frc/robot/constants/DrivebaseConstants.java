@@ -11,7 +11,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.PubSub;
 
 public final class DrivebaseConstants {
-    public static final double driveConversionFactor = 0.05215454470665408;
+    public static final double driveConversionFactor = ((4.00 * Math.PI) * 0.0254) / 6.12;
     public static final double steerConversionFactor = 16.8;
     public static final double moduleOffset = Units.inchesToMeters(10.375);
     public static final double drivebaseRadius = Math.hypot(moduleOffset, moduleOffset);
@@ -27,10 +27,11 @@ public final class DrivebaseConstants {
         maxVelocity / new Rotation2d(moduleOffset, moduleOffset).getRadians();
     public static final double rampRate = 0.17;
     public static final double headingRampRate = 10000.0;
-    public static final double KS = 0.01;
-    public static final double KV = 0.15;
-    public static final double KP = 0.40;
-    public static final double KD = 0.00;
+    private static final double KS = 0.63253;
+    private static final double KV = 2.2936;
+    private static final double KA = 0.18409;
+    private static final double KP = 0.40;
+    private static final double KD = 0.00;
 
     public static final class AlignConstants {
         public static final double kP = 0.20;
@@ -47,7 +48,7 @@ public final class DrivebaseConstants {
         public static final double kP = 0.19;
         public static final double kI = 0.0;
         public static final double kD = 0.020;
-        public static final double kS = 0.004;
+        public static final double kS = 0.002;
         public static final double kV = 0.01;
         //public static final double powerLimit = 0.75;
         public static final double positionTolerance = Units.degreesToRadians(2);
@@ -78,9 +79,9 @@ public final class DrivebaseConstants {
     }
 
     public static ModuleCoefficient BACK_LEFT = new ModuleCoefficient(
-        0.28903,
-        1.7657,
-        0.31505,
+        KS,
+        KV,
+        KA,
 
         KP,
         0.0,
@@ -88,27 +89,27 @@ public final class DrivebaseConstants {
     );
 
     public static ModuleCoefficient BACK_RIGHT = new ModuleCoefficient (
-        0.1647, //-0.21156, 
-        1.7998,
-        0.33328, //0.65603,
+        KS,
+        KV,
+        KA,
 
         KP,
         0.0,
         KD
     );
     public static ModuleCoefficient FRONT_LEFT = new ModuleCoefficient (
-        0.18494, // -0.25525,
-        1.7955,
-        0.25813, // 0.60935,
+        KS,
+        KV,
+        KA,
 
         KP,
         0.0,
         KD
     );
     public static ModuleCoefficient FRONT_RIGHT = new ModuleCoefficient (
-        0.23188,
-        1.7732,
-        0.34659,
+        KS,
+        KV,
+        KA,
 
         KP,
         0.0,

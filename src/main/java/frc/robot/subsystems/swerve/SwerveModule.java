@@ -160,26 +160,35 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState state) {
-        if (limitInput && Math.abs(state.speedMetersPerSecond) < 0.01) {
-            stop();
-            return;
-        }
-        
+        // if (limitInput && Math.abs(state.speedMetersPerSecond) < 0.01) {
+        //     stop();
+        //     return;
+        // }
 
         state = SwerveModuleState.optimize(state, getRotation2d());
         desiredStates = state;
 
-        var newDrivePower = driveFeedforward.calculate(state.speedMetersPerSecond);
-        var newSteerPower = steerPIDController.calculate(getRadians(), state.angle.getRadians());
-        if (Math.abs(newDrivePower-drivePower) > 0.01) {
-            drivePower = newDrivePower;
-            drive.set(drivePower);
-        }
-        if (Math.abs(newSteerPower-steerPower) > 0.01) {
-            steerPower = newSteerPower;
-            steer.set(steerPower);
-        }
+        drivePower = driveFeedforward.calculate(state.speedMetersPerSecond) / 12.0;
+        steerPower = steerPIDController.calculate(getRadians(), state.angle.getRadians());
+        drive.set(drivePower);
+        steer.set(steerPower);
 
+        //     drivePower = newDrivePower;
+        // if (Math.abs(newDrivePower-drivePower) > 0.01) {
+        //     drivePower = newDrivePower;
+        //     drive.set(drivePower);
+        // }
+        // if (Math.abs(newSteerPower-steerPower) > 0.01) {
+        //     steerPower = newSteerPower;
+        //     steer.set(steerPower);
+        // }
+
+    }
+
+    public void setZeroPosition() {
+        drive.set(0);
+        var newSteerPower = steerPIDController.calculate(getRadians(), 0.0);
+        steer.set(newSteerPower);
     }
 
     public SwerveModulePosition getPosition() {
@@ -251,5 +260,6 @@ public class SwerveModule {
     public double getVoltage() {
         return drive.getAppliedOutput();
     }
+
     
 }

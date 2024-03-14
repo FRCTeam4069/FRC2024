@@ -71,7 +71,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     private final MutableMeasure<Angle> m_angle = mutable(Degrees.of(0));
     private final MutableMeasure<Velocity<Angle>> m_angularVelocity = mutable(DegreesPerSecond.of(0));
 
-    private Measure<Time> m_timeout = Millisecond.of(6000);
+    private Measure<Time> m_timeout = Millisecond.of(3000);
     private Measure<Velocity<Voltage>> rampRate = Volts.per(Second).of(2);
 
     private final StructArrayPublisher<SwerveModuleState> publisher;
@@ -156,6 +156,20 @@ public class SwerveDrivetrain extends SubsystemBase {
                     .linearVelocity(m_velocity.mut_replace(br.getDriveVelocity(), MetersPerSecond));
             }, this));
         
+    /*
+    private final SysIdRoutine driveRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            rampRate, null, m_timeout
+        ), 
+        new SysIdRoutine.Mechanism(
+            (Measure<Voltage> volts) -> {
+                fl.setVoltage(volts.in(Volts));
+                fr.setVoltage(volts.in(Volts));
+                bl.setVoltage(volts.in(Volts));
+                br.setVoltage(volts.in(Volts));
+            }, null, this));
+
+    */
 
     private final SysIdRoutine steerRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -344,7 +358,7 @@ public class SwerveDrivetrain extends SubsystemBase {
      * @param speeds mps
      */
     public void drive(ChassisSpeeds speeds) {
-        var betterSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        var betterSpeeds = new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
         desiredStates = kinematics.toSwerveModuleStates(betterSpeeds);
         setModuleStates(desiredStates);
     }
@@ -448,10 +462,10 @@ public class SwerveDrivetrain extends SubsystemBase {
             SmartDashboard.putNumber("BL drive pos", bl.getDrivePosition());
             SmartDashboard.putNumber("BR drive pos", br.getDrivePosition());
 
-            // SmartDashboard.putNumber("FL current mps", fl.getDriveVelocity());
-            // SmartDashboard.putNumber("FR current mps", fr.getDriveVelocity());
-            // SmartDashboard.putNumber("BL current mps", bl.getDriveVelocity());
-            // SmartDashboard.putNumber("BR current mps", br.getDriveVelocity());
+            SmartDashboard.putNumber("FL current mps", fl.getDriveVelocity());
+            SmartDashboard.putNumber("FR current mps", fr.getDriveVelocity());
+            SmartDashboard.putNumber("BL current mps", bl.getDriveVelocity());
+            SmartDashboard.putNumber("BR current mps", br.getDriveVelocity());
 
             // SmartDashboard.putNumber("FL steer heading", steerHeadings[0]);
             // SmartDashboard.putNumber("FR steer heading", steerHeadings[1]);
@@ -463,10 +477,10 @@ public class SwerveDrivetrain extends SubsystemBase {
             // SmartDashboard.putNumber("BL absolute heading", headings[2]);
             // SmartDashboard.putNumber("BR absolute heading", headings[3]);
 
-            // SmartDashboard.putNumber("FL desired mps", fl.getDesiredState().speedMetersPerSecond);
-            // SmartDashboard.putNumber("FR desired mps", fr.getDesiredState().speedMetersPerSecond);
-            // SmartDashboard.putNumber("BL desired mps", bl.getDesiredState().speedMetersPerSecond);
-            // SmartDashboard.putNumber("BR desired mps", br.getDesiredState().speedMetersPerSecond);
+            SmartDashboard.putNumber("FL desired mps", fl.getDesiredState().speedMetersPerSecond);
+            SmartDashboard.putNumber("FR desired mps", fr.getDesiredState().speedMetersPerSecond);
+            SmartDashboard.putNumber("BL desired mps", bl.getDesiredState().speedMetersPerSecond);
+            SmartDashboard.putNumber("BR desired mps", br.getDesiredState().speedMetersPerSecond);
 
             // SmartDashboard.putNumber("FL desired angle", fl.getDesiredState().angle.getDegrees());
             // SmartDashboard.putNumber("FR desired angle", fr.getDesiredState().angle.getDegrees());
@@ -504,12 +518,10 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     public void angleModules(Rotation2d angle) {
         SmartDashboard.putNumber("input angle", angle.getDegrees());
-        fl.setDesiredState(new
-        
-        SwerveModuleState(0.00, angle));
-        fr.setDesiredState(new SwerveModuleState(0.00, angle));
-        bl.setDesiredState(new SwerveModuleState(0.00, angle));
-        br.setDesiredState(new SwerveModuleState(0.00, angle));
+        fl.setDesiredState(new SwerveModuleState(0.0, angle));
+        fr.setDesiredState(new SwerveModuleState(0.0, angle));
+        bl.setDesiredState(new SwerveModuleState(0.0, angle));
+        br.setDesiredState(new SwerveModuleState(0.0, angle));
         SwerveModuleState help[] = {
             new SwerveModuleState(0.0, angle),
             new SwerveModuleState(0.0, angle),
@@ -517,6 +529,15 @@ public class SwerveDrivetrain extends SubsystemBase {
             new SwerveModuleState(0.0, angle)
         };
         desiredStates = help;
+    }
+
+    public Command zeroModules() {
+        return run(() -> {
+            fl.setZeroPosition();
+            fr.setZeroPosition();
+            bl.setZeroPosition();
+            br.setZeroPosition();
+        });
     }
 
     public void resetGyro() {

@@ -43,6 +43,7 @@ import frc.robot.commands.drivebase.TwoNote;
 import frc.robot.commands.drivebase.TwoNoteNew;
 import frc.robot.commands.drivebase.TwoNoteNewBlue;
 import frc.robot.commands.drivebase.testAuto;
+import frc.robot.commands.drivebase.test.straightLineTest;
 import frc.robot.commands.drivebase.test.testAutov2;
 import frc.robot.commands.drivebase.test.testAutov3;
 import frc.robot.commands.drivebase.test.testAutov4;
@@ -139,7 +140,6 @@ public class RobotContainer {
     // var camX = FrontCamera.getXDistanceToApriltag(7, 4);
     // var camY = FrontCamera.getYDistanceToApriltag(4, 7);
     // var angle = Math.atan2(camY, camX);
-    /*
     toggle = new Toggle(() -> Controller1.getHID().getStartButton(), () -> Controller1.getHID().getBackButton());
     drive.setDefaultCommand(new FieldCentricDrive(
       drive,
@@ -165,8 +165,6 @@ public class RobotContainer {
     Controller1.b().whileTrue(new Rotate(drive, Units.degreesToRadians(15.0)));
     Controller1.rightBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), 1.0, () -> FrontCamera.hasTarget(7, 4)));
     Controller1.leftBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), -1.0, () -> FrontCamera.hasTarget(7, 4)));
-    */
-    
     //autoChooser = AutoBuilder.buildAutoChooser();
 
     
@@ -181,17 +179,23 @@ public class RobotContainer {
     autoChooser.addOption("new pid auto", new testAutov5(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("new two ring on the side auto", new TwoNoteNew(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("BLUE new two ring on the side auto BLUE", new TwoNoteNewBlue(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("test", new straightLineTest(drive, intake, indexer, shooter, artShooter));
     
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    Controller1.a().onTrue(drive.sysIdSteerTest());
-    Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
+    //drive.setDefaultCommand(drive.zeroModules());
+    //Controller1.a().onTrue(drive.sysIdDriveTestQuasistatic());
+    //Controller1.b().onTrue(drive.sysIdDriveTestDynamic());
 
-    //intake.setDefaultCommand(new BringIntakeUpCommand(intake));
+
+
+    /*
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     intake.setDefaultCommand(new defaultArtCommand());
     climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
+    */
+
     //led.setDefaultCommand(led.setPattern(RevBlinkinPatterns.WHITE));
     //led.setDefaultCommand(led.HoldSetColour());
 
@@ -201,7 +205,7 @@ public class RobotContainer {
     //    () -> Controller2.leftBumper().getAsBoolean()
     //  ));
   
-    configureBindings();
+    //configureBindings();
   }
 
   /**

@@ -37,9 +37,9 @@ public class FieldCentricDrive extends Command {
     private double angleBuffer;
     private ShuffleboardTab tab;
     private BooleanSupplier fieldCentric;
-    // private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(0.5, -0.8, 0.0);
-    // private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(0.5, -0.8, 0.0);
-    // private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(0.8, -0.8, 0.0);
+    private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(20.0);
+    private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(20.0);
+    private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(20.0);
     public FieldCentricDrive(SwerveDrivetrain drive, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign, DoubleSupplier angleToAlign, BooleanSupplier fieldCentric) {
         this.drive = drive;
         this.turnSpeed = turnSpeed;
@@ -94,9 +94,9 @@ public class FieldCentricDrive extends Command {
         if (!autoAlign.getAsBoolean()) {
             drive.setInputLimit(true);
             outputSpeeds = new ChassisSpeeds(
-                (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (Math.pow(turnSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity));
+                xSlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(forwardSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                ySlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(strafeSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+                wSlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(turnSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity));
         } else {
             var power = headingPID.calculate(drive.getNormalizedRads(), 0.0);
             var voltage = (12 - RobotController.getBatteryVoltage()) * AutoAlignConstants.kV * Math.signum(power);
