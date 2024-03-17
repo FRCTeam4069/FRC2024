@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -8,9 +10,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-
-
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -35,9 +35,9 @@ public class ShooterController extends SubsystemBase {
 
         var slot0Configs = new Slot0Configs();
         slot0Configs.kV = 0.12273;
-        slot0Configs.kP = 0.11;
-        slot0Configs.kI = 0.48;
-        slot0Configs.kD = 0.01;
+        slot0Configs.kP = 0.2;
+        slot0Configs.kI = 0;
+        slot0Configs.kD = 0;
 
         // var slot1Configs = new Slot0Configs();
         // slot0Configs.kV = 0.12273;
@@ -106,7 +106,9 @@ public class ShooterController extends SubsystemBase {
             talon1.setControl(v.withVelocity(leftVel));
             talon2.setControl(v.withVelocity(-rightVel));
         }
-        
+
+        SmartDashboard.putNumber("Right Shooter Speed", talon2.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Left  Shooter Speed", talon1.getVelocity().getValueAsDouble());
     }
     
    

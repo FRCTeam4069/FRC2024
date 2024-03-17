@@ -98,6 +98,18 @@ public class ClimberSubsystem extends SubsystemBase {
         return climber.getOutputCurrent();
     }
 
-
-
+    public Command setPower(edu.wpi.first.wpilibj.Relay.Direction d){
+        if (d == edu.wpi.first.wpilibj.Relay.Direction.kForward){
+            return this.runOnce(() -> climber.set(1));
+        }
+        else if(d == edu.wpi.first.wpilibj.Relay.Direction.kReverse){
+            return this.runOnce(() -> climber.set(-1));
+        }
+        return this.runOnce(() -> climber.set(0));
+    }
+    
 }
+
+
+
+

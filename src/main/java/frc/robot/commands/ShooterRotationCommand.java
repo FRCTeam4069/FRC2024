@@ -18,7 +18,7 @@ public class ShooterRotationCommand extends Command {
             shooter.goToAngle();
         }
         else{
-            shooter.setCustomAngle(15);
+            shooter.setCustomAngle(0);
         }
         
     }

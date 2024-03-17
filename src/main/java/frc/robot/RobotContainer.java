@@ -13,6 +13,7 @@ import com.revrobotics.REVLibError;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -197,7 +198,7 @@ public class RobotContainer {
 
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     intake.setDefaultCommand(new defaultArtCommand());
-    climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
+    //climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
 
     //led.setDefaultCommand(led.setPattern(RevBlinkinPatterns.WHITE));
     //led.setDefaultCommand(led.HoldSetColour());
@@ -239,8 +240,9 @@ public class RobotContainer {
     //Controller2.rightBumper().whileTrue(new RunCommand(() -> intake.driveFeed())).whileFalse(new InstantCommand(() -> intake.stopFeed()));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
-    Controller2.start().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.CLIMB)).onTrue(artShooter.changeClimbStatus());
-
+    Controller2.start().onTrue(artShooter.changeClimbStatus()).onTrue(climber.setPower(Direction.kForward));
+    Controller2.back().onTrue(climber.setPower(Direction.kReverse))//.onTrue(()-> artShooter.setCustomAngle(15));
+;
     Controller2.start().onTrue(led.setPattern(RevBlinkinPatterns.VIOLET));
 
     //Controller2.start().onTrue(led.setColour(Colours.RED));

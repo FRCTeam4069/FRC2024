@@ -16,8 +16,7 @@ public class LEDController extends SubsystemBase {
     }
 
     public Command setPattern(RevBlinkinPatterns pattern) {
-
-                return this.runOnce(() -> blinkinLED.setPulseTimeMicroseconds((int)(pattern.getValue())));
+        return this.runOnce(() -> blinkinLED.setPulseTimeMicroseconds((int)(pattern.getValue())));
     }
 
 }
