@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoCustomAngle;
+import frc.robot.commands.AutoLowerIntake;
+import frc.robot.commands.AutoSetIntakeState;
 import frc.robot.commands.DisableSubsystems;
 import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.drivebase.BadPIDCommand;
@@ -42,7 +44,14 @@ public class straightLineTest extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 new InstantCommand(() -> drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(0.0)))),
                 
-                new FollowPath(drive, "straight test"),
+                new ParallelCommandGroup(
+                    new SequentialCommandGroup(
+                        new AutoLowerIntake(intake),
+                        new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON)
+                    ),
+                    new FollowPath(drive, "straight test")
+
+                ),
 
                 new DisableSubsystems(rot, shooter, index, i)
 

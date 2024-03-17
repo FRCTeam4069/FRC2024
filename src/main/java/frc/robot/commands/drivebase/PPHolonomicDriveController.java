@@ -2,6 +2,7 @@ package frc.robot.commands.drivebase;
 
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -10,6 +11,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.subsystems.IntakeController.positions;
+
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -22,7 +25,11 @@ public class PPHolonomicDriveController implements PathFollowingController {
   private final double mpsToRps;
 
   private Translation2d translationError = new Translation2d();
+  private Rotation2d rotationalError = new Rotation2d();
+  private Pose2d tolerance = new Pose2d();
+  private State referenceState = new State();
   private boolean isEnabled = true;
+  private Translation2d referenceError = new Translation2d();
 
   private static Supplier<Optional<Rotation2d>> rotationTargetOverride = null;
 
@@ -125,6 +132,10 @@ public class PPHolonomicDriveController implements PathFollowingController {
     targetState.heading = new Rotation2d(targetState.heading.getRadians()*-1);
 
     this.translationError = currentPose.getTranslation().minus(targetState.positionMeters);
+    
+    // for tolerance
+    this.referenceError = currentPose.getTranslation().minus(referenceState.positionMeters);
+    this.rotationalError = currentPose.getRotation().minus(referenceState.getTargetHolonomicPose().getRotation());
 
     if (!this.isEnabled) {
       return ChassisSpeeds.fromFieldRelativeSpeeds(xFF, yFF, 0, currentPose.getRotation());
@@ -154,7 +165,7 @@ public class PPHolonomicDriveController implements PathFollowingController {
     }
 
     double rotationFeedback =
-        -1*rotationController.calculate(
+        rotationController.calculate(
             currentPose.getRotation().getRadians(),
             new TrapezoidProfile.State(targetRotation.getRadians(), 0),
             rotationConstraints);
@@ -162,7 +173,7 @@ public class PPHolonomicDriveController implements PathFollowingController {
         targetState.holonomicAngularVelocityRps.orElse(rotationController.getSetpoint().velocity);
 
     return ChassisSpeeds.fromFieldRelativeSpeeds(
-        xFF + xFeedback, yFF + yFeedback, (rotationFF + rotationFeedback), currentPose.getRotation());
+        xFF + xFeedback, yFF + yFeedback, -1*rotationFF + rotationFeedback, currentPose.getRotation());
   }
 
   /**
@@ -173,6 +184,32 @@ public class PPHolonomicDriveController implements PathFollowingController {
   @Override
   public double getPositionalError() {
     return translationError.getNorm();
+  }
+
+  /**
+   * Get the current rotational error between the robot's actual and target positions
+   *
+   * @return Rotational error, in degrees
+   */
+  public double getRotationalError() {
+    return rotationalError.getDegrees();
+  }
+
+  public void setTolerance(Pose2d pose) {
+    this.tolerance = pose;
+  }
+
+  public void setReferenceState(State state) {
+    this.referenceState = state;
+  }
+
+  public boolean atReference() {
+    Translation2d translationTolerance = this.tolerance.getTranslation();
+    Rotation2d rotationTolerance = this.tolerance.getRotation();
+
+    return Math.abs(this.referenceError.getX()) < translationTolerance.getX()
+        && Math.abs(this.referenceError.getY()) < translationTolerance.getY()
+        && Math.abs(getRotationalError()) < rotationTolerance.getDegrees();
   }
 
   /**

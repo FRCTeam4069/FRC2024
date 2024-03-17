@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.constants.DrivebaseConstants;
 import frc.robot.constants.DrivebaseConstants.ModuleCoefficient;
+import frc.robot.subsystems.IntakeController.positions;
 
 public class SwerveModule {
     private CANSparkFlex drive;
@@ -28,6 +29,7 @@ public class SwerveModule {
     private double steerPower = 0.0;
     private double heading = 0.0;
     private boolean limitInput = true;
+    private double kS = 0.0;
 
     /**
      * Create swerve module
@@ -66,9 +68,11 @@ public class SwerveModule {
         drive.getEncoder().setPositionConversionFactor(DrivebaseConstants.driveConversionFactor);
         drive.getEncoder().setVelocityConversionFactor(DrivebaseConstants.driveConversionFactor);
         drive.setSmartCurrentLimit(30);
-        drive.setOpenLoopRampRate(DrivebaseConstants.rampRate);
+        drive.setOpenLoopRampRate(0.005);
         steer.getEncoder().setPositionConversionFactor(DrivebaseConstants.steerConversionFactor);
         steer.getEncoder().setVelocityConversionFactor(DrivebaseConstants.steerConversionFactor);
+        steer.setSmartCurrentLimit(30);
+        steer.setOpenLoopRampRate(0.001);
 
         var config = new MagnetSensorConfigs();
         config.SensorDirection = encoderInverted ? SensorDirectionValue.CounterClockwise_Positive : SensorDirectionValue.Clockwise_Positive;
@@ -78,6 +82,7 @@ public class SwerveModule {
 
         steerPIDController = new PIDController(moduleCoefficient.kP, moduleCoefficient.kI, moduleCoefficient.kD);
         steerPIDController.enableContinuousInput(0.0, Math.PI*2);
+        kS = moduleCoefficient.kS;
 
     }
 
@@ -160,16 +165,17 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState state) {
-        // if (limitInput && Math.abs(state.speedMetersPerSecond) < 0.01) {
-        //     stop();
-        //     return;
-        // }
+        if (limitInput && Math.abs(state.speedMetersPerSecond) < 0.00) {
+            stop();
+            return;
+        }
 
         state = SwerveModuleState.optimize(state, getRotation2d());
         desiredStates = state;
 
         drivePower = driveFeedforward.calculate(state.speedMetersPerSecond) / 12.0;
         steerPower = steerPIDController.calculate(getRadians(), state.angle.getRadians());
+        //steerPower = steerPower + Math.signum(steerPower) * kS;
         drive.set(drivePower);
         steer.set(steerPower);
 

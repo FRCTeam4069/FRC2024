@@ -33,6 +33,7 @@ import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
+import frc.robot.commands.drivebase.Auto2056;
 import frc.robot.commands.drivebase.FrontAuto;
 import frc.robot.commands.drivebase.OneNote;
 import frc.robot.commands.drivebase.Rotate;
@@ -140,6 +141,7 @@ public class RobotContainer {
     // var camX = FrontCamera.getXDistanceToApriltag(7, 4);
     // var camY = FrontCamera.getYDistanceToApriltag(4, 7);
     // var angle = Math.atan2(camY, camX);
+
     toggle = new Toggle(() -> Controller1.getHID().getStartButton(), () -> Controller1.getHID().getBackButton());
     drive.setDefaultCommand(new FieldCentricDrive(
       drive,
@@ -167,19 +169,22 @@ public class RobotContainer {
     Controller1.leftBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), -1.0, () -> FrontCamera.hasTarget(7, 4)));
     //autoChooser = AutoBuilder.buildAutoChooser();
 
+    // drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
+
     
     autoChooser.setDefaultOption("one", new testAuto(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("onev2", new testAutov2(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("onev3", new testAutov3(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("onev4", new testAutov4(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("side auto", new SideAuto(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("front auto", new FrontAuto(drive, intake, indexer, shooter, artShooter));
+    //autoChooser.addOption("onev3", new testAutov3(drive, intake, indexer, shooter, artShooter));
+    //autoChooser.addOption("onev4", new testAutov4(drive, intake, indexer, shooter, artShooter));
+    //autoChooser.addOption("side auto", new SideAuto(drive, intake, indexer, shooter, artShooter));
+    //autoChooser.addOption("front auto", new FrontAuto(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("no move auto", new OneNote(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("two ring on angle", new TwoNote(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("new pid auto", new testAutov5(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("new two ring on the side auto", new TwoNoteNew(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("BLUE new two ring on the side auto BLUE", new TwoNoteNewBlue(drive, intake, indexer, shooter, artShooter));
+    //autoChooser.addOption("new pid auto", new testAutov5(drive, intake, indexer, shooter, artShooter));
+    //autoChooser.addOption("new two ring on the side auto", new TwoNoteNew(drive, intake, indexer, shooter, artShooter));
+    //autoChooser.addOption("BLUE new two ring on the side auto BLUE", new TwoNoteNewBlue(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("test", new straightLineTest(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("2056 auto", new Auto2056(drive, intake, indexer, shooter, artShooter));
     
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -190,11 +195,9 @@ public class RobotContainer {
 
 
 
-    /*
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     intake.setDefaultCommand(new defaultArtCommand());
     climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
-    */
 
     //led.setDefaultCommand(led.setPattern(RevBlinkinPatterns.WHITE));
     //led.setDefaultCommand(led.HoldSetColour());
@@ -205,7 +208,7 @@ public class RobotContainer {
     //    () -> Controller2.leftBumper().getAsBoolean()
     //  ));
   
-    //configureBindings();
+    configureBindings();
   }
 
   /**

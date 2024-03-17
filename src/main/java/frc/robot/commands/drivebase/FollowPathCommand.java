@@ -1,19 +1,24 @@
 package frc.robot.commands.drivebase;
 
-import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.EventMarker;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.PPLibTelemetry;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.constants.DrivebaseConstants;
+
 import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -26,7 +31,7 @@ public class FollowPathCommand extends Command {
   private final Supplier<Pose2d> poseSupplier;
   private final Supplier<ChassisSpeeds> speedsSupplier;
   private final Consumer<ChassisSpeeds> output;
-  private final PathFollowingController controller;
+  private final PPHolonomicDriveController controller;
   private final ReplanningConfig replanningConfig;
   private final BooleanSupplier shouldFlipPath;
 
@@ -56,7 +61,7 @@ public class FollowPathCommand extends Command {
       Supplier<Pose2d> poseSupplier,
       Supplier<ChassisSpeeds> speedsSupplier,
       Consumer<ChassisSpeeds> outputRobotRelative,
-      PathFollowingController controller,
+      PPHolonomicDriveController controller,
       ReplanningConfig replanningConfig,
       BooleanSupplier shouldFlipPath,
       Subsystem... requirements) {
@@ -123,6 +128,8 @@ public class FollowPathCommand extends Command {
     untriggeredEvents.clear();
     untriggeredEvents.addAll(generatedTrajectory.getEventCommands());
 
+    controller.setTolerance(DrivebaseConstants.positionTolerance);
+
     timer.reset();
     timer.start();
   }
@@ -173,6 +180,8 @@ public class FollowPathCommand extends Command {
         currentSpeeds.omegaRadiansPerSecond,
         targetSpeeds.omegaRadiansPerSecond);
     PPLibTelemetry.setPathInaccuracy(controller.getPositionalError());
+    SmartDashboard.putNumber("translation error", controller.getPositionalError());
+    SmartDashboard.putNumber("rotational error", controller.getRotationalError());
 
     output.accept(targetSpeeds);
 
@@ -213,8 +222,9 @@ public class FollowPathCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds());
+    return (controller.atReference()) || timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds()+5);
   }
+
 
   @Override
   public void end(boolean interrupted) {
