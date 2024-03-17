@@ -129,6 +129,7 @@ public class FollowPathCommand extends Command {
     untriggeredEvents.addAll(generatedTrajectory.getEventCommands());
 
     controller.setTolerance(DrivebaseConstants.positionTolerance);
+    controller.setReferenceState(generatedTrajectory.getEndState());
 
     timer.reset();
     timer.start();
@@ -180,8 +181,15 @@ public class FollowPathCommand extends Command {
         currentSpeeds.omegaRadiansPerSecond,
         targetSpeeds.omegaRadiansPerSecond);
     PPLibTelemetry.setPathInaccuracy(controller.getPositionalError());
-    SmartDashboard.putNumber("translation error", controller.getPositionalError());
+    SmartDashboard.putNumber("x error", controller.geTranslationError().getX());
+    SmartDashboard.putNumber("y error", controller.geTranslationError().getY());
     SmartDashboard.putNumber("rotational error", controller.getRotationalError());
+
+    if (Math.abs(targetSpeeds.vxMetersPerSecond) < 0.001 
+     && Math.abs(targetSpeeds.vyMetersPerSecond) < 0.001
+     && Math.abs(targetSpeeds.omegaRadiansPerSecond) < 0.001) {
+      targetSpeeds = new ChassisSpeeds();
+    }
 
     output.accept(targetSpeeds);
 
@@ -222,7 +230,7 @@ public class FollowPathCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return (controller.atReference()) || timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds()+5);
+    return /*(controller.atReference()) ||*/ timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds()+5);
   }
 
 
@@ -244,6 +252,8 @@ public class FollowPathCommand extends Command {
         runningCommand.getKey().end(true);
       }
     }
+
+    output.accept(new ChassisSpeeds());
   }
 
   private void replanPath(Pose2d currentPose, ChassisSpeeds currentSpeeds) {

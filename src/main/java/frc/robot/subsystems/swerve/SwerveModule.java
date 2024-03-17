@@ -165,10 +165,10 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState state) {
-        if (limitInput && Math.abs(state.speedMetersPerSecond) < 0.00) {
-            stop();
-            return;
-        }
+        // if (limitInput && Math.abs(state.speedMetersPerSecond) < 0.001) {
+        //     stop();
+        //     return;
+        // }
 
         state = SwerveModuleState.optimize(state, getRotation2d());
         desiredStates = state;
