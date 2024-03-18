@@ -96,6 +96,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     public void updateOdometry(SwerveModulePosition[] positions) {
         odometry.update(gyro.getRotation2d(), positions);
+        
 
         // var res = cam.getLatestResult();
         // SmartDashboard.putBoolean("hasTargets", res.hasTargets());
@@ -568,6 +569,10 @@ public class SwerveDrivetrain extends SubsystemBase {
         var theta = getRadians();
         return Math.IEEEremainder(theta, 2*Math.PI);
         //return theta - (2*Math.PI) * Math.floor((theta + Math.PI) / 2*Math.PI);
+    }
+
+    public static double normalizeRadians(double rads) {
+        return Math.IEEEremainder(rads, 2*Math.PI);
     }
 
     public Rotation2d getRotation2d() {

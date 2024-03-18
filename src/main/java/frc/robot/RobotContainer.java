@@ -158,8 +158,8 @@ public class RobotContainer {
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.y().onTrue(new InstantCommand(() -> drive.resetGyro()));
     //Controller1.povUp().onTrue(new InstantCommand(() -> drive.resetPose()));
-    //Controller1.povUp().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, Rotation2d.fromDegrees(60.0)))));
-    Controller1.povUp().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))));
+    Controller1.povUp().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, Rotation2d.fromDegrees(0.0)))));
+    // Controller1.povUp().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))));
 
     new Trigger(() -> MathUtil.isNear(0.0, FrontCamera.getTX(7, 4), Units.degreesToRadians(3)))
       .whileTrue(new InstantCommand(() -> Controller1.getHID().setRumble(RumbleType.kBothRumble, 0.1)))
