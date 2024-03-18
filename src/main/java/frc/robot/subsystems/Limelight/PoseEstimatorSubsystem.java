@@ -49,14 +49,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final Supplier<SwerveModulePosition[]> modulePositionSupplier;
   private final SwerveDrivePoseEstimator poseEstimator;
   private final Field2d field2d = new Field2d();
-  private final PhotonRunnable frontEstimator = new PhotonRunnable(new PhotonCamera("frontCamera"),
+  private final PhotonRunnable frontEstimator = new PhotonRunnable(new PhotonCamera("front"),
       CameraConstants.robotCenterToFrontCam);
-  // private final PhotonRunnable leftEstimator = new PhotonRunnable(new PhotonCamera("rightCamera"),
-      // CameraConstants.robotCenterToRightCam);
+  private final PhotonRunnable leftEstimator = new PhotonRunnable(new PhotonCamera("right"),
+      CameraConstants.robotCenterToRightCam);
 
   private final Notifier allNotifier = new Notifier(() -> {
     frontEstimator.run();
-    // leftEstimator.run();
+    leftEstimator.run();
   });
 
   private OriginPosition originPosition = kBlueAllianceWallRightSide;

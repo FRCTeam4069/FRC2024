@@ -13,15 +13,14 @@ public class CameraConstants {
     
     public static boolean USE_VISION = true;
 
-    public static final double apriltagAmbiguityThreshold = 0.2;
+    public static final double apriltagAmbiguityThreshold = 0.4;
     public static final double POSE_AMBIGUITY_SHIFTER = 0.2;
     public static final double POSE_AMBIGUITY_MULTIPLIER = 4;
     public static final double NOISY_DISTANCE_METERS = 2.5;
     public static final double DISTANCE_WEIGHT = 7;
     public static final int TAG_PRESENCE_WEIGHT = 10;
 
-    public static final String fCamName = "frontCamera", sCamName = "rightCamera";
-
+    //TODO find correct transforms
     public static final Transform3d robotCenterToFrontCam = new Transform3d(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)), new Rotation3d(0, Units.degreesToRadians(28.0), 0));
     public static final Transform3d robotCenterToRightCam = new Transform3d(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)), new Rotation3d(0, Units.degreesToRadians(27.8), 0));
 
