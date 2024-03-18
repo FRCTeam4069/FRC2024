@@ -8,9 +8,12 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 
+import org.photonvision.PhotonCamera;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.REVLibError;
 
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
@@ -49,6 +52,7 @@ import frc.robot.commands.drivebase.test.testAutov2;
 import frc.robot.commands.drivebase.test.testAutov3;
 import frc.robot.commands.drivebase.test.testAutov4;
 import frc.robot.commands.drivebase.test.testAutov5;
+import frc.robot.constants.CameraConstants;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
@@ -62,6 +66,7 @@ import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
+import frc.robot.subsystems.Limelight.PhotonRunnable;
 import frc.robot.subsystems.Limelight.PoseEstimatorSubsystem;
 
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
@@ -101,7 +106,7 @@ public class RobotContainer {
   public static final CameraIsAsCameraDoes  FrontCamera = new CameraIsAsCameraDoes("limelight-front");
   // public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(null, null);
 
-  public static final ShuffleboardTab autoTab = Shuffleboard.getTab("auto");
+  public final ShuffleboardTab autoTab = Shuffleboard.getTab("auto");
 
   public final PowerDistribution powerDistributionHub = new PowerDistribution();
 
@@ -116,10 +121,7 @@ public class RobotContainer {
 
   public static final SwerveDrivetrain drive = new SwerveDrivetrain();
 
-  // public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive.getGyroscropeRotation(), drive.getModulePositions());
-  // public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getGyroscropeRotation, drive::getModulePositions);
-
-  //public final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getRotation2d, drive::getModulePositions);
+  public final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getRotation2d, drive::getModulePositions);
 
   public final SendableChooser<Command> autoChooser = new SendableChooser<>();
   
