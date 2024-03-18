@@ -22,13 +22,13 @@ import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
-public class straightLineTest extends SequentialCommandGroup {
+public class PoseTest extends SequentialCommandGroup {
     private SwerveDrivetrain drive;
     private IntakeController intake;
     private IndexerController indexer;
     private ShooterController shooter;
     private ShooterRotationController rotShoot;
-    public straightLineTest(SwerveDrivetrain drive, IntakeController i, IndexerController index, ShooterController shooter, ShooterRotationController rot) {
+    public PoseTest(SwerveDrivetrain drive, IntakeController i, IndexerController index, ShooterController shooter, ShooterRotationController rot) {
         this.drive = drive;
         intake = i;
         indexer = index;
@@ -42,16 +42,9 @@ public class straightLineTest extends SequentialCommandGroup {
 
         addCommands(
             new SequentialCommandGroup(
-                new InstantCommand(() -> drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(0.0)))),
+                new InstantCommand(() -> drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(60.0)))),
                 
-                new ParallelCommandGroup(
-                    new SequentialCommandGroup(
-                        //new AutoLowerIntake(intake),
-                        //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON)
-                    ),
-                    new FollowPath(drive, "straight test")
-
-                ),
+                // new FollowPath(drive, "straight test"),
 
                 //new WaitCommand(3),
 

@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.DrivebaseConstants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.DrivebaseConstants.AlignConstants;
 import frc.robot.constants.DrivebaseConstants.AutoAlignConstants;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
@@ -98,15 +100,15 @@ public class FieldCentricDrive extends Command {
                 ySlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(strafeSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 wSlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(turnSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity));
         } else {
-            var power = headingPID.calculate(drive.getNormalizedRads(), 0.0);
-            var voltage = (12 - RobotController.getBatteryVoltage()) * AutoAlignConstants.kV * Math.signum(power);
-            power += Math.abs(AutoAlignConstants.kS)*Math.signum(power) + voltage*Math.signum(power);
-            var xSpeed = forwardSpeed.getAsDouble();
-            var ySpeed = strafeSpeed.getAsDouble();
+            // var power = headingPID.calculate(drive.getNormalizedRads(), 0.0);
+            // var voltage = (12 - RobotController.getBatteryVoltage()) * AutoAlignConstants.kV * Math.signum(power);
+            // power += Math.abs(AutoAlignConstants.kS)*Math.signum(power) + voltage*Math.signum(power);
+            // var xSpeed = forwardSpeed.getAsDouble();
+            // var ySpeed = strafeSpeed.getAsDouble();
 
-            if (xSpeed > 0.2 || ySpeed > 0.2) {
-                power = power * 180;
-            }
+            // if (xSpeed > 0.2 || ySpeed > 0.2) {
+            //     power = power * 180;
+            // }
 
 
 
@@ -122,13 +124,24 @@ public class FieldCentricDrive extends Command {
             //     power = AutoAlignConstants.powerLimit*Math.signum(power);
             // }
             // SmartDashboard.putNumber("align power", power);
-            if (Math.abs(drive.getRadians()) < Units.degreesToRadians(3)) power = 0;
-            if (Math.abs(power)>1) power=Math.signum(power);
+
+
+            // if (Math.abs(drive.getRadians()) < Units.degreesToRadians(3)) power = 0;
+            // if (Math.abs(power)>1) power=Math.signum(power);
+
+            var robotPose = drive.getPose();
+            var targetPose = FieldConstants.poseBlueSpeaker;
+
+            var relativePose = robotPose.minus(targetPose);
+            var desiredAngle = Math.atan2(relativePose.getY(), relativePose.getX());
+
+            var power = headingPID.calculate(drive.getNormalizedRads(), SwerveDrivetrain.normalizeRadians(desiredAngle+Math.PI));
+
             
             outputSpeeds = new ChassisSpeeds(
                 (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
                 (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (-1*power)*DrivebaseConstants.maxAngularVelocity);
+                (power)*DrivebaseConstants.maxAngularVelocity);
 
         }
 

@@ -40,8 +40,8 @@ public final class DrivebaseConstants {
     private static final double STEER_KV = 1.00;
 
     // public static final PIDConstants translation = new PIDConstants(6.0, 0.0, 0.5);
-    public static final PIDConstants translation = new PIDConstants(0.1, 0.0, 0.0);
-    public static final PIDConstants rotation = new PIDConstants(1.0, 0.0, 0.0);
+    public static final PIDConstants translation = new PIDConstants(0.5, 0.0, 0.0);
+    public static final PIDConstants rotation = new PIDConstants(0.1, 0.0, 0.0);
     public static final Pose2d positionTolerance = new Pose2d(0.02, 0.02, Rotation2d.fromDegrees(3));
 
     public static final class AlignConstants {
@@ -56,11 +56,11 @@ public final class DrivebaseConstants {
     }
 
     public static final class AutoAlignConstants {
-        public static final double kP = 0.19;
+        public static final double kP = 0.10;
         public static final double kI = 0.0;
-        public static final double kD = 0.020;
-        public static final double kS = 0.002;
-        public static final double kV = 0.01;
+        public static final double kD = 0.001;
+        public static final double kS = 0.000;
+        public static final double kV = 0.00;
         //public static final double powerLimit = 0.75;
         public static final double positionTolerance = Units.degreesToRadians(2);
         //public static final double velocityTolerance = 0.005;

@@ -134,7 +134,7 @@ public class PPHolonomicDriveController implements PathFollowingController {
     this.translationError = currentPose.getTranslation().minus(targetState.positionMeters);
     
     // for tolerance
-    this.referenceError = currentPose.getTranslation().minus(referenceState.positionMeters);
+    this.referenceError = currentPose.getTranslation().minus(referenceState.getTargetHolonomicPose().getTranslation());
     this.rotationalError = currentPose.getRotation().minus(referenceState.getTargetHolonomicPose().getRotation());
 
     if (!this.isEnabled) {
@@ -193,6 +193,14 @@ public class PPHolonomicDriveController implements PathFollowingController {
    */
   public double getRotationalError() {
     return rotationalError.getDegrees();
+  }
+
+  public double getReferenceError() {
+    return referenceError.getNorm();
+  }
+
+  public Translation2d geTranslationError() {
+    return referenceError;
   }
 
   public void setTolerance(Pose2d pose) {
