@@ -21,7 +21,7 @@ public class CameraConstants {
     public static final int TAG_PRESENCE_WEIGHT = 10;
 
     //TODO find correct transforms
-    public static final Transform3d robotCenterToFrontCam = new Transform3d(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)), new Rotation3d(0, Units.degreesToRadians(28.0), 0));
+    public static final Transform3d robotCenterToFrontCam = new Transform3d(new Translation3d(Units.inchesToMeters(11.5), Units.inchesToMeters(6.5), Units.inchesToMeters(0)), new Rotation3d(0, Units.degreesToRadians(28.0), 0));
     public static final Transform3d robotCenterToRightCam = new Transform3d(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)), new Rotation3d(0, Units.degreesToRadians(27.8), 0));
 
      /**
