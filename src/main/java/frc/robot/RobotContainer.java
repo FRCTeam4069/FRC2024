@@ -26,6 +26,7 @@ import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.DefualtShooter;
 import frc.robot.commands.FeedIntakeCommand;
 import frc.robot.commands.FieldCentricDrive;
+import frc.robot.commands.IndexShooter;
 import frc.robot.commands.REverseIndexerCommand;
 import frc.robot.commands.SetShooterCommand;
 import frc.robot.commands.SetShooterRotation;
@@ -198,7 +199,7 @@ public class RobotContainer {
 
     artShooter.setDefaultCommand(new ShooterRotationCommand(artShooter));
     intake.setDefaultCommand(new defaultArtCommand());
-    //climber.setDefaultCommand(new ClimberCommand(climber, () -> Controller2.getLeftY()));
+    //climber.setDefaultCommand(new Climb erCommand(climber, () -> Controller2.getLeftY()));
 
     //led.setDefaultCommand(led.setPattern(RevBlinkinPatterns.WHITE));
     //led.setDefaultCommand(led.HoldSetColour());
@@ -223,12 +224,18 @@ public class RobotContainer {
    */
   private void configureBindings() {
     Controller2.y().whileTrue(new SetShooterRotation(artShooter,-Math.abs(FrontCamera.getXDistanceToApriltag(7, 4)), shooter)).onTrue(intake.setPosition(positions.UPPER));
-
+    //git hub trial//
+    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
     //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA))/*.onTrue(intake.setPosition(positions.UPPER))* */;
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
-    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
-
+    //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
+    Controller1.rightTrigger(0.2).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
+    Controller1.rightTrigger(0.2).whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller1.getRightTriggerAxis()));
+    Controller1.rightTrigger(0.2).whileTrue(new FeedIntakeCommand());
+    Controller1.rightTrigger(0.2).whileTrue(led.setPattern(RevBlinkinPatterns.SHOT_BLUE));
+    Controller1.rightTrigger(0.2).onFalse(led.setPattern(RevBlinkinPatterns.SHOT_RED));
+    Controller1.rightTrigger(0.2).onTrue(intake.setPosition(positions.LOWER));
     // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     Controller2.leftBumper().whileTrue(new unIndexCOmmand(indexer));

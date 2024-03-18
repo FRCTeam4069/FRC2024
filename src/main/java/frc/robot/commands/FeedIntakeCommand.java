@@ -8,7 +8,7 @@ public class FeedIntakeCommand extends Command{
     private IntakeController intake = RobotContainer.intake;
 
     public FeedIntakeCommand(){
-        addRequirements(RobotContainer.intake);
+        //addRequirements(RobotContainer.intake);
     }
 
     @Override
