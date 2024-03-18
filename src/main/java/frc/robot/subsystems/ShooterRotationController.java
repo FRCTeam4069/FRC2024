@@ -145,4 +145,14 @@ public class ShooterRotationController extends SubsystemBase {
         left.stopMotor();
         right.stopMotor();
     }
+
+    boolean down = false;
+
+    public Command setDown(){
+        return this.runOnce(() -> down = true);
+    }
+
+    public boolean NotDown(){
+        return down;
+    }
 }

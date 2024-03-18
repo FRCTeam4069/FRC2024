@@ -17,8 +17,11 @@ public class ShooterRotationCommand extends Command {
         if(!shooter.isClimbing()){
             shooter.goToAngle();
         }
+        else if(shooter.isClimbing() && !shooter.NotDown()){
+            shooter.setCustomAngle(1);
+        }
         else{
-            shooter.setCustomAngle(0);
+            shooter.setCustomAngle(15);
         }
         
     }

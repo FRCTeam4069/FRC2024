@@ -35,7 +35,7 @@ public class ShooterController extends SubsystemBase {
 
         var slot0Configs = new Slot0Configs();
         slot0Configs.kV = 0.12273;
-        slot0Configs.kP = 0.2;
+        slot0Configs.kP = 0.13;
         slot0Configs.kI = 0;
         slot0Configs.kD = 0;
 

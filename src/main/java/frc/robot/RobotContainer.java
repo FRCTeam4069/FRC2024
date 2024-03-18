@@ -225,7 +225,7 @@ public class RobotContainer {
     Controller2.y().whileTrue(new SetShooterRotation(artShooter,-Math.abs(FrontCamera.getXDistanceToApriltag(7, 4)), shooter)).onTrue(intake.setPosition(positions.UPPER));
 
     //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
-    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA))/*.onTrue(intake.setPosition(positions.UPPER))* */;
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
 
@@ -237,11 +237,12 @@ public class RobotContainer {
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
     //Controller2.rightBumper().onTrue(intake.setPosition(positions.LOWER));
+
     //Controller2.rightBumper().whileTrue(new RunCommand(() -> intake.driveFeed())).whileFalse(new InstantCommand(() -> intake.stopFeed()));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
     Controller2.start().onTrue(artShooter.changeClimbStatus()).onTrue(climber.setPower(Direction.kForward));
-    Controller2.back().onTrue(climber.setPower(Direction.kReverse))//.onTrue(()-> artShooter.setCustomAngle(15));
+    Controller2.back().onTrue(climber.setPower(Direction.kReverse)).onTrue(artShooter.setDown())//.onTrue(()-> artShooter.setCustomAngle(15));
 ;
     Controller2.start().onTrue(led.setPattern(RevBlinkinPatterns.VIOLET));
 
