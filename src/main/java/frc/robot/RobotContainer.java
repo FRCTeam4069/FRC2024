@@ -38,6 +38,7 @@ import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
 import frc.robot.commands.drivebase.Auto2056;
+import frc.robot.commands.drivebase.Four;
 import frc.robot.commands.drivebase.FrontAuto;
 import frc.robot.commands.drivebase.OneNote;
 import frc.robot.commands.drivebase.Rotate;
@@ -123,7 +124,7 @@ public class RobotContainer {
 
   public static final SwerveDrivetrain drive = new SwerveDrivetrain();
 
-  public final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getRotation2d, drive::getModulePositions);
+  public final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getRotation2d, drive::getModulePositions, drive::addVisionMeasurement);
 
   public final SendableChooser<Command> autoChooser = new SendableChooser<>();
   
@@ -191,6 +192,7 @@ public class RobotContainer {
     autoChooser.addOption("test", new straightLineTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("2056 auto", new Auto2056(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("pose test", new PoseTest(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("four ring", new Four(drive, intake, indexer, shooter, artShooter));
     
 
     SmartDashboard.putData("Auto Chooser", autoChooser);

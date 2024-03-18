@@ -3,6 +3,7 @@ package frc.robot.subsystems.Limelight;
 import static edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide;
 import static edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition.kRedAllianceWallRightSide;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.photonvision.EstimatedRobotPose;
@@ -22,6 +23,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,6 +32,7 @@ import frc.robot.constants.CameraConstants;
 // import frc.robot.util.FieldConstants;
 import frc.robot.constants.DrivebaseConstants;
 import frc.robot.constants.FieldConstants;
+import frc.robot.util.TimedPose2d;
 
 public class PoseEstimatorSubsystem extends SubsystemBase {
 
@@ -47,6 +50,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
   private final Supplier<Rotation2d> rotationSupplier;
   private final Supplier<SwerveModulePosition[]> modulePositionSupplier;
+  private final Consumer<TimedPose2d> poseConsumer;
   private final SwerveDrivePoseEstimator poseEstimator;
   private final Field2d field2d = new Field2d();
   private final PhotonRunnable frontEstimator = new PhotonRunnable(new PhotonCamera("front"),
@@ -65,9 +69,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   // private final ArrayList<Double> yValues = new ArrayList<Double>();
 
   public PoseEstimatorSubsystem(Supplier<Rotation2d> rotationSupplier,
-      Supplier<SwerveModulePosition[]> modulePositionSupplier) {
+      Supplier<SwerveModulePosition[]> modulePositionSupplier, Consumer<TimedPose2d> poseConsumer) {
     this.rotationSupplier = rotationSupplier;
     this.modulePositionSupplier = modulePositionSupplier;
+    this.poseConsumer = poseConsumer;
 
     poseEstimator = new SwerveDrivePoseEstimator(
         DrivebaseConstants.kinematics,
@@ -137,6 +142,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
       dashboardPose = flipAlliance(dashboardPose);
     }
     field2d.setRobotPose(dashboardPose);
+
+    poseConsumer.accept(new TimedPose2d(getCurrentPose(), Timer.getFPGATimestamp()));
   }
 
   public Transform2d getSpeakerTransform() {

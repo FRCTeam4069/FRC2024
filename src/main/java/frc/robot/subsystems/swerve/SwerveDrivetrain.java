@@ -58,6 +58,7 @@ import frc.robot.constants.BetterCameraConstants;
 import frc.robot.constants.DeviceIDs;
 import frc.robot.constants.DrivebaseConstants;
 import frc.robot.subsystems.Limelight.PoseEstimatorSubsystem;
+import frc.robot.util.TimedPose2d;
 
 public class SwerveDrivetrain extends SubsystemBase {
     public SwerveModule fl, fr, bl, br;
@@ -417,13 +418,11 @@ public class SwerveDrivetrain extends SubsystemBase {
         odometry.resetPosition(new Rotation2d(getRadians()), getModulePositions(), pose);
     }
 
-    public void addVisionMeasurement(Pose2d poseMeters, double timstampSeconds) {
-        var deltaX = poseMeters.getX() - getPose().getX();
-        var deltaY = poseMeters.getY() - getPose().getY();
-        var delta = Math.hypot(deltaX, deltaY);
-        if (delta > 1.0) {
-            odometry.addVisionMeasurement(poseMeters, timstampSeconds);
-        }
+    public void addVisionMeasurement(TimedPose2d timedPose) {
+        var poseMeters = timedPose.getPose();
+        //odometry.addVisionMeasurement(poseMeters, timedPose.getTimestamp());
+        // if (poseMeters.getTranslation().getNorm() < 1.0) {
+        // }
 
     }
 
