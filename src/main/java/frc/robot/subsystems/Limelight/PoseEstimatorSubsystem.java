@@ -158,7 +158,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
   private String getFormattedTransform() {
     var transform = getSpeakerTransform();
-    // return transform.toString();
     return String.format("(%.3f, %.3f) %.2f degrees", transform.getX(), transform.getY(), transform.getRotation().getDegrees());
   }
 
