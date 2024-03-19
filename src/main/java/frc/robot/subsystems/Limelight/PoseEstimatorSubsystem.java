@@ -51,12 +51,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final Field2d field2d = new Field2d();
   private final PhotonRunnable frontEstimator = new PhotonRunnable(new PhotonCamera("front"),
       CameraConstants.robotCenterToFrontCam);
-  private final PhotonRunnable leftEstimator = new PhotonRunnable(new PhotonCamera("right"),
+  private final PhotonRunnable rightEstimator = new PhotonRunnable(new PhotonCamera("right"),
       CameraConstants.robotCenterToRightCam);
 
   private final Notifier allNotifier = new Notifier(() -> {
     frontEstimator.run();
-    leftEstimator.run();
+    rightEstimator.run();
   });
 
   private OriginPosition originPosition = kBlueAllianceWallRightSide;
@@ -124,7 +124,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     poseEstimator.update(rotationSupplier.get(), modulePositionSupplier.get());
     if (CameraConstants.USE_VISION) {
       estimatorChecker(frontEstimator);
-      // estimatorChecker(leftEstimator);
+      estimatorChecker(rightEstimator);
     } else {
       allNotifier.close();
     }
@@ -151,7 +151,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
   private String getFormattedTransform() {
     var transform = getSpeakerTransform();
-    return String.format("(%.3f, %.3f) %.2f degrees", transform.getX(), transform.getY(), transform.getRotation());
+    // return transform.toString();
+    return String.format("(%.3f, %.3f) %.2f degrees", transform.getX(), transform.getY(), transform.getRotation().getDegrees());
   }
 
   private String getFomattedPose() {

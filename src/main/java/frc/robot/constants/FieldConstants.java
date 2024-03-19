@@ -28,7 +28,7 @@ public class FieldConstants {
 
   public static Alliance alliance = DriverStation.getAlliance().get();
 
-  public static final Pose2d blueTrap = new Pose2d(new Translation2d(1, 1), new Rotation2d(1));
+  public static final Pose2d blueTrap = new Pose2d(new Translation2d(4.2, 5.5), new Rotation2d(122));
   public static final Pose2d redTrap = new Pose2d(new Translation2d(1, 1), new Rotation2d(1));
 
 }

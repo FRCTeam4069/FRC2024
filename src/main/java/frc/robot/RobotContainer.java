@@ -11,8 +11,10 @@ import java.util.function.BooleanSupplier;
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.REVLibError;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -70,8 +72,7 @@ import frc.robot.subsystems.Limelight.PhotonRunnable;
 import frc.robot.subsystems.Limelight.PoseEstimatorSubsystem;
 
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
-
-
+import frc.robot.traputil.MakePathOnTheFly;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -229,6 +230,8 @@ public class RobotContainer {
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA)).onTrue(intake.setPosition(positions.UPPER));
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
+
+    Controller3.b().whileTrue(new MakePathOnTheFly(0, false, new PathConstraints(2, 0.5, 1, 0.5), poseEstimator, DriverStation.getAlliance().get()));
 
     // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
