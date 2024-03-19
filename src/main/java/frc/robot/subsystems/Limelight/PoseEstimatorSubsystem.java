@@ -90,6 +90,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   public void addDashboardWidgets(ShuffleboardTab tab) {
     tab.add("Field", field2d).withPosition(0, 0).withSize(6, 4);
     tab.addString("Pose", this::getFomattedPose).withPosition(6, 2).withSize(2, 1);
+    tab.addString("Speaker Transform", this::getFormattedTransform);
   }
 
   /**
@@ -153,6 +154,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     }
     return poseEstimator.getEstimatedPosition().minus(FieldConstants.poseBlueSpeaker);
     // Call this method periodically when needed to aim shooter
+  }
+
+  private String getFormattedTransform() {
+    var transform = getSpeakerTransform();
+    return String.format("(%.3f, %.3f) %.2f degrees", transform.getX(), transform.getY(), transform.getRotation());
   }
 
   private String getFomattedPose() {
