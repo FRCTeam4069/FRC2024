@@ -118,6 +118,7 @@ public class Robot extends TimedRobot {
   
     m_robotContainer.Controller1.getHID().setRumble(RumbleType.kBothRumble, 0.0);
 
+    m_robotContainer.led.setPattern(RevBlinkinPatterns.WHITE);
   }
 
   @Override
@@ -140,6 +141,8 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.drive.setOpenLoopRampRate(0.0);
     m_robotContainer.drive.setSmartCurrentLimit(40);
+
+    m_robotContainer.led.setPattern(RevBlinkinPatterns.COLOR_WAVES_LAVA_PALLETE);
   }
 
   /** This function is called periodically during autonomous. */
@@ -165,6 +168,8 @@ public class Robot extends TimedRobot {
     
     m_robotContainer.drive.setOpenLoopRampRate(0.0);
     m_robotContainer.drive.setSmartCurrentLimit(40);
+
+    m_robotContainer.led.setPattern(RevBlinkinPatterns.COLOR_WAVES_OCEAN_PALLETE);
 
     
 
