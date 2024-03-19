@@ -5,5 +5,6 @@ public enum ShooterPositions {
     WHITE_LINE,
     WALL_AREA,
     AMP_AREA,
-    CLIMB
+    CLIMB,
+    AUTO_FEED
 }

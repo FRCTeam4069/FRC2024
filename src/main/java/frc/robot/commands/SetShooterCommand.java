@@ -60,6 +60,14 @@ public class SetShooterCommand extends Command{
             velocity = 0;
             angle = 1;
         }
+        else if(positions == ShooterPositions.AMP_AREA){
+            velocity = 10;
+            angle = 25;
+        }
+        else if(positions == ShooterPositions.AUTO_FEED){
+            velocity = 80;
+            angle = 85;
+        }
         else {
             velocity = 80;
             angle = 62;
