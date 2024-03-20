@@ -8,7 +8,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -70,7 +70,7 @@ public class ShooterController extends SubsystemBase {
 
     public void ShootWithPos(double x, double theta){
         double leftSpeed = x;
-        double rightSpeed = x/2;
+        double rightSpeed = x;
         
         v.Slot = 0;
         talon1.setControl(v.withVelocity(leftSpeed));
@@ -79,8 +79,8 @@ public class ShooterController extends SubsystemBase {
 
 
     public boolean atSpeed(){
-        if(talon1.getVelocity().getValueAsDouble() < 5) return false;
-        if(talon1.getVelocity().getValueAsDouble() >= 75 && talon1.getVelocity().getValueAsDouble() <= 85) return true;
+        if(talon1.getVelocity().getValueAsDouble() < 5) return false; 
+        else if(MathUtil.isNear(talon1.getVelocity().getValueAsDouble(), targetSpeed, 2)) return true; 
         return false;
     }
 
@@ -94,9 +94,11 @@ public class ShooterController extends SubsystemBase {
     public double getSlowerVelocity(){
         return talon2.getVelocity().getValueAsDouble();
     }
+    double targetSpeed = 0;
 
     public void driveWithCustomSpeed(double leftVel, double rightVel){
         v.Slot = 0;
+        targetSpeed = leftVel;
 
         if(leftVel <= 30){
             talon1.setControl(v.withVelocity(leftVel));
