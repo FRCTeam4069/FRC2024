@@ -96,7 +96,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     private SwerveDriveOdometry inversedOdo;
 
     public void updateOdometry(SwerveModulePosition[] positions) {
-        odometry.update(gyro.getRotation2d(), positions);
+        odometry.update(getRotation2d(), positions);
         
 
         // var res = cam.getLatestResult();
@@ -548,12 +548,8 @@ public class SwerveDrivetrain extends SubsystemBase {
         return runOnce(() -> resetGyro());
     }
 
-    public Rotation2d getGyroscropeRotation(){
-        return gyro.getRotation2d();
-    }
-
     public StatusCode setRadians(double rads) {
-        return gyro.setYaw(Units.radiansToDegrees(rads));
+        return gyro.setYaw(-1*Units.radiansToDegrees(rads));
     }
     public double getDegrees() {
         return gyro.getYaw().getValueAsDouble();

@@ -81,7 +81,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         DrivebaseConstants.kinematics,
         rotationSupplier.get(),
         modulePositionSupplier.get(),
-        new Pose2d(),
+        new Pose2d(1.3, 5.55, new Rotation2d()),
         CameraConstants.STATE_STANDARD_DEVIATIONS,
         CameraConstants.VISION_MEASUREMENT_STANDARD_DEVIATIONS);
 

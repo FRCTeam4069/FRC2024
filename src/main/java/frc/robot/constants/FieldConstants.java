@@ -26,7 +26,7 @@ public class FieldConstants {
     public static final Pose2d poseBlueAutoRight = new Pose2d(new Translation2d(), new Rotation2d());
     //make pose2d for positions where the robot starts in auto to compare the estimated pose to
 
-  public static Alliance alliance = DriverStation.getAlliance().get();
+  //public static Alliance alliance = DriverStation.getAlliance().get();
 
   public static final Pose2d blueTrap = new Pose2d(new Translation2d(4.2, 5.5), new Rotation2d(122));
   public static final Pose2d redTrap = new Pose2d(new Translation2d(1, 1), new Rotation2d(1));

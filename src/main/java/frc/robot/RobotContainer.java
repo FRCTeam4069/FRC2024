@@ -52,6 +52,7 @@ import frc.robot.commands.drivebase.TwoNote;
 import frc.robot.commands.drivebase.TwoNoteNew;
 import frc.robot.commands.drivebase.TwoNoteNewBlue;
 import frc.robot.commands.drivebase.testAuto;
+import frc.robot.commands.drivebase.test.DriveTest;
 import frc.robot.commands.drivebase.test.PoseTest;
 import frc.robot.commands.drivebase.test.straightLineTest;
 import frc.robot.commands.drivebase.test.testAutov2;
@@ -197,6 +198,7 @@ public class RobotContainer {
     autoChooser.addOption("2056 auto", new Auto2056(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("pose test", new PoseTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("four ring", new Four(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("drive test", new DriveTest(drive));
     
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
