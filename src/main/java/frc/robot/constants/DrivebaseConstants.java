@@ -13,7 +13,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.commands.drivebase.test.straightLineTest;
 
 public final class DrivebaseConstants {
-    public static final double driveConversionFactor = ((3.80 * Math.PI) * 0.0254) / 6.12;
+    public static final double driveConversionFactor = ((3.90 * Math.PI) * 0.0254) / 6.12;
     public static final double steerConversionFactor = 16.8;
     public static final double moduleOffset = Units.inchesToMeters(10.375);
     public static final double drivebaseRadius = Math.hypot(moduleOffset, moduleOffset);
@@ -45,9 +45,9 @@ public final class DrivebaseConstants {
     public static final Pose2d positionTolerance = new Pose2d(0.02, 0.02, Rotation2d.fromDegrees(3));
 
     public static final class AlignConstants {
-        public static final double kP = 0.20;
+        public static final double kP = 6.00;
         public static final double kI = 0.0;
-        public static final double kD = 0.001;
+        public static final double kD = 0.1;
         public static final double kS = 0.005;
         public static final double kV = 0.01;
 
@@ -56,9 +56,9 @@ public final class DrivebaseConstants {
     }
 
     public static final class AutoAlignConstants {
-        public static final double kP = 0.10;
+        public static final double kP = 6.00;
         public static final double kI = 0.0;
-        public static final double kD = 0.001;
+        public static final double kD = 0.1;
         public static final double kS = 0.000;
         public static final double kV = 0.00;
         //public static final double powerLimit = 0.75;

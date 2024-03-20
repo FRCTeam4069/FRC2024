@@ -36,13 +36,13 @@ public class straightLineTest extends SequentialCommandGroup {
         this.rotShoot = rot;
         addRequirements(drive, intake, shooter, rot, index);
 
-        drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(180.0)));
+        drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(90.0)));
 
         //PathPlannerPath.fromPathFile("one").getGoalEndState()
 
         addCommands(
             new SequentialCommandGroup(
-                new InstantCommand(() -> drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(0.0)))),
+                new InstantCommand(() -> drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(90.0)))),
                 
                 new ParallelCommandGroup(
                     new SequentialCommandGroup(

@@ -12,6 +12,8 @@ import org.photonvision.PhotonCamera;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
+import edu.wpi.first.math.MathUsageId;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,6 +23,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
@@ -55,12 +58,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final Field2d field2d = new Field2d();
   private final PhotonRunnable frontEstimator = new PhotonRunnable(new PhotonCamera("front"),
       CameraConstants.robotCenterToFrontCam);
-  private final PhotonRunnable leftEstimator = new PhotonRunnable(new PhotonCamera("right"),
+  private final PhotonRunnable rightEstimator = new PhotonRunnable(new PhotonCamera("right"),
       CameraConstants.robotCenterToRightCam);
 
   private final Notifier allNotifier = new Notifier(() -> {
     frontEstimator.run();
-    leftEstimator.run();
+    rightEstimator.run();
   });
 
   private OriginPosition originPosition = kBlueAllianceWallRightSide;
@@ -78,7 +81,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         DrivebaseConstants.kinematics,
         rotationSupplier.get(),
         modulePositionSupplier.get(),
-        new Pose2d(),
+        new Pose2d(1.3, 5.55, new Rotation2d()),
         CameraConstants.STATE_STANDARD_DEVIATIONS,
         CameraConstants.VISION_MEASUREMENT_STANDARD_DEVIATIONS);
 
@@ -129,7 +132,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     poseEstimator.update(rotationSupplier.get(), modulePositionSupplier.get());
     if (CameraConstants.USE_VISION) {
       estimatorChecker(frontEstimator);
-      // estimatorChecker(leftEstimator);
+      estimatorChecker(rightEstimator);
     } else {
       allNotifier.close();
     }
@@ -147,6 +150,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     poseConsumer.accept(new TimedPose2d(getCurrentPose(), Timer.getFPGATimestamp()));
   }
 
+  /**
+   * origin is at the speaker
+   * @return
+   */
   public Transform2d getSpeakerTransform() {
     if (originPosition == kRedAllianceWallRightSide) {
       // Find the transform from robot to speaker when red
@@ -154,6 +161,22 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     }
     return poseEstimator.getEstimatedPosition().minus(FieldConstants.poseBlueSpeaker);
     // Call this method periodically when needed to aim shooter
+  }
+
+  public Rotation2d getAngleFromSpeaker() {
+    var relativePose = getSpeakerTransform();
+    var desiredAngle = Math.atan2(relativePose.getY(), relativePose.getX());
+    
+    return Rotation2d.fromRadians(desiredAngle);
+  }
+
+  public Rotation2d getRotation2d() {
+    return getCurrentPose().getRotation();
+  }
+
+  public boolean isAligned() {
+    return MathUtil.isNear(getAngleFromSpeaker().getRadians(), Math.IEEEremainder(getCurrentPose().getRotation().getRadians(), Math.PI), Units.degreesToRadians(3));
+
   }
 
   private String getFormattedTransform() {

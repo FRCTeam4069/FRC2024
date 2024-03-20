@@ -2,13 +2,15 @@ package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
-import edu.wpi.first.cscore.CameraServerJNI.TelemetryKind;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
@@ -34,23 +36,27 @@ public class FieldCentricDrive extends Command {
     private final BooleanSupplier autoAlign;
     private PIDController headingPID;
     private MedianFilter headingFilter;
-    private DoubleSupplier angle;
+    // private DoubleSupplier angle;
+    private Supplier<Transform2d> speakerTransform;
     private double lastTimestamp;
     private double angleBuffer;
-    private ShuffleboardTab tab;
-    private BooleanSupplier fieldCentric;
+    private BooleanSupplier speakerAlign;
+    private BooleanSupplier spinSupplier;
+    private Supplier<Rotation2d> rotationSupplier;
     private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(20.0);
     private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(20.0);
     private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(20.0);
-    public FieldCentricDrive(SwerveDrivetrain drive, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign, DoubleSupplier angleToAlign, BooleanSupplier fieldCentric) {
+    public FieldCentricDrive(SwerveDrivetrain drive, DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, DoubleSupplier turnSpeed, BooleanSupplier halfSpeed, BooleanSupplier autoAlign, Supplier<Transform2d> speakerTransform, BooleanSupplier speakerAlign, BooleanSupplier spin, Supplier<Rotation2d> rotationSupplier) {
         this.drive = drive;
         this.turnSpeed = turnSpeed;
         this.forwardSpeed = forwardSpeed;
         this.strafeSpeed = strafeSpeed;
         this.halfSpeed = halfSpeed;
         this.autoAlign = autoAlign;
-        this.angle = angleToAlign;
-        this.fieldCentric = fieldCentric;
+        this.speakerTransform = speakerTransform;
+        this.speakerAlign = speakerAlign;
+        this.spinSupplier = spin;
+        this.rotationSupplier = rotationSupplier;
 
 
         addRequirements(drive);
@@ -66,7 +72,6 @@ public class FieldCentricDrive extends Command {
         
         lastTimestamp = Timer.getFPGATimestamp();
 
-        tab = Shuffleboard.getTab("rotation");
     }
 
     @Override
@@ -81,78 +86,47 @@ public class FieldCentricDrive extends Command {
             speedMultiplier = 1.0;
         }
 
-        if (currentTime-lastTimestamp > 1.0) {
-            angleBuffer = angle.getAsDouble() + drive.getRadians();
-            lastTimestamp = Timer.getFPGATimestamp();
-        }
-
         //var targetAngle = headingFilter.calculate(cam.getTargetRotation().getY());
-        SmartDashboard.putNumber("camera target angle", angle.getAsDouble());
-        SmartDashboard.putNumber("camera target angle buffer", angleBuffer);
-        SmartDashboard.putBoolean("isAligned", MathUtil.isNear(0.0, angle.getAsDouble(), Units.degreesToRadians(3)));
-        
+        // SmartDashboard.putNumber("camera target angle", angle.getAsDouble());
+        // SmartDashboard.putNumber("camera target angle buffer", angleBuffer);
+        // SmartDashboard.putBoolean("isAligned", MathUtil.isNear(0.0, angle.getAsDouble(), Units.degreesToRadians(3)));
 
-        var outputSpeeds = new ChassisSpeeds();
-        if (!autoAlign.getAsBoolean()) {
-            drive.setInputLimit(true);
-            outputSpeeds = new ChassisSpeeds(
-                xSlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(forwardSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                ySlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(strafeSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                wSlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(turnSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity));
-        } else {
-            // var power = headingPID.calculate(drive.getNormalizedRads(), 0.0);
-            // var voltage = (12 - RobotController.getBatteryVoltage()) * AutoAlignConstants.kV * Math.signum(power);
-            // power += Math.abs(AutoAlignConstants.kS)*Math.signum(power) + voltage*Math.signum(power);
-            // var xSpeed = forwardSpeed.getAsDouble();
-            // var ySpeed = strafeSpeed.getAsDouble();
+        var turnPower = wSlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(turnSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity);
+        var speaker = speakerAlign.getAsBoolean();
+        var straight = autoAlign.getAsBoolean();
+        var spin = spinSupplier.getAsBoolean();
+        if (spin && (speaker || straight) || (speaker && straight)) {
+            ;
+        } else if (speakerAlign.getAsBoolean()) {
 
-            // if (xSpeed > 0.2 || ySpeed > 0.2) {
-            //     power = power * 180;
-            // }
-
-
-
-            //drive.setInputLimit(false);
-            // var translation = cam.getTargetTranslation(7);
-            // var targetAngle = Math.atan2(translation.getY(), translation.getX());
-            //var power = headingPID.calculate(drive.getDegrees(), angle.getAsDouble());
-
-            // var power = headingPID.calculate(drive.getRadians(), angleBuffer);
-            // power = power + DrivebaseConstants.AutoAlignConstants.kS*Math.signum(power);
-            
-            // if (power > AutoAlignConstants.powerLimit || power < -AutoAlignConstants.powerLimit) {
-            //     power = AutoAlignConstants.powerLimit*Math.signum(power);
-            // }
-            // SmartDashboard.putNumber("align power", power);
-
-
-            // if (Math.abs(drive.getRadians()) < Units.degreesToRadians(3)) power = 0;
-            // if (Math.abs(power)>1) power=Math.signum(power);
-
-            var robotPose = drive.getPose();
-            var targetPose = FieldConstants.poseBlueSpeaker;
-
-            var relativePose = robotPose.minus(targetPose);
+            var relativePose = speakerTransform.get();
             var desiredAngle = Math.atan2(relativePose.getY(), relativePose.getX());
 
-            var power = headingPID.calculate(drive.getNormalizedRads(), SwerveDrivetrain.normalizeRadians(desiredAngle+Math.PI));
-
+            turnPower = -1*headingPID.calculate(SwerveDrivetrain.normalizeRadians(rotationSupplier.get().getRadians()), SwerveDrivetrain.normalizeRadians(desiredAngle));
             
-            outputSpeeds = new ChassisSpeeds(
-                (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
-                (power)*DrivebaseConstants.maxAngularVelocity);
+            // outputSpeeds = new ChassisSpeeds(
+            //     (Math.pow(forwardSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+            //     (Math.pow(strafeSpeed.getAsDouble(), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+            //     (power)*DrivebaseConstants.maxAngularVelocity);
 
+        } else if (autoAlign.getAsBoolean()) {
+            // SmartDashboard.putNumber("normalized rads", drive.getNormalizedRads());
+            // SmartDashboard.putNumber("angle error", drive.getNormalizedRads()-Math.PI);
+            turnPower = -1*headingPID.calculate(drive.getNormalizedRads(), Units.degreesToRadians(0.0));
+            // var voltage = (12 - RobotController.getBatteryVoltage()) * AutoAlignConstants.kV * Math.signum(power);
+            // power += Math.abs(AutoAlignConstants.kS)*Math.signum(power) + voltage*Math.signum(power);
+
+        } else if (spinSupplier.getAsBoolean()) {
+            turnPower = 100;
         }
 
-        if (fieldCentric.getAsBoolean()) {
-            drive.fieldOrientedDrive(outputSpeeds);
+        drive.setInputLimit(true);
+        var outputSpeeds = new ChassisSpeeds(
+            xSlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(forwardSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+            ySlewRateLimiter.calculate(Math.pow(MathUtil.applyDeadband(strafeSpeed.getAsDouble(), 0.15), 3)*speedMultiplier * DrivebaseConstants.maxVelocity),
+            turnPower);
 
-        } else {
-            drive.drive(outputSpeeds);
-        }
-
-
+        drive.fieldOrientedDrive(outputSpeeds);
 
         SmartDashboard.putString("teleop running", "yes");
 
