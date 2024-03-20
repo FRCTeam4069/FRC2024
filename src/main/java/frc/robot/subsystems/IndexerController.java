@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.constants.DeviceIDs;
@@ -28,6 +29,8 @@ public class IndexerController extends SubsystemBase {
         if(RobotContainer.shooter.isShooting()){
             past = false;
         }
+
+        SmartDashboard.putNumber("indexer position", getPosition());
     }
 
     public void feedShooter(){
@@ -42,7 +45,7 @@ public class IndexerController extends SubsystemBase {
     }
 
     public boolean getPhotoReading(){
-        if(pes.getVoltage() > 0.7) return true;
+        if(pes.getVoltage() < 4.0) return true;
         return false;
     }
 
@@ -60,6 +63,18 @@ public class IndexerController extends SubsystemBase {
 
     public boolean pastSensor(){
         return past;
+    }
+
+    public double getPosition() {
+        return m1.getEncoder().getPosition();
+    }
+
+    public void setPosition(double position) {
+        m1.getEncoder().setPosition(position);
+    }
+
+    public double getVelocity() {
+        return m1.getEncoder().getVelocity();
     }
     
 }
