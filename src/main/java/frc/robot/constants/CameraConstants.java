@@ -21,8 +21,8 @@ public class CameraConstants {
     public static final int TAG_PRESENCE_WEIGHT = 10;
 
     //TODO find correct transforms
-    public static final Transform3d robotCenterToFrontCam = new Transform3d(new Translation3d(Units.inchesToMeters(-11.5), Units.inchesToMeters(6.5), Units.inchesToMeters(0)), new Rotation3d(0, Units.degreesToRadians(28.0), Units.degreesToRadians(180)));
-    public static final Transform3d robotCenterToRightCam = new Transform3d(new Translation3d(Units.inchesToMeters(-6.5), Units.inchesToMeters(11.5), Units.inchesToMeters(-10.5)), new Rotation3d(0, Units.degreesToRadians(27.8), Units.degreesToRadians(90)));
+    public static final Transform3d robotCenterToFrontCam = new Transform3d(new Translation3d(Units.inchesToMeters(-11.5), Units.inchesToMeters(0), Units.inchesToMeters(6.5)), new Rotation3d(0, Units.degreesToRadians(28.0), Units.degreesToRadians(180)));
+    public static final Transform3d robotCenterToRightCam = new Transform3d(new Translation3d(Units.inchesToMeters(-6.5), Units.inchesToMeters(-10.5), Units.inchesToMeters(11.5)), new Rotation3d(0, Units.degreesToRadians(27.8), Units.degreesToRadians(90)));
 
      /**
      * Standard deviations of model states. Increase these numbers to trust your
@@ -33,7 +33,7 @@ public class CameraConstants {
     public static final Matrix<N3, N1> VISION_MEASUREMENT_STANDARD_DEVIATIONS = Matrix.mat(Nat.N3(), Nat.N1())
         .fill(
             // if these numbers are less than one, multiplying will do bad things
-            1, // x
+        1, // x
             1, // y
             1 * Math.PI // theta
         );

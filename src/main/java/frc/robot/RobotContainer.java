@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BackIntakeCommand;
-
+import frc.robot.commands.BetterIndexerCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DefualtIndexerCommand;
 import frc.robot.commands.DefualtShooter;
@@ -255,7 +255,7 @@ public class RobotContainer {
     // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
     Controller2.leftBumper().whileTrue(new unIndexCOmmand(indexer));
-    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller2.getRightTriggerAxis()));                                                       
+    //Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller2.getRightTriggerAxis()));                                                       
    
     //new Trigger(Controller2.rightBumper()).whileTrue(intake.setPosition(positions.LOWER)).onFalse(intake.setPosition(positions.UPPER));
     
@@ -283,12 +283,13 @@ public class RobotContainer {
     Controller2.rightTrigger(0.2).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), () -> indexer.pastSensor()));
 
     Controller2.leftTrigger(0.2).onTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()).withTimeout(1));
+    Controller2.rightBumper().whileTrue(new BetterIndexerCommand(indexer));
 
     new Trigger(() -> indexer.getPhotoReading()).onFalse(led.setPattern(RevBlinkinPatterns.WHITE)).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
     new Trigger(() -> shooter.atSpeed()).onTrue(led.setPattern(RevBlinkinPatterns.GREEN)).onFalse(led.setPattern(RevBlinkinPatterns.WHITE));
     new Trigger(() -> shooter.atSpeed()).whileTrue(new InstantCommand(() -> Controller2.getHID().setRumble(RumbleType.kBothRumble, 0.1))).onFalse(new InstantCommand(() -> Controller2.getHID().setRumble(RumbleType.kBothRumble, 0)));
     
-    
+    //github test
       
     
 

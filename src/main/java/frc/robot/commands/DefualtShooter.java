@@ -24,7 +24,7 @@ public class DefualtShooter extends Command {
              controlelr.stop();
         }
         
-    }
+    } 
 
     public void end(boolean interupted){
         controlelr.stop();
