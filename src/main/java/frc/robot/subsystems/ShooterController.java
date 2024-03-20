@@ -104,7 +104,7 @@ public class ShooterController extends SubsystemBase {
         }
         else{
             talon1.setControl(v.withVelocity(leftVel));
-            talon2.setControl(v.withVelocity(-rightVel));
+            talon2.setControl(v.withVelocity(-rightVel/2));
         }
 
         SmartDashboard.putNumber("Right Shooter Speed", talon2.getVelocity().getValueAsDouble());
