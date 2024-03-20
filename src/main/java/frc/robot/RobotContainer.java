@@ -157,24 +157,26 @@ public class RobotContainer {
       () -> Controller1.getRightX(),
       () -> Controller1.getHID().getRightBumper(),
       () -> Controller1.getHID().getAButton(),
-      () -> FrontCamera.getTX(7, 4),
-      () -> toggle.getState()
+      () -> poseEstimator.getSpeakerTransform(),
+      () -> Controller1.getHID().getLeftBumper(),
+      () -> (Controller1.getHID().getPOV() == 90),
+      () -> poseEstimator.getRotation2d()
     ));
 
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.y().onTrue(new InstantCommand(() -> drive.resetGyro()));
     //Controller1.povUp().onTrue(new InstantCommand(() -> drive.resetPose()));
-    Controller1.povUp().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, Rotation2d.fromDegrees(0.0)))));
+    Controller1.back().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, Rotation2d.fromDegrees(0.0)))));
     // Controller1.povUp().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))));
 
-    new Trigger(() -> MathUtil.isNear(0.0, FrontCamera.getTX(7, 4), Units.degreesToRadians(3)))
+    new Trigger(() -> poseEstimator.isAligned())
       .whileTrue(new InstantCommand(() -> Controller1.getHID().setRumble(RumbleType.kBothRumble, 0.1)))
       .onFalse(new InstantCommand(() -> Controller1.getHID().setRumble(RumbleType.kBothRumble, 0)));
 
     Controller1.x().whileTrue(new Rotate(drive, Units.degreesToRadians(-15.0)));
     Controller1.b().whileTrue(new Rotate(drive, Units.degreesToRadians(15.0)));
-    Controller1.rightBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), 1.0, () -> FrontCamera.hasTarget(7, 4)));
-    Controller1.leftBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), -1.0, () -> FrontCamera.hasTarget(7, 4)));
+    // Controller1.rightBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), 1.0, () -> FrontCamera.hasTarget(7, 4)));
+    // Controller1.leftBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), -1.0, () -> FrontCamera.hasTarget(7, 4)));
     //autoChooser = AutoBuilder.buildAutoChooser();
 
     // drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
@@ -246,7 +248,7 @@ public class RobotContainer {
     Controller1.rightTrigger(0.2).onTrue(intake.setPosition(positions.LOWER));
     // Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
 
-    Controller3.b().whileTrue(new MakePathOnTheFly(0, false, new PathConstraints(2, 0.5, 1, 0.5), poseEstimator, DriverStation.getAlliance().get()));
+    //Controller3.b().whileTrue(new MakePathOnTheFly(0, false, new PathConstraints(2, 0.5, 1, 0.5), poseEstimator, DriverStation.getAlliance().get()));
 
     // new Trigger(Controller2.rightBumper()).whileTrue(new FeedIntakeCommand());
     // new Trigger(Controller2.leftBumper()).whileTrue(new BackIntakeCommand(intake));
@@ -278,7 +280,7 @@ public class RobotContainer {
 
     Controller2.rightTrigger(0.2).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger(0.2)));
 
-    Controller2.leftTrigger(0.2).onTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()));
+    Controller2.leftTrigger(0.2).onTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()).withTimeout(1));
 
     new Trigger(() -> indexer.getPhotoReading()).onFalse(led.setPattern(RevBlinkinPatterns.WHITE)).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
     new Trigger(() -> shooter.atSpeed()).onTrue(led.setPattern(RevBlinkinPatterns.GREEN)).onFalse(led.setPattern(RevBlinkinPatterns.WHITE));

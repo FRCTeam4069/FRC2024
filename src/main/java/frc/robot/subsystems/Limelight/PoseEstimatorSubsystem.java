@@ -12,6 +12,8 @@ import org.photonvision.PhotonCamera;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
+import edu.wpi.first.math.MathUsageId;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,6 +23,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
@@ -147,6 +150,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     poseConsumer.accept(new TimedPose2d(getCurrentPose(), Timer.getFPGATimestamp()));
   }
 
+  /**
+   * origin is at the speaker
+   * @return
+   */
   public Transform2d getSpeakerTransform() {
     if (originPosition == kRedAllianceWallRightSide) {
       // Find the transform from robot to speaker when red
@@ -154,6 +161,22 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     }
     return poseEstimator.getEstimatedPosition().minus(FieldConstants.poseBlueSpeaker);
     // Call this method periodically when needed to aim shooter
+  }
+
+  public Rotation2d getAngleFromSpeaker() {
+    var relativePose = getSpeakerTransform();
+    var desiredAngle = Math.atan2(relativePose.getY(), relativePose.getX());
+    
+    return Rotation2d.fromRadians(desiredAngle);
+  }
+
+  public Rotation2d getRotation2d() {
+    return getCurrentPose().getRotation();
+  }
+
+  public boolean isAligned() {
+    return MathUtil.isNear(getAngleFromSpeaker().getRadians(), Math.IEEEremainder(getCurrentPose().getRotation().getRadians(), Math.PI), Units.degreesToRadians(3));
+
   }
 
   private String getFormattedTransform() {

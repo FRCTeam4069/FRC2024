@@ -31,7 +31,7 @@ public class IndexerController extends SubsystemBase {
     }
 
     public void feedShooter(){
-        m1.set(0.45);
+        m1.set(0.55);
     }
 
     public void unFeedShooter(){
