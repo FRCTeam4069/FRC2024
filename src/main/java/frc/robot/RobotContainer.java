@@ -282,7 +282,7 @@ public class RobotContainer {
 
     Controller2.rightTrigger(0.2).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger(0.2)));
 
-    //Controller2.leftTrigger(0.2).onTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()).withTimeout(1));
+    Controller2.leftTrigger(0.2).onTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()).withTimeout(1));
     Controller2.rightBumper().whileTrue(new BetterIndexerCommand(indexer));
 
     new Trigger(() -> indexer.getPhotoReading()).onFalse(led.setPattern(RevBlinkinPatterns.WHITE)).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
