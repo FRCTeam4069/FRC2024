@@ -31,6 +31,7 @@ public class PhotonRunnable implements Runnable {
       // PV estimates will always be blue, they'll get flipped by robot thread
       layout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
       if (photonCamera != null) {
+        photonCamera.setDriverMode(false);
         photonPoseEstimator = new PhotonPoseEstimator(
             layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera, robotToCamera);
         photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
