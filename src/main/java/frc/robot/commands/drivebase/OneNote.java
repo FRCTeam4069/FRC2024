@@ -45,7 +45,7 @@ public class OneNote extends SequentialCommandGroup {
         addCommands(
             new SequentialCommandGroup(
                 new InstantCommand(() -> drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(180.0)))),
-                new ShootFirstRing(drive, i, index, shooter, rot),
+                new ShootFirstRing(i, index, shooter, rot),
 
                 new WaitCommand(5.0),
                 

@@ -1,5 +1,8 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,10 +14,12 @@ public class BetterIndexerCommand extends Command {
     private State state;
     private double setpoint;
     private PIDController pid;
-    public BetterIndexerCommand(IndexerController indexer) {
+    private BooleanSupplier shoot;
+    public BetterIndexerCommand(IndexerController indexer, BooleanSupplier shoot) {
         this.indexer = indexer;
         state = State.INITIAL;
-        pid = new PIDController(0.06, 0.0, 0.0);
+        pid = new PIDController(0.055, 0.0, 0.0);
+        this.shoot = shoot;
     }
 
     enum State {
@@ -36,25 +41,26 @@ public class BetterIndexerCommand extends Command {
                 if (isLoaded) {
                     state = State.PID;
                     setpoint = indexer.getPosition();
+                    indexer.stop();
                     break;
                 }
                 indexer.feedShooter();
                 break;
             case IN:
-                if (!isLoaded) {
-                    state = State.PID;
+                if (shoot.getAsBoolean() || !MathUtil.isNear(setpoint, indexer.getPosition(), 5.0)) {
+                    state = State.INITIAL;
                     break;
                 }
                 indexer.stop();
                 break;
             case PID:
-                if (isLoaded && Math.abs(indexer.getVelocity()) < 1.0) {
+                if (isLoaded && Math.abs(indexer.getVelocity()) < 1.0 || MathUtil.isNear(setpoint, indexer.getPosition(), 1.0)) {
                     state = State.IN;
                     setpoint = indexer.getPosition();
                     indexer.stop();
                     break;
                 }
-                if (indexer.getPosition() - setpoint < -15) {
+                if (indexer.getPosition() - setpoint < -15 && indexer.getPosition() - setpoint > 30) {
                     state = State.INITIAL;
                     break;
                 }

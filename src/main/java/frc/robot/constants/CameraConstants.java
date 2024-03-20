@@ -24,11 +24,11 @@ public class CameraConstants {
     public static final Transform3d robotCenterToFrontCam = new Transform3d(new Translation3d(Units.inchesToMeters(-11.5), Units.inchesToMeters(0), Units.inchesToMeters(6.5)), new Rotation3d(0, Units.degreesToRadians(28.0), Units.degreesToRadians(180)));
     public static final Transform3d robotCenterToRightCam = new Transform3d(new Translation3d(Units.inchesToMeters(-6.5), Units.inchesToMeters(-10.5), Units.inchesToMeters(11.5)), new Rotation3d(0, Units.degreesToRadians(27.8), Units.degreesToRadians(90)));
 
-     /**
-     * Standard deviations of model states. Increase these numbers to trust your
-     * model's state estimates less. This
-     * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians, then
-     * meters.
+    /**
+     * Standard deviations of the vision measurements. Increase these numbers to
+     * trust global measurements from vision
+     * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
+     * radians.
      */
     public static final Matrix<N3, N1> VISION_MEASUREMENT_STANDARD_DEVIATIONS = Matrix.mat(Nat.N3(), Nat.N1())
         .fill(
@@ -38,11 +38,11 @@ public class CameraConstants {
             1 * Math.PI // theta
         );
 
-    /**
-     * Standard deviations of the vision measurements. Increase these numbers to
-     * trust global measurements from vision
-     * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
-     * radians.
+     /**
+     * Standard deviations of model states. Increase these numbers to trust your
+     * model's state estimates less. This
+     * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians, then
+     * meters.
      */
     public static final Matrix<N3, N1> STATE_STANDARD_DEVIATIONS = Matrix.mat(Nat.N3(), Nat.N1())
         .fill(

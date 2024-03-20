@@ -34,7 +34,7 @@ public class Four extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, Rotation2d.fromDegrees(0.0)))),
                 new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, Rotation2d.fromDegrees(0.0)))),
-                //new ShootFirstRing(drive, i, index, shooter, rot),
+                new ShootFirstRing(i, index, shooter, rot),
                 // new FollowPath(drive, "start left align"),
                 // new WaitCommand(3),
                 // new FollowPath(drive, "start left close ring"),
@@ -42,7 +42,14 @@ public class Four extends SequentialCommandGroup {
 
                 //new FollowPath(drive, "start very left to ring"),
                 new FollowPath(drive, "four ring p1"),
+                // new WaitCommand(1),
                 new FollowPath(drive, "four ring p2"),
+                // new WaitCommand(1),
+                new FollowPath(drive, "four ring p3"),
+                // new WaitCommand(1),
+                new FollowPath(drive, "four ring p4"),
+                // new WaitCommand(1),
+                new FollowPath(drive, "four ring p5"),
 
                 //new WaitCommand(3),
 

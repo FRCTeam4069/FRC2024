@@ -230,7 +230,7 @@ public class FollowPathCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return /*(controller.atReference()) ||*/ timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds()+5);
+    return (controller.atReference()) || timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds());
   }
 
 
