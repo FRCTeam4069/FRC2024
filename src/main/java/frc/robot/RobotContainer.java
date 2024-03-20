@@ -235,7 +235,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> Math.hypot(poseEstimator.getSpeakerTransform().getX(), poseEstimator.getSpeakerTransform().getX()), shooter)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> poseEstimator.getSpeakerTransform().getX(), shooter)).onTrue(intake.setPosition(positions.UPPER));
     //git hub trial//
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
     //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
