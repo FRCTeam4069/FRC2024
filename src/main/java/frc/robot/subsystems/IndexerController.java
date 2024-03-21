@@ -46,7 +46,7 @@ public class IndexerController extends SubsystemBase {
     }
 
     public boolean getPhotoReading(){
-        return (pes.getVoltage() < 4.0);
+        return (pes.getVoltage() < 2.0);
     }
 
     public double getCurrent(){

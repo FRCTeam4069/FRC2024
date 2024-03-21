@@ -8,7 +8,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,9 +35,9 @@ public class ShooterController extends SubsystemBase {
 
         var slot0Configs = new Slot0Configs();
         slot0Configs.kV = 0.12273;
-        slot0Configs.kP = 0.13;
-        slot0Configs.kI = 0;
-        slot0Configs.kD = 0;
+        slot0Configs.kP = 0.11;
+        slot0Configs.kI = 0.48;
+        slot0Configs.kD = 0.01;
 
         // var slot1Configs = new Slot0Configs();
         // slot0Configs.kV = 0.12273;
@@ -66,11 +66,12 @@ public class ShooterController extends SubsystemBase {
     public void stop(){
         talon1.set(0);
         talon2.set(0);
+        targetSpeed = 0;
     }
 
     public void ShootWithPos(double x, double theta){
         double leftSpeed = x;
-        double rightSpeed = x/2;
+        double rightSpeed = x;
         
         v.Slot = 0;
         talon1.setControl(v.withVelocity(leftSpeed));
@@ -79,8 +80,8 @@ public class ShooterController extends SubsystemBase {
 
 
     public boolean atSpeed(){
-        if(talon1.getVelocity().getValueAsDouble() < 5) return false;
-        if(talon1.getVelocity().getValueAsDouble() >= 75 && talon1.getVelocity().getValueAsDouble() <= 85) return true;
+        if(talon1.getVelocity().getValueAsDouble() < 5) return false; 
+        else if(MathUtil.isNear(talon1.getVelocity().getValueAsDouble(), targetSpeed, 2)) return true; 
         return false;
     }
 
@@ -94,9 +95,11 @@ public class ShooterController extends SubsystemBase {
     public double getSlowerVelocity(){
         return talon2.getVelocity().getValueAsDouble();
     }
+    double targetSpeed = 0;
 
     public void driveWithCustomSpeed(double leftVel, double rightVel){
         v.Slot = 0;
+        targetSpeed = leftVel;
 
         if(leftVel <= 30){
             talon1.setControl(v.withVelocity(leftVel));
@@ -104,7 +107,7 @@ public class ShooterController extends SubsystemBase {
         }
         else{
             talon1.setControl(v.withVelocity(leftVel));
-            talon2.setControl(v.withVelocity(-rightVel));
+            talon2.setControl(v.withVelocity(-rightVel/1.5));
         }
 
         SmartDashboard.putNumber("Right Shooter Speed", talon2.getVelocity().getValueAsDouble());
