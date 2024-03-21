@@ -37,6 +37,7 @@ public class IntakeController extends SubsystemBase {
         limit = new SlewRateLimiter(.94);
 
         artMotor1.setSmartCurrentLimit(20);
+        feedMotor.setSmartCurrentLimit(40);
     }
 
     public void driveFeed(){

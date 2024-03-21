@@ -60,7 +60,7 @@ public class BetterIndexerCommand extends Command {
                     indexer.stop();
                     break;
                 }
-                if (indexer.getPosition() - setpoint < -15 && indexer.getPosition() - setpoint > 30) {
+                if (indexer.getPosition() - setpoint < -8 && indexer.getPosition() - setpoint > 50 || shoot.getAsBoolean()) {
                     state = State.INITIAL;
                     break;
                 }

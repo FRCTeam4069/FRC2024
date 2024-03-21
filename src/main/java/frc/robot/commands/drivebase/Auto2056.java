@@ -63,7 +63,7 @@ public class Auto2056 extends SequentialCommandGroup {
                         // new WaitCommand(0.5),
                         new ParallelCommandGroup(
                             //new BetterIndexerCommandWithStop(index).withTimeout(10),
-                            new InstantCommand(() -> i.driveFeed()),
+                            //new InstantCommand(() -> i.driveFeed()),
                             new RotateShooterCommand(rot, 70)
                         )
                         // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE)
@@ -77,9 +77,19 @@ public class Auto2056 extends SequentialCommandGroup {
                 new ParallelCommandGroup(
                     new BetterIndexerCommandWithStop(index).withTimeout(10),
                     new RotateShooterCommand(rot, 70),
-                    new FollowPath(drive, "2056 p1")
-
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "2056 p1"),
+                        new InstantCommand(() -> drive.stopModules())
+                    )
                 ),
+
+
+
+                new InstantCommand(() -> SmartDashboard.putString("auto location", "WOOO YA BABA THAT'S WHAT I'VE BEEN WAITING FOR THAT'S WHAT IT'S ALL ABOUT")),
+                new WaitCommand(1),
+
+                
+                new Rotate(drive, Units.degreesToRadians(30)),
 
             //     // new InstantCommand(() -> drive.stopModules()),
                 new WaitCommand(1),
