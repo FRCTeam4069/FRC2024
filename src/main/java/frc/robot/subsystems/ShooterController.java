@@ -66,6 +66,7 @@ public class ShooterController extends SubsystemBase {
     public void stop(){
         talon1.set(0);
         talon2.set(0);
+        targetSpeed = 0;
     }
 
     public void ShootWithPos(double x, double theta){
