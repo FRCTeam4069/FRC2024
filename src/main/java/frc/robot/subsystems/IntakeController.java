@@ -64,6 +64,9 @@ public class IntakeController extends SubsystemBase {
         return feedMotor.getAppliedOutput();
     }
 
+    public void setIntakeSpeed(double speed) {
+        feedMotor.set(speed);
+    }
     
 
     
