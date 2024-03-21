@@ -88,6 +88,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog.State;
 
 
 /**
@@ -282,6 +283,7 @@ public class RobotContainer {
 
     Controller2.rightTrigger(0.2).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), () -> indexer.pastSensor()));
 
+    new Trigger(() -> indexer.pastSensor()).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
     Controller2.leftTrigger(0.2).onTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()).withTimeout(1));
     Controller2.rightBumper().whileTrue(new BetterIndexerCommand(indexer, () -> (Controller2.getHID().getRightTriggerAxis() > 0.2 || Controller2.getHID().getLeftTriggerAxis() > 0.2 || Controller2.getHID().getLeftBumper())));
 
