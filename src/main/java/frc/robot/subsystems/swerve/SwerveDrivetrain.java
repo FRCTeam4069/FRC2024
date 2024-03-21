@@ -551,6 +551,12 @@ public class SwerveDrivetrain extends SubsystemBase {
     public StatusCode setRadians(double rads) {
         return gyro.setYaw(-1*Units.radiansToDegrees(rads));
     }
+    /**
+     * Returns the heading of the robot in degrees.
+     * The angle increases as the Pigeon 2 turns clockwise when looked at from the top. This follows the NED axis convention.
+     * The angle is continuous; that is, it will continue from 360 to 361 degrees. This allows for algorithms that wouldn't want to see a discontinuity in the gyro output as it sweeps past from 360 to 0 on the second time around.
+     * @return
+     */
     public double getDegrees() {
         return gyro.getYaw().getValueAsDouble();
     }

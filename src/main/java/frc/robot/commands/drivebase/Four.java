@@ -5,10 +5,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoCustomAngle;
+import frc.robot.commands.AutoLowerIntake;
+import frc.robot.commands.AutoSetIntakeState;
+import frc.robot.commands.AutoShooterCommand;
+import frc.robot.commands.BetterIndexerCommandWithStop;
+import frc.robot.commands.DisableIndexCommand;
 import frc.robot.commands.DisableSubsystems;
+import frc.robot.commands.IndexWithTime;
+import frc.robot.commands.RotateShooterCommand;
 import frc.robot.commands.ShooterPositions;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
@@ -34,52 +42,105 @@ public class Four extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, Rotation2d.fromDegrees(0.0)))),
                 new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, Rotation2d.fromDegrees(0.0)))),
-                //new ShootFirstRing(drive, i, index, shooter, rot),
-                // new FollowPath(drive, "start left align"),
-                // new WaitCommand(3),
-                // new FollowPath(drive, "start left close ring"),
-                // new WaitCommand(3),
+                new SequentialCommandGroup(
+                    new ParallelCommandGroup(
+                        new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA),
+                        new SequentialCommandGroup(
+                            new WaitCommand(1),
+                            new IndexWithTime(index, 1.0),
+                            new WaitCommand(0.5),
+                            new DisableIndexCommand(index)
+                        ),
+                        new InstantCommand(() -> SmartDashboard.putString("auto location", "first parallel"))
+                    ),
+                    //new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
 
-                //new FollowPath(drive, "start very left to ring"),
-                new FollowPath(drive, "four ring p1"),
-                new FollowPath(drive, "four ring p2"),
+                    new InstantCommand(() -> SmartDashboard.putString("auto location", "start path"))
 
-                //new WaitCommand(3),
+                ),
 
-                //new FollowPath(drive, "close to left"),
+                new ParallelCommandGroup(
+                    //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
+                    new AutoLowerIntake(intake),
+                    new InstantCommand(() -> i.setIntakeSpeed(-0.65)),
+                    new SequentialCommandGroup(
+                        new WaitCommand(0.5),
+                        new ParallelDeadlineGroup(
+                            new BetterIndexerCommandWithStop(index).withTimeout(4),
+                            new RotateShooterCommand(rot, 70)
+                        ),
+                        new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE)
+                    ),
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "four ring p1"),
+                        new InstantCommand(() -> drive.stopModules())
+                    )
 
-                // new InstantCommand(() -> SmartDashboard.putString("auto location", "end path")),
-                // new WaitCommand(1.5),
+                ),
 
-                // // new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(155.0)))),
-                // //new InstantCommand(() -> drive.setPose(new Pose2d(2.388, 4.392, Rotation2d.fromRadians(-drive.getRadians())))),
+                // new InstantCommand(() -> drive.stopModules()),
+                //new WaitCommand(1),
+                new ParallelCommandGroup(
+                    new InstantCommand(() -> i.stopFeed()),
+                    new IndexWithTime(index, 1)
+                ),
 
-                // new Rotate(drive, 0).withTimeout(1),
-                // new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(drive.getDegrees())))),
+                new ParallelCommandGroup(
+                    //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
+                    new InstantCommand(() -> i.setIntakeSpeed(-0.65)),
+                    new SequentialCommandGroup(
+                        new WaitCommand(0.5),
+                        new ParallelDeadlineGroup(
+                            new BetterIndexerCommandWithStop(index).withTimeout(3),
+                            new RotateShooterCommand(rot, 70)
+                        )
+                    ),
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "four ring p2"),
+                        new InstantCommand(() -> drive.stopModules())
+                    )
 
-                // new BadPIDCommand(drive, new Pose2d(-0.5, 0.0, Rotation2d.fromDegrees(drive.getDegrees()))),
-                
+                ),
 
-                // new ParallelCommandGroup(
+                new ParallelCommandGroup(
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "four ring p3"),
+                        new InstantCommand(() -> drive.stopModules())
+                    ),
+                    new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                    new InstantCommand(() -> i.stopFeed())
+                ),
+                //new WaitCommand(1),
+                new IndexWithTime(index, 1),
 
-                //     new AutoCustomAngle(rot, shooter, ShooterPositions.CLIMB),
-                //     new SequentialCommandGroup(
-                //         new BadPIDCommand(drive, new Pose2d(-0.5, 1.54, Rotation2d.fromDegrees(drive.getDegrees()))),
-                //         new BadPIDCommand(drive, new Pose2d(0.3, 1.54, Rotation2d.fromDegrees(drive.getDegrees())))
+                new ParallelCommandGroup(
+                    //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
+                    new InstantCommand(() -> i.setIntakeSpeed(-0.65)),
+                    new SequentialCommandGroup(
+                        new WaitCommand(0.5),
+                        new ParallelDeadlineGroup(
+                            new BetterIndexerCommandWithStop(index).withTimeout(3),
+                            new RotateShooterCommand(rot, 70)
+                        )
+                    ),
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "four ring p4"),
+                        new InstantCommand(() -> drive.stopModules())
+                    )
 
-                //     )
-                // ),
+                ),
 
-                // new WaitCommand(3.5),
-
-                // // new BadPIDCommand(drive, new Pose2d(-0.5, 1.12, Rotation2d.fromDegrees(drive.getDegrees()))),
-                // // new BadPIDCommand(drive, new Pose2d(-0.5, 2.50, Rotation2d.fromDegrees(drive.getDegrees()))),
-                // // new Rotate(drive, Units.degreesToRadians(20)).withTimeout(1.5),
-
-                // // new BadPIDCommand(drive, new Pose2d(-0.5, 2.50, Rotation2d.fromDegrees(200.0))),
-                // // new BadPIDCommand(drive, new Pose2d(0.3, 2.50, Rotation2d.fromDegrees(200.0))),
-                // // //new FollowPath(drive, "bad two"),
-                // // new WaitCommand(3),
+                new ParallelCommandGroup(
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "four ring p5"),
+                        new InstantCommand(() -> drive.stopModules())
+                    ),
+                    new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                    new InstantCommand(() -> i.stopFeed())
+                ),
+                new WaitCommand(0.25),
+                new IndexWithTime(index, 2),
+                new WaitCommand(3),
 
                 new DisableSubsystems(rot, shooter, index, i)
 

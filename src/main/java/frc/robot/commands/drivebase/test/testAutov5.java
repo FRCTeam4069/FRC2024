@@ -41,7 +41,7 @@ public class testAutov5 extends SequentialCommandGroup {
         addCommands(
             new SequentialCommandGroup(
                 new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))),
-                new ShootFirstRing(drive, i, index, shooter, rot),
+                new ShootFirstRing(i, index, shooter, rot),
                 
                 //new FollowPath(drive, "one v2"),
                 //new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))),

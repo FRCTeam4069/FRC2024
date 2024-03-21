@@ -9,17 +9,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController.positions;
 
-public class BetterIndexerCommand extends Command {
+public class BetterIndexerCommandWithStop extends Command {
     private IndexerController indexer;
     private State state;
     private double setpoint;
     private PIDController pid;
-    private BooleanSupplier shoot;
-    public BetterIndexerCommand(IndexerController indexer, BooleanSupplier shoot) {
+    public BetterIndexerCommandWithStop(IndexerController indexer) {
         this.indexer = indexer;
         state = State.INITIAL;
         pid = new PIDController(0.055, 0.0, 0.0);
-        this.shoot = shoot;
     }
 
     enum State {
@@ -44,10 +42,10 @@ public class BetterIndexerCommand extends Command {
                     indexer.stop();
                     break;
                 }
-                indexer.feedShooter();
+                indexer.setCustomSpeed(0.65);
                 break;
             case IN:
-                if (shoot.getAsBoolean() || !MathUtil.isNear(setpoint, indexer.getPosition(), 5.0)) {
+                if (!MathUtil.isNear(setpoint, indexer.getPosition(), 5.0)) {
                     state = State.INITIAL;
                     break;
                 }
@@ -74,8 +72,7 @@ public class BetterIndexerCommand extends Command {
     }
     @Override
     public boolean isFinished() {
-        //return state == State.IN && Math.abs(indexer.getVelocity()) < 1.0;
-        return false;
+        return state == State.IN && Math.abs(indexer.getVelocity()) < 0.5;
     }
     @Override
     public void end(boolean interrupted) {

@@ -22,20 +22,17 @@ import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 public class ShootFirstRing extends SequentialCommandGroup {
-    private SwerveDrivetrain drive;
     private IntakeController intake;
     private IndexerController indexer;
     private ShooterController shooter;
     private ShooterRotationController rotShoot;
-    public ShootFirstRing(SwerveDrivetrain drive, IntakeController i, IndexerController index, ShooterController shooter, ShooterRotationController rot) {
-        this.drive = drive;
+    public ShootFirstRing(IntakeController i, IndexerController index, ShooterController shooter, ShooterRotationController rot) {
         intake = i;
         indexer = index;
         this.shooter = shooter;
         this.rotShoot = rot;
-        addRequirements(drive, intake, shooter, rot, index);
+        addRequirements(intake, shooter, rot, index);
 
-        drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(180.0)));
 
         addCommands(
             new SequentialCommandGroup(
