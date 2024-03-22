@@ -62,11 +62,11 @@ public class Four extends SequentialCommandGroup {
                 new ParallelCommandGroup(
                     //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
                     new AutoLowerIntake(intake),
-                    new InstantCommand(() -> i.setIntakeSpeed(-0.65)),
+                    new InstantCommand(() -> i.setIntakeSpeed(-0.80)),
                     new SequentialCommandGroup(
                         new WaitCommand(0.5),
                         new ParallelDeadlineGroup(
-                            new BetterIndexerCommandWithStop(index).withTimeout(4),
+                            new BetterIndexerCommandWithStop(index).withTimeout(5),
                             new RotateShooterCommand(rot, 70)
                         ),
                         new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE)
@@ -87,7 +87,7 @@ public class Four extends SequentialCommandGroup {
 
                 new ParallelCommandGroup(
                     //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
-                    new InstantCommand(() -> i.setIntakeSpeed(-0.65)),
+                    new InstantCommand(() -> i.setIntakeSpeed(-0.80)),
                     new SequentialCommandGroup(
                         new WaitCommand(0.5),
                         new ParallelDeadlineGroup(
@@ -115,7 +115,7 @@ public class Four extends SequentialCommandGroup {
 
                 new ParallelCommandGroup(
                     //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
-                    new InstantCommand(() -> i.setIntakeSpeed(-0.65)),
+                    new InstantCommand(() -> i.setIntakeSpeed(-0.80)),
                     new SequentialCommandGroup(
                         new WaitCommand(0.5),
                         new ParallelDeadlineGroup(

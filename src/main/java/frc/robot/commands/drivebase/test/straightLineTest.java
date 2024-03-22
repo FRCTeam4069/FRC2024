@@ -11,6 +11,7 @@ import frc.robot.commands.AutoCustomAngle;
 import frc.robot.commands.AutoLowerIntake;
 import frc.robot.commands.AutoSetIntakeState;
 import frc.robot.commands.DisableSubsystems;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.drivebase.BadPIDCommand;
 import frc.robot.commands.drivebase.FollowPath;
@@ -20,6 +21,7 @@ import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
+import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 public class straightLineTest extends SequentialCommandGroup {
@@ -43,7 +45,7 @@ public class straightLineTest extends SequentialCommandGroup {
         addCommands(
             new SequentialCommandGroup(
                 new InstantCommand(() -> drive.setPose(new Pose2d(1.3, 5.55, Rotation2d.fromDegrees(90.0)))),
-                
+
                 new ParallelCommandGroup(
                     new SequentialCommandGroup(
                         //new AutoLowerIntake(intake),

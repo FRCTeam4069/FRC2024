@@ -142,4 +142,64 @@ public class FollowPathHolonomic extends FollowPathCommand {
         shouldFlipPath,
         requirements);
   }
+
+
+  /**
+   * Construct a path following command that will use a holonomic drive controller for holonomic
+   * drive trains
+   *
+   * @param path The path to follow
+   * @param poseSupplier Function that supplies the current field-relative pose of the robot
+   * @param speedsSupplier Function that supplies the current robot-relative chassis speeds
+   * @param outputRobotRelative Function that will apply the robot-relative output speeds of this
+   *     command
+   * @param config Holonomic path follower configuration
+   * @param shouldFlipPath Should the path be flipped to the other side of the field? This will
+   *     maintain a global blue alliance origin.
+   * @param requirements Subsystems required by this command, usually just the drive subsystem
+   */
+  public FollowPathHolonomic(
+      PathPlannerPath path,
+      Supplier<Pose2d> poseSupplier,
+      Supplier<ChassisSpeeds> speedsSupplier,
+      Consumer<ChassisSpeeds> outputRobotRelative,
+      PPHolonomicDriveController controller,
+      ReplanningConfig replanningConfig,
+      double timeout,
+      BooleanSupplier shouldFlipPath,
+      Subsystem... requirements) {
+        super(
+          path,
+          poseSupplier,
+          speedsSupplier,
+          outputRobotRelative,
+          controller,
+          replanningConfig,
+          timeout,
+          shouldFlipPath,
+          requirements
+        );
+  }
+
+  public FollowPathHolonomic(
+      PathPlannerPath path,
+      Supplier<Pose2d> poseSupplier,
+      Supplier<ChassisSpeeds> speedsSupplier,
+      Consumer<ChassisSpeeds> outputRobotRelative,
+      HolonomicPathFollowerConfig config,
+      double timeout,
+      BooleanSupplier shouldFlipPath,
+      Subsystem... requirements) {
+        this(
+          path,
+          poseSupplier,
+          speedsSupplier,
+          outputRobotRelative,
+          new PPHolonomicDriveController(
+              config.translationConstants, config.rotationConstants, config.period, config.maxModuleSpeed, config.driveBaseRadius),
+          config.replanningConfig,
+          timeout,
+          shouldFlipPath,
+          requirements);
+  }
 }

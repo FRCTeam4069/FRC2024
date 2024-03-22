@@ -82,6 +82,15 @@ public class ShooterController extends SubsystemBase {
     public boolean atSpeed(){
         if(talon1.getVelocity().getValueAsDouble() < 5) return false; 
         else if(MathUtil.isNear(talon1.getVelocity().getValueAsDouble(), targetSpeed, 2)) return true; 
+<<<<<<< HEAD
+=======
+        return false;
+    }
+
+    public boolean atSpeed(double tolerance){
+        if(talon1.getVelocity().getValueAsDouble() < 5) return false; 
+        else if(MathUtil.isNear(talon1.getVelocity().getValueAsDouble(), targetSpeed, tolerance)) return true; 
+>>>>>>> origin/main
         return false;
     }
 
@@ -110,8 +119,13 @@ public class ShooterController extends SubsystemBase {
             talon2.setControl(v.withVelocity(-rightVel/1.5));
         }
 
+    }
+
+    @Override
+    public void periodic() {
         SmartDashboard.putNumber("Right Shooter Speed", talon2.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Left  Shooter Speed", talon1.getVelocity().getValueAsDouble());
+
     }
     
    

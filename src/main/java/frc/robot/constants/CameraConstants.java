@@ -33,9 +33,9 @@ public class CameraConstants {
     public static final Matrix<N3, N1> VISION_MEASUREMENT_STANDARD_DEVIATIONS = Matrix.mat(Nat.N3(), Nat.N1())
         .fill(
             // if these numbers are less than one, multiplying will do bad things
-        1, // x
-            1, // y
-            1 * Math.PI // theta
+        1.5, // x
+            1.5, // y
+            1.5 * Math.PI // theta
         );
 
      /**
@@ -47,8 +47,8 @@ public class CameraConstants {
     public static final Matrix<N3, N1> STATE_STANDARD_DEVIATIONS = Matrix.mat(Nat.N3(), Nat.N1())
         .fill(
             // if these numbers are less than one, multiplying will do bad things
-            .1, // x
-            .1, // y
-            .1);
+            .15, // x
+            .15, // y
+            .20);
 
 }
