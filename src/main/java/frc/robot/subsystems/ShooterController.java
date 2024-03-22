@@ -82,15 +82,12 @@ public class ShooterController extends SubsystemBase {
     public boolean atSpeed(){
         if(talon1.getVelocity().getValueAsDouble() < 5) return false; 
         else if(MathUtil.isNear(talon1.getVelocity().getValueAsDouble(), targetSpeed, 2)) return true; 
-<<<<<<< HEAD
-=======
         return false;
     }
 
     public boolean atSpeed(double tolerance){
         if(talon1.getVelocity().getValueAsDouble() < 5) return false; 
         else if(MathUtil.isNear(talon1.getVelocity().getValueAsDouble(), targetSpeed, tolerance)) return true; 
->>>>>>> origin/main
         return false;
     }
 
