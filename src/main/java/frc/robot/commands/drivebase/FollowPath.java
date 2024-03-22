@@ -30,5 +30,44 @@ public class FollowPath extends SequentialCommandGroup {
                 drive));
     }
 
+    public FollowPath(SwerveDrivetrain drive, String pathName, double timeout) {
+        addRequirements(drive);
+        addCommands(
+            new FollowPathHolonomic(
+                PathPlannerPath.fromPathFile(pathName), 
+                drive::getPose, 
+                drive::getRobotRelativeSpeeds, 
+                drive::drive, 
+                new HolonomicPathFollowerConfig(
+                    DrivebaseConstants.translation, //translation 0.6
+                    DrivebaseConstants.rotation, //rotation
+                    DrivebaseConstants.maxVelocity, 
+                    DrivebaseConstants.drivebaseRadius, 
+                    new ReplanningConfig()
+                    ),
+                timeout,
+                () -> false,
+                drive));
+    }
+
+    public FollowPath(SwerveDrivetrain drive, String pathName, PIDConstants translation, double timeout) {
+        addRequirements(drive);
+        addCommands(
+            new FollowPathHolonomic(
+                PathPlannerPath.fromPathFile(pathName), 
+                drive::getPose, 
+                drive::getRobotRelativeSpeeds, 
+                drive::drive, 
+                new HolonomicPathFollowerConfig(
+                    translation, //translation 0.6
+                    DrivebaseConstants.rotation, //rotation
+                    DrivebaseConstants.maxVelocity, 
+                    DrivebaseConstants.drivebaseRadius, 
+                    new ReplanningConfig()
+                    ),
+                timeout,
+                () -> false,
+                drive));
+    }
     
 }

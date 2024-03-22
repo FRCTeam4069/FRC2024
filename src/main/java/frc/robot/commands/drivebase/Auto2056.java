@@ -1,5 +1,7 @@
 package frc.robot.commands.drivebase;
 
+import com.pathplanner.lib.util.PIDConstants;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -18,12 +20,14 @@ import frc.robot.commands.CustomShooterCommand;
 import frc.robot.commands.DisableIndexCommand;
 import frc.robot.commands.DisableSubsystems;
 import frc.robot.commands.IndexWithTime;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.RotateShooterCommand;
 import frc.robot.commands.ShooterPositions;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
+import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 public class Auto2056 extends SequentialCommandGroup {
@@ -47,18 +51,18 @@ public class Auto2056 extends SequentialCommandGroup {
 
                 new SequentialCommandGroup(
                     new ParallelCommandGroup(
-                        new Rotate(drive, Units.degreesToRadians(32)),
-                        new CustomShooterCommand(rot, shooter, 55, 40)
+                        new Rotate(drive, Units.degreesToRadians(34)),
+                        new CustomShooterCommand(rot, shooter, 58, 40)
                         //new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA)
                     ),
                     new IndexWithTime(index, 1.0),
-                    new WaitCommand(0.5)
+                    new WaitCommand(0.2)
                 ),
 
                 new ParallelCommandGroup(
                     //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
                     new AutoLowerIntake(intake),
-                    new InstantCommand(() -> i.setIntakeSpeed(-0.65)),
+                    new InstantCommand(() -> i.setIntakeSpeed(-0.80)),
                     new SequentialCommandGroup(
                         // new WaitCommand(0.5),
                         new ParallelCommandGroup(
@@ -83,37 +87,62 @@ public class Auto2056 extends SequentialCommandGroup {
                     )
                 ),
 
+                // new InstantCommand(() -> SmartDashboard.putString("auto location", "WOOO YA BABA THAT'S WHAT I'VE BEEN WAITING FOR THAT'S WHAT IT'S ALL ABOUT")),
 
+                new ParallelCommandGroup(
+                    new Rotate(drive, Units.degreesToRadians(31)),
+                    // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                    // new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA),
+                    new CustomShooterCommand(rot, shooter, 60, 53, 0.80),
+                    new InstantCommand(() -> i.stopFeed())
+                ),
 
-                new InstantCommand(() -> SmartDashboard.putString("auto location", "WOOO YA BABA THAT'S WHAT I'VE BEEN WAITING FOR THAT'S WHAT IT'S ALL ABOUT")),
-                new WaitCommand(1),
-
-                
-                new Rotate(drive, Units.degreesToRadians(30)),
-
-            //     // new InstantCommand(() -> drive.stopModules()),
-                new WaitCommand(1),
+            //      new InstantCommand(() -> drive.stopModules()),
                 new ParallelCommandGroup(
                     new InstantCommand(() -> i.stopFeed()),
                     new IndexWithTime(index, 1)
                 ),
+                new WaitCommand(0.2),
 
-            //     new ParallelCommandGroup(
-            //         //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
-            //         new InstantCommand(() -> i.setIntakeSpeed(-0.65)),
-            //         new SequentialCommandGroup(
-            //             new WaitCommand(0.5),
-            //             new ParallelDeadlineGroup(
-            //                 new BetterIndexerCommandWithStop(index).withTimeout(3),
-            //                 new RotateShooterCommand(rot, 70)
-            //             )
-            //         ),
-            //         new SequentialCommandGroup(
-            //             new FollowPath(drive, "four ring p2"),
-            //             new InstantCommand(() -> drive.stopModules())
-            //         )
+                new ParallelCommandGroup(
+                    new Rotate(drive, Units.degreesToRadians(0)),
+                    new InstantCommand(() -> i.stopFeed())
+                ),
 
-            //     ),
+                new ParallelCommandGroup(
+                    //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
+                    new SequentialCommandGroup(
+                        new InstantCommand(() -> i.stopFeed()),
+                        new InstantCommand(() -> index.stop()),
+                        new WaitCommand(2.0),
+                        new ParallelDeadlineGroup(
+                            new BetterIndexerCommandWithStop(index).withTimeout(5),
+                            new ParallelCommandGroup(
+                                new RotateShooterCommand(rot, 70),
+                                new InstantCommand(() -> i.setIntakeSpeed(-0.80))
+                            )
+                        )
+                    ),
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "2056 p2", new PIDConstants(1.5), 0.5),
+                        new InstantCommand(() -> drive.stopModules())
+                    )
+                ),
+
+                new ParallelCommandGroup(
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "2056 p3", new PIDConstants(0.8), 0.5),
+                        new InstantCommand(() -> drive.stopModules())
+                    ),
+                    //new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                    new CustomShooterCommand(rot, shooter, 80, 59.5, 0.5, 0.5),
+                    new InstantCommand(() -> i.stopFeed()),
+                    new IntakeCommand(i, positions.UPPER)
+                ),
+                new WaitCommand(0.2),
+                new IndexWithTime(index, 1),
+                new WaitCommand(1),
+
 
             //     new ParallelCommandGroup(
             //         new SequentialCommandGroup(

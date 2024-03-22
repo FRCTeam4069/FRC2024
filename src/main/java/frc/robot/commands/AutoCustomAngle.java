@@ -76,6 +76,7 @@ public class AutoCustomAngle extends Command {
         //s.stop();
     }
     public boolean isFinished(){
-        return MathUtil.isNear(Math.toRadians(angle), controller.getAngle(), Units.degreesToRadians(2));
+        return MathUtil.isNear(Math.toRadians(angle), controller.getAngle(), Units.degreesToRadians(2))
+            && s.atSpeed();
     }
 }

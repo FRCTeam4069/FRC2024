@@ -8,13 +8,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "start very left to ring"
+            "pathName": "2056 p1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "close to left"
+            "pathName": "2056 p2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2056 p3"
           }
         }
       ]
