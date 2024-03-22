@@ -37,10 +37,11 @@ public class IntakeController extends SubsystemBase {
         limit = new SlewRateLimiter(.94);
 
         artMotor1.setSmartCurrentLimit(20);
+        feedMotor.setSmartCurrentLimit(40);
     }
 
     public void driveFeed(){
-        feedMotor.set((-0.75));
+        feedMotor.set((-0.85));
     }
     public void backIntake(){
         feedMotor.set(limit.calculate(1));
@@ -64,6 +65,9 @@ public class IntakeController extends SubsystemBase {
         return feedMotor.getAppliedOutput();
     }
 
+    public void setIntakeSpeed(double speed) {
+        feedMotor.set(speed);
+    }
     
 
     

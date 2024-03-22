@@ -22,6 +22,7 @@ import frc.robot.constants.DrivebaseConstants;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 /** Base command for following a path */
@@ -41,6 +42,7 @@ public class FollowPathCommand extends Command {
 
   private PathPlannerPath path;
   private PathPlannerTrajectory generatedTrajectory;
+  private double timeout = 0.0;
 
   /**
    * Construct a base path following command
@@ -87,6 +89,55 @@ public class FollowPathCommand extends Command {
       m_requirements.addAll(reqs);
     }
   }
+
+  /**
+   * Construct a base path following command
+   *
+   * @param path The path to follow
+   * @param poseSupplier Function that supplies the current field-relative pose of the robot
+   * @param speedsSupplier Function that supplies the current robot-relative chassis speeds
+   * @param outputRobotRelative Function that will apply the robot-relative output speeds of this
+   *     command
+   * @param controller Path following controller that will be used to follow the path
+   * @param replanningConfig Path replanning configuration
+   * @param shouldFlipPath Should the path be flipped to the other side of the field? This will
+   *     maintain a global blue alliance origin.
+   * @param requirements Subsystems required by this command, usually just the drive subsystem
+   */
+  public FollowPathCommand(
+      PathPlannerPath path,
+      Supplier<Pose2d> poseSupplier,
+      Supplier<ChassisSpeeds> speedsSupplier,
+      Consumer<ChassisSpeeds> outputRobotRelative,
+      PPHolonomicDriveController controller,
+      ReplanningConfig replanningConfig,
+      double timeout,
+      BooleanSupplier shouldFlipPath,
+      Subsystem... requirements) {
+    this.originalPath = path;
+    this.poseSupplier = poseSupplier;
+    this.speedsSupplier = speedsSupplier;
+    this.output = outputRobotRelative;
+    this.controller = controller;
+    this.replanningConfig = replanningConfig;
+    this.shouldFlipPath = shouldFlipPath;
+    this.timeout = timeout;
+
+    Set<Subsystem> driveRequirements = Set.of(requirements);
+    m_requirements.addAll(driveRequirements);
+
+    for (EventMarker marker : this.originalPath.getEventMarkers()) {
+      var reqs = marker.getCommand().getRequirements();
+
+      if (!Collections.disjoint(driveRequirements, reqs)) {
+        throw new IllegalArgumentException(
+            "Events that are triggered during path following cannot require the drive subsystem");
+      }
+
+      m_requirements.addAll(reqs);
+    }
+  }
+
 
   @Override
   public void initialize() {
@@ -230,7 +281,7 @@ public class FollowPathCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return /*(controller.atReference()) ||*/ timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds()+5);
+    return (controller.atReference()) || timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds()+timeout);
   }
 
 

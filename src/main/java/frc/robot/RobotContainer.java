@@ -44,6 +44,7 @@ import frc.robot.commands.drivebase.Auto2056;
 import frc.robot.commands.drivebase.Four;
 import frc.robot.commands.drivebase.FrontAuto;
 import frc.robot.commands.drivebase.OneNote;
+import frc.robot.commands.drivebase.Red2056;
 import frc.robot.commands.drivebase.Rotate;
 import frc.robot.commands.drivebase.SideAuto;
 import frc.robot.commands.drivebase.StrafeUntilCam;
@@ -196,6 +197,7 @@ public class RobotContainer {
     //autoChooser.addOption("BLUE new two ring on the side auto BLUE", new TwoNoteNewBlue(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("test", new straightLineTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("2056 auto", new Auto2056(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("RED 2056", new Red2056(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("pose test", new PoseTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("four ring", new Four(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("drive test", new DriveTest(drive));
@@ -235,7 +237,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> poseEstimator.getSpeakerTransform().getX(), shooter)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> Math.hypot(poseEstimator.getSpeakerTransform().getX(), poseEstimator.getSpeakerTransform().getY()), shooter)).onTrue(intake.setPosition(positions.UPPER));
     //git hub trial//
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
     //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
@@ -283,7 +285,7 @@ public class RobotContainer {
     Controller2.rightTrigger(0.2).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger(0.2)));
 
     Controller2.leftTrigger(0.2).onTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()).withTimeout(1));
-    Controller2.rightBumper().whileTrue(new BetterIndexerCommand(indexer));
+    Controller2.rightBumper().whileTrue(new BetterIndexerCommand(indexer, () -> (Controller2.getHID().getRightTriggerAxis() > 0.2 || Controller2.getHID().getLeftTriggerAxis() > 0.2 || Controller2.getHID().getLeftBumper())));
 
     new Trigger(() -> indexer.getPhotoReading()).onFalse(led.setPattern(RevBlinkinPatterns.WHITE)).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
     new Trigger(() -> shooter.atSpeed()).onTrue(led.setPattern(RevBlinkinPatterns.GREEN)).onFalse(led.setPattern(RevBlinkinPatterns.WHITE));

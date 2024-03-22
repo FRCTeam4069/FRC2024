@@ -15,10 +15,12 @@ import com.revrobotics.SparkMaxLimitSwitch.Direction;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -43,10 +45,13 @@ public class ClimberSubsystem extends SubsystemBase {
 
         climber.getEncoder().setPosition(0);
         climber.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        climber.setSoftLimit(SoftLimitDirection.kForward, 233);
+        climber.setSoftLimit(SoftLimitDirection.kForward, 133);
+        climber.setIdleMode(IdleMode.kBrake);
 
         climber.enableSoftLimit(SoftLimitDirection.kReverse, true);
         climber.enableSoftLimit(SoftLimitDirection.kForward, true);
+        climber.setSmartCurrentLimit(40);
+        climber.burnFlash();
 
         //climber.setSmartCurrentLimit(60);
         
@@ -98,6 +103,16 @@ public class ClimberSubsystem extends SubsystemBase {
         return climber.getOutputCurrent();
     }
 
+    public void spin(double speed) {
+        if (climber.getEncoder().getPosition() > 134 && speed > 0) {
+            climber.stopMotor();
+        } else if (climber.getEncoder().getPosition() < 0 && speed < 0) {
+            climber.stopMotor();
+        } else {
+            climber.set(speed);
+        }
+    }
+
     public Command setPower(edu.wpi.first.wpilibj.Relay.Direction d){
         if (d == edu.wpi.first.wpilibj.Relay.Direction.kForward){
             return this.runOnce(() -> climber.set(1));
@@ -106,6 +121,11 @@ public class ClimberSubsystem extends SubsystemBase {
             return this.runOnce(() -> climber.set(-1));
         }
         return this.runOnce(() -> climber.set(0));
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("climber position", getEncoder());
     }
     
 }
