@@ -60,7 +60,7 @@ public class AutoCustomAngle extends Command {
         //     //3.2m
         // }
 
-        s.driveWithCustomSpeed(velocity, velocity/2);
+        s.driveWithCustomSpeed(velocity, velocity);
         controller.setCustomAngle(angle);
         SmartDashboard.putBoolean("autoCustomAngle", true);
         SmartDashboard.putNumber("bad angle", angle);

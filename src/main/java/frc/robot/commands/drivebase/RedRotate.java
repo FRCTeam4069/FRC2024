@@ -8,17 +8,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.DrivebaseConstants.AlignConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
-public class Rotate extends Command {
+public class RedRotate extends Command {
     private SwerveDrivetrain drive;
     private PIDController pid;
     private double radians;
 
-    public Rotate(SwerveDrivetrain drive, double radians) {
+    public RedRotate(SwerveDrivetrain drive, double radians) {
         this.drive = drive;
         pid = new PIDController(AlignConstants.kP, AlignConstants.kI, AlignConstants.kD);
         pid.setTolerance(AlignConstants.positionTolerance, AlignConstants.velocityTolerance);
         pid.enableContinuousInput(-Math.PI, Math.PI);
-        this.radians = radians;
+        this.radians = -1*radians;
         
         addRequirements(drive);
     }
@@ -29,12 +29,12 @@ public class Rotate extends Command {
      * @param radians
      * @param positionTolerance rads
      */
-    public Rotate(SwerveDrivetrain drive, double radians, double positionTolerance) {
+    public RedRotate(SwerveDrivetrain drive, double radians, double positionTolerance) {
         this.drive = drive;
         pid = new PIDController(AlignConstants.kP, AlignConstants.kI, AlignConstants.kD);
         pid.setTolerance(positionTolerance, AlignConstants.velocityTolerance);
         pid.enableContinuousInput(-Math.PI, Math.PI);
-        this.radians = radians;
+        this.radians = -1*radians;
         
         addRequirements(drive);
     }

@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.constants.DrivebaseConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
-public class FollowPath extends SequentialCommandGroup {
-    public FollowPath(SwerveDrivetrain drive, String pathName) {
+public class RedFollowPath extends SequentialCommandGroup {
+    public RedFollowPath(SwerveDrivetrain drive, String pathName) {
         addRequirements(drive);
         addCommands(
             new FollowPathHolonomic(
@@ -26,11 +26,11 @@ public class FollowPath extends SequentialCommandGroup {
                     DrivebaseConstants.drivebaseRadius, 
                     new ReplanningConfig()
                     ),
-                () -> false,
+                () -> true,
                 drive));
     }
 
-    public FollowPath(SwerveDrivetrain drive, String pathName, double timeout) {
+    public RedFollowPath(SwerveDrivetrain drive, String pathName, double timeout) {
         addRequirements(drive);
         addCommands(
             new FollowPathHolonomic(
@@ -46,11 +46,11 @@ public class FollowPath extends SequentialCommandGroup {
                     new ReplanningConfig()
                     ),
                 timeout,
-                () -> false,
+                () -> true,
                 drive));
     }
 
-    public FollowPath(SwerveDrivetrain drive, String pathName, PIDConstants translation, double timeout) {
+    public RedFollowPath(SwerveDrivetrain drive, String pathName, PIDConstants translation, double timeout) {
         addRequirements(drive);
         addCommands(
             new FollowPathHolonomic(
@@ -66,11 +66,11 @@ public class FollowPath extends SequentialCommandGroup {
                     new ReplanningConfig()
                     ),
                 timeout,
-                () -> false,
+                () -> true,
                 drive));
     }
 
-    public FollowPath(SwerveDrivetrain drive, String pathName, PIDConstants translation, PIDConstants rotation, double timeout) {
+    public RedFollowPath(SwerveDrivetrain drive, String pathName, PIDConstants translation, PIDConstants rotation, double timeout) {
         addRequirements(drive);
         addCommands(
             new FollowPathHolonomic(
@@ -86,7 +86,7 @@ public class FollowPath extends SequentialCommandGroup {
                     new ReplanningConfig()
                     ),
                 timeout,
-                () -> false,
+                () -> true,
                 drive));
     }
     

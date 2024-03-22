@@ -44,6 +44,7 @@ import frc.robot.commands.drivebase.Auto2056;
 import frc.robot.commands.drivebase.Four;
 import frc.robot.commands.drivebase.FrontAuto;
 import frc.robot.commands.drivebase.OneNote;
+import frc.robot.commands.drivebase.Red2056;
 import frc.robot.commands.drivebase.Rotate;
 import frc.robot.commands.drivebase.SideAuto;
 import frc.robot.commands.drivebase.StrafeUntilCam;
@@ -196,6 +197,7 @@ public class RobotContainer {
     //autoChooser.addOption("BLUE new two ring on the side auto BLUE", new TwoNoteNewBlue(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("test", new straightLineTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("2056 auto", new Auto2056(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("RED 2056", new Red2056(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("pose test", new PoseTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("four ring", new Four(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("drive test", new DriveTest(drive));
