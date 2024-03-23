@@ -20,6 +20,8 @@ public class IndexerController extends SubsystemBase {
         m1 = new CANSparkMax(DeviceIDs.FEEDER, MotorType.kBrushless);
         pes = new edu.wpi.first.wpilibj.AnalogInput(0);
         m1.setIdleMode(IdleMode.kBrake);
+        m1.setSmartCurrentLimit(40);
+        m1.burnFlash();
     }
 
     public void periodic(){

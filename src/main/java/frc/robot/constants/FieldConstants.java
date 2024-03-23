@@ -15,8 +15,9 @@ public class FieldConstants {
     public static final double fieldLengthMeters = Units.inchesToMeters(651.25);
     public static final double fieldWidthMeters = Units.inchesToMeters(315.5);
 
-    public static final Pose2d poseRedSpeaker = new Pose2d(new Translation2d(-0.038099999999999995, 2.465832), new Rotation2d(Units.degreesToRadians(0))); //x equals total field length minus abs value of red x, y equals total field width minus blue y
+    public static final Pose2d poseRedSpeaker = new Pose2d(new Translation2d(16.51, 5.50), new Rotation2d(Units.degreesToRadians(0))); //x equals total field length minus abs value of red x, y equals total field width minus blue y
     public static final Pose2d poseBlueSpeaker = new Pose2d(new Translation2d(-0.038099999999999995, 5.50), new Rotation2d(Units.degreesToRadians(0)));
+    // public static final Pose2d poseRedSpeaker = new Pose2d(new Translation2d(-0.038099999999999995, 5.50), new Rotation2d(Units.degreesToRadians(0)));
 
     public static final Pose2d poseRedAutoLeft = new Pose2d(new Translation2d(), new Rotation2d());
     public static final Pose2d poseRedAutoCenter = new Pose2d(new Translation2d(), new Rotation2d());

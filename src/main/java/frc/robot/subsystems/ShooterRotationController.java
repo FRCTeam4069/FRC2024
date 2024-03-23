@@ -47,6 +47,9 @@ public class ShooterRotationController extends SubsystemBase {
 
         controller = new PIDController(kP, kI, kD);
 
+        left.setSmartCurrentLimit(40);
+        right.setSmartCurrentLimit(40);
+
         
 
     }
