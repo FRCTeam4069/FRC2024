@@ -24,19 +24,11 @@ public class SetShooterRotation extends Command {
 
     public void execute(){
             
-<<<<<<< HEAD
             double angle =  190.478 * (Math.pow((d.getAsDouble()* 100 / 2.54), 0.0787374)) - 219.781;
             SmartDashboard.putNumber("Set Angle", angle);
             controller.setCustomAngle(angle);
             if(angle > 65){
                 s.driveWithCustomSpeed(85, 85);
-=======
-            double angle =  190.478 * (Math.pow((d.getAsDouble()* 100 / 2.54), 0.0787374)) - 219.172;
-            SmartDashboard.putNumber("Set Angle", angle);
-            controller.setCustomAngle(angle);
-            if(angle > 70){
-                s.driveWithCustomSpeed(90, 90);
->>>>>>> 756b06f8cb4f24c0ba5c31cfc4e1bee239a42afd
             }
             else if(angle < 65 && angle > 40){
                 s.driveWithCustomSpeed(70, 70);
