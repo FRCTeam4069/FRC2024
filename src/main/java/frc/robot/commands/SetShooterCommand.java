@@ -74,7 +74,7 @@ public class SetShooterCommand extends Command{
             //3.2m
         }
 
-        shooter.driveWithCustomSpeed(velocity, velocity);
+        shooter.driveWithCustomSpeed(velocity, velocity/2);
         controller.setCustomAngle(angle);
     }
 

@@ -38,6 +38,8 @@ public class IntakeController extends SubsystemBase {
 
         artMotor1.setSmartCurrentLimit(20);
         feedMotor.setSmartCurrentLimit(40);
+        artMotor1.burnFlash();
+        feedMotor.burnFlash();
     }
 
     public void driveFeed(){
