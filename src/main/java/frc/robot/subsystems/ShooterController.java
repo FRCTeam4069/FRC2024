@@ -37,8 +37,8 @@ public class ShooterController extends SubsystemBase {
         var slot0Configs = new Slot0Configs();
         slot0Configs.kV = 0.12273;
         slot0Configs.kP = 0.13;
-        slot0Configs.kI = 0;
-        slot0Configs.kD = 0;
+        slot0Configs.kI = 0.0;
+        slot0Configs.kD = 0.02;
 
         // var slot1Configs = new Slot0Configs();
         // slot0Configs.kV = 0.12273;
@@ -80,8 +80,8 @@ public class ShooterController extends SubsystemBase {
 
 
     public boolean atSpeed(){
-        if(talon1.getVelocity().getValueAsDouble() < 5) return false; 
-        else if(MathUtil.isNear(talon1.getVelocity().getValueAsDouble(), targetSpeed, 2)) return true; 
+        if(talon1.getVelocity().getValueAsDouble() < 3) return false; 
+        else if(MathUtil.isNear(talon1.getVelocity().getValueAsDouble(), targetSpeed, 1.5)) return true; 
         return false;
     }
 

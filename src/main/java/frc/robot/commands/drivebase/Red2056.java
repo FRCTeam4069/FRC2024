@@ -46,8 +46,8 @@ public class Red2056 extends SequentialCommandGroup {
 
         addCommands(
             new SequentialCommandGroup(
-                new InstantCommand(() -> drive.setPose(new Pose2d(1.45, 6.50, Rotation2d.fromDegrees(0.0)))),
-                new InstantCommand(() -> drive.setPose(new Pose2d(1.45, 6.50, Rotation2d.fromDegrees(0.0)))),
+                new InstantCommand(() -> drive.setPose(new Pose2d(1.45, 4.50, Rotation2d.fromDegrees(0.0)))),
+                new InstantCommand(() -> drive.setPose(new Pose2d(1.45, 4.50, Rotation2d.fromDegrees(0.0)))),
 
                 new SequentialCommandGroup(
                     new ParallelCommandGroup(

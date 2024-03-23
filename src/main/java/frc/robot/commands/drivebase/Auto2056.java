@@ -124,7 +124,7 @@ public class Auto2056 extends SequentialCommandGroup {
                         )
                     ),
                     new SequentialCommandGroup(
-                        new FollowPath(drive, "2056 p2", new PIDConstants(1.15), 0.5),
+                        new FollowPath(drive, "2056 p2", new PIDConstants(1.15), 1.0),
                         new InstantCommand(() -> drive.stopModules())
                     )
                 ),

@@ -44,6 +44,7 @@ import frc.robot.commands.drivebase.Auto2056;
 import frc.robot.commands.drivebase.Four;
 import frc.robot.commands.drivebase.FrontAuto;
 import frc.robot.commands.drivebase.OneNote;
+import frc.robot.commands.drivebase.OneNoteAndPark;
 import frc.robot.commands.drivebase.Red2056;
 import frc.robot.commands.drivebase.Rotate;
 import frc.robot.commands.drivebase.SideAuto;
@@ -201,6 +202,7 @@ public class RobotContainer {
     autoChooser.addOption("pose test", new PoseTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("four ring", new Four(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("drive test", new DriveTest(drive));
+    autoChooser.addOption("one and park (cw)", new OneNoteAndPark(drive, intake, indexer, shooter, artShooter));
     
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -239,18 +241,25 @@ public class RobotContainer {
   private void configureBindings() {
     Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> Math.hypot(poseEstimator.getSpeakerTransform().getX(), poseEstimator.getSpeakerTransform().getY()), shooter)).onTrue(intake.setPosition(positions.UPPER));
     //git hub trial//
-    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
+    //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
     //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA))/*.onTrue(intake.setPosition(positions.UPPER))* */;
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
     //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
     Controller1.rightTrigger(0.2).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
-    Controller1.rightTrigger(0.2).whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller1.getRightTriggerAxis()));
+    // Controller1.rightTrigger(0.2).whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller1.getRightTriggerAxis()));
+    Controller1.rightTrigger(0.2).whileTrue(new InstantCommand(() -> indexer.feedShooter())).onFalse(new InstantCommand(() -> indexer.stop()));
     Controller1.rightTrigger(0.2).whileTrue(new FeedIntakeCommand());
     Controller1.rightTrigger(0.2).whileTrue(led.setPattern(RevBlinkinPatterns.SHOT_BLUE));
     Controller1.rightTrigger(0.2).onFalse(led.setPattern(RevBlinkinPatterns.SHOT_RED));
     Controller1.rightTrigger(0.2).onTrue(intake.setPosition(positions.LOWER));
-    // Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
+
+    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
+    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller1.getRightTriggerAxis()));
+    //Controller2.x().whileTrue(new FeedIntakeCommand());
+    Controller2.x().whileTrue(led.setPattern(RevBlinkinPatterns.SHOT_BLUE));
+    Controller2.x().onFalse(led.setPattern(RevBlinkinPatterns.SHOT_RED));
+    //Controller2.x().onTrue(intake.setPosition(positions.LOWER)); //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE)).onTrue(intake.setPosition(positions.UPPER));
 
     //Controller3.b().whileTrue(new MakePathOnTheFly(0, false, new PathConstraints(2, 0.5, 1, 0.5), poseEstimator, DriverStation.getAlliance().get()));
 
@@ -281,11 +290,13 @@ public class RobotContainer {
     new Trigger(Controller2.pov(180).onTrue(intake.setPosition(positions.LOWER)));
     
     Controller2.rightBumper().whileTrue(new FeedIntakeCommand());
+    // Controller2.rightBumper().whileTrue(new InstantCommand(() -> intake.driveFeed())).onFalse(new InstantCommand(() -> intake.stopFeed()));
 
     Controller2.rightTrigger(0.2).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger(0.2)));
 
     Controller2.leftTrigger(0.2).onTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()).withTimeout(1));
-    Controller2.rightBumper().whileTrue(new BetterIndexerCommand(indexer, () -> (Controller2.getHID().getRightTriggerAxis() > 0.2 || Controller2.getHID().getLeftTriggerAxis() > 0.2 || Controller2.getHID().getLeftBumper())));
+    // Controller2.leftTrigger(0.2).onTrue(new InstantCommand(() -> indexer.feedShooter())).onFalse(new InstantCommand(() -> indexer.stop()));
+    //Controller2.rightBumper().whileTrue(new BetterIndexerCommand(indexer, () -> (Controller2.getHID().getRightTriggerAxis() > 0.2 || Controller2.getHID().getLeftTriggerAxis() > 0.2 || Controller2.getHID().getLeftBumper())));
 
     new Trigger(() -> indexer.getPhotoReading()).onFalse(led.setPattern(RevBlinkinPatterns.WHITE)).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
     new Trigger(() -> shooter.atSpeed()).onTrue(led.setPattern(RevBlinkinPatterns.GREEN)).onFalse(led.setPattern(RevBlinkinPatterns.WHITE));

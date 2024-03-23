@@ -34,6 +34,7 @@ public class IndexerController extends SubsystemBase {
 
         SmartDashboard.putNumber("indexer position", getPosition());
         SmartDashboard.putBoolean("colour sensor", getPhotoReading());
+        SmartDashboard.putNumber("photoelectric sensor volts", pes.getVoltage());
     }
 
     public void feedShooter(){
@@ -48,7 +49,7 @@ public class IndexerController extends SubsystemBase {
     }
 
     public boolean getPhotoReading(){
-        return (pes.getVoltage() < 2.0);
+        return (pes.getVoltage() < 1.5);
     }
 
     public double getCurrent(){
