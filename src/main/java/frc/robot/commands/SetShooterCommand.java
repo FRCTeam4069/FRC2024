@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
@@ -44,37 +45,45 @@ public class SetShooterCommand extends Command{
     }
 
     public void execute(){
+        SmartDashboard.putNumber("Config", shooter.getConfig());
         if(positions == ShooterPositions.WALL_AREA){
             velocity = 60; //60 from wall
-            angle = 35;    //35 from wall
+            angle = 35;  
+            shooter.driveWithCustomSpeed(velocity, velocity/2);  //35 from wall
         } 
         else if(positions == ShooterPositions.WHITE_LINE){
             velocity = 60;
             angle = 45;
+            shooter.driveWithCustomSpeed(velocity, velocity/2);
         }
         else if(positions == ShooterPositions.SAFE_ZONE){
             velocity = 80;
             angle = 60;
+            shooter.driveWithCustomSpeed(velocity, velocity/2);
         }
         else if(positions == ShooterPositions.CLIMB){
             velocity = 0;
             angle = 1;
+            shooter.driveWithCustomSpeed(velocity, velocity/2);
         }
         else if(positions == ShooterPositions.AMP_AREA){
             velocity = 10;
             angle = 25;
+            shooter.driveWithSlowSpeed(velocity, velocity/2);
         }
         else if(positions == ShooterPositions.AUTO_FEED){
             velocity = 80;
             angle = 85;
+            shooter.driveWithCustomSpeed(velocity, velocity/2);
         }
         else {
             velocity = 80;
             angle = 62;
+            shooter.driveWithCustomSpeed(velocity, velocity/2);
             //3.2m
         }
 
-        shooter.driveWithCustomSpeed(velocity, velocity/2);
+        
         controller.setCustomAngle(angle);
     }
 
