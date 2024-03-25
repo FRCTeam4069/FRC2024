@@ -27,6 +27,7 @@ import frc.robot.constants.DrivebaseConstants;
 import frc.robot.subsystems.RevBlinkinPatterns;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.ShooterTest;
+import frc.robot.subsystems.SystemCheck;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -58,7 +59,7 @@ public class Robot extends TimedRobot {
     // m_robotContainer.notifier.startPeriodic(0.02);
 
     m_robotContainer.poseEstimator.addDashboardWidgets(m_robotContainer.autoTab);
-    
+
     // m_robotContainer.intake.setBrakeState(1);
     // DataLogManager.start();
     // URCL.start();
@@ -186,6 +187,8 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("3", values[3]);
     
   }
+
+  private SystemCheck systemCheck;
   //private ShooterTest t;
   @Override
   public void testInit() {
@@ -195,6 +198,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.clearPersistent("Field");
 
+    systemCheck = new SystemCheck(null, m_robotContainer.shooter, m_robotContainer.artShooter, m_robotContainer.intake, m_robotContainer.indexer, null);
+
     //t = new ShooterTest();
    
   }
@@ -203,7 +208,9 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     //SmartDashboard.putNumber("SHOOTER", c.getEncoder());
-    SmartDashboard.putNumber("intake", m_robotContainer.intake.getEncoder());
+    //SmartDashboard.putNumber("intake", m_robotContainer.intake.getEncoder());
+
+    systemCheck.checkSystem();
   }
   
 

@@ -12,6 +12,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import com.revrobotics.CANSparkBase.FaultID;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -652,5 +653,4 @@ public class SwerveDrivetrain extends SubsystemBase {
             .andThen(Commands.waitSeconds(delay))
             .andThen(driveRoutine.dynamic(SysIdRoutine.Direction.kReverse).withTimeout(timeout));
     }
-
 }

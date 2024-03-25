@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.reduxrobotics.sensors.canandcolor.digout.SlotComparison;
+import com.revrobotics.CANSparkBase.FaultID;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -172,5 +173,4 @@ public class ShooterController extends SubsystemBase {
         return talon1.getClosedLoopSlot().getValueAsDouble();
         
     }
-   
 }
