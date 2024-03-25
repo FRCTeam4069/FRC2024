@@ -90,7 +90,7 @@ public class Red2056 extends SequentialCommandGroup {
                 // new InstantCommand(() -> SmartDashboard.putString("auto location", "WOOO YA BABA THAT'S WHAT I'VE BEEN WAITING FOR THAT'S WHAT IT'S ALL ABOUT")),
 
                 new ParallelCommandGroup(
-                    new Rotate(drive, Units.degreesToRadians(-32), Units.degreesToRadians(1)),
+                    new Rotate(drive, Units.degreesToRadians(-30.5), Units.degreesToRadians(1)),
                     // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
                     // new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA),
                     new CustomShooterCommand(rot, shooter, 60, 53, 0.80),
@@ -116,7 +116,7 @@ public class Red2056 extends SequentialCommandGroup {
                         new InstantCommand(() -> index.stop()),
                         new WaitCommand(2.0),
                         new ParallelDeadlineGroup(
-                            new BetterIndexerCommandWithStop(index).withTimeout(5),
+                            new BetterIndexerCommandWithStop(index).withTimeout(3),
                             new ParallelCommandGroup(
                                 new RotateShooterCommand(rot, 70),
                                 new InstantCommand(() -> i.setIntakeSpeed(-0.80))

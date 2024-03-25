@@ -71,7 +71,7 @@ public class Four extends SequentialCommandGroup {
                             new RotateShooterCommand(rot, 70)
                         ),
                         // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
-                        new CustomShooterCommand(rot, shooter, 65, 49)
+                        new CustomShooterCommand(rot, shooter, 70, 49, 0.75, 1.0, 1.5).withTimeout(2)
                     ),
                     new SequentialCommandGroup(
                         new FollowPath(drive, "four ring p1"),
@@ -110,7 +110,7 @@ public class Four extends SequentialCommandGroup {
                         new InstantCommand(() -> drive.stopModules())
                     ),
                     // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
-                    new CustomShooterCommand(rot, shooter, 65, 49.3, 0.75, 1.0, 1.5).withTimeout(2.2),
+                    new CustomShooterCommand(rot, shooter, 70, 49.3, 0.75, 1.0, 1.5).withTimeout(2.2),
                     new InstantCommand(() -> i.stopFeed())
                 ),
                 //new WaitCommand(1),

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
+import frc.robot.subsystems.ShooterController.SlotConfigs;
 
 public class SetShooterRotation extends Command {
     private ShooterRotationController controller;
@@ -23,7 +24,7 @@ public class SetShooterRotation extends Command {
     }
 
     public void execute(){
-            
+            s.switchSlotConfig(SlotConfigs.FAST);
             double angle =  190.478 * (Math.pow((d.getAsDouble()* 100 / 2.54), 0.0787374)) - 219.172;
             SmartDashboard.putNumber("Set Angle", angle);
             controller.setCustomAngle(angle);

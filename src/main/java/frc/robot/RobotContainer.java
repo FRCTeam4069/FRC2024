@@ -38,11 +38,13 @@ import frc.robot.commands.SetShooterRotation;
 
 import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
+import frc.robot.commands.ShooterVelocityPIDCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
 import frc.robot.commands.drivebase.Auto2056;
 import frc.robot.commands.drivebase.Four;
 import frc.robot.commands.drivebase.FrontAuto;
+import frc.robot.commands.drivebase.OneAndMurder;
 import frc.robot.commands.drivebase.OneNote;
 import frc.robot.commands.drivebase.OneNoteAndPark;
 import frc.robot.commands.drivebase.Red2056;
@@ -203,6 +205,7 @@ public class RobotContainer {
     autoChooser.addOption("four ring", new Four(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("drive test", new DriveTest(drive));
     autoChooser.addOption("one and park (cw)", new OneNoteAndPark(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("murdur in blue", new OneAndMurder(drive, intake, indexer, shooter, artShooter));
     
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -239,9 +242,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> Math.hypot(poseEstimator.getSpeakerTransform().getX(), poseEstimator.getSpeakerTransform().getY()), shooter)).onTrue(intake.setPosition(positions.UPPER));
+    // Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> Math.hypot(poseEstimator.getSpeakerTransform().getX(), poseEstimator.getSpeakerTransform().getY()), shooter)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.y().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
     //git hub trial//
-    //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
+    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
     //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA))/*.onTrue(intake.setPosition(positions.UPPER))* */;
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
@@ -254,7 +258,7 @@ public class RobotContainer {
     Controller1.rightTrigger(0.2).onFalse(led.setPattern(RevBlinkinPatterns.SHOT_RED));
     Controller1.rightTrigger(0.2).onTrue(intake.setPosition(positions.LOWER));
 
-    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
+    // Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
     Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller1.getRightTriggerAxis()));
     //Controller2.x().whileTrue(new FeedIntakeCommand());
     Controller2.x().whileTrue(led.setPattern(RevBlinkinPatterns.SHOT_BLUE));
