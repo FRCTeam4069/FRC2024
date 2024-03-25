@@ -25,6 +25,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -141,10 +142,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
     // Set the pose on the dashboard
     var dashboardPose = poseEstimator.getEstimatedPosition();
-    if (originPosition == kRedAllianceWallRightSide) {
-      // Flip the pose when red, since the dashboard field photo cannot be rotated
-      dashboardPose = flipAlliance(dashboardPose);
-    }
+    // if (originPosition == kRedAllianceWallRightSide) {
+    //   // Flip the pose when red, since the dashboard field photo cannot be rotated
+    //   dashboardPose = flipAlliance(dashboardPose);
+    // }
     field2d.setRobotPose(dashboardPose);
 
     poseConsumer.accept(new TimedPose2d(getCurrentPose(), Timer.getFPGATimestamp()));
@@ -155,7 +156,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
    * @return
    */
   public Transform2d getSpeakerTransform() {
-    if (originPosition == kRedAllianceWallRightSide) {
+    Alliance allianceColour = Alliance.Red;
+    try {
+      allianceColour = DriverStation.getAlliance().get();
+    } catch (Exception e) {
+      System.out.println("no alliance colour");
+    }
+
+    if (allianceColour == Alliance.Red) {
       // Find the transform from robot to speaker when red
       return poseEstimator.getEstimatedPosition().minus(FieldConstants.poseRedSpeaker);
     }

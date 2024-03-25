@@ -13,6 +13,7 @@ import frc.robot.commands.AutoLowerIntake;
 import frc.robot.commands.AutoSetIntakeState;
 import frc.robot.commands.AutoShooterCommand;
 import frc.robot.commands.BetterIndexerCommandWithStop;
+import frc.robot.commands.CustomShooterCommand;
 import frc.robot.commands.DisableIndexCommand;
 import frc.robot.commands.DisableSubsystems;
 import frc.robot.commands.IndexWithTime;
@@ -69,7 +70,8 @@ public class Four extends SequentialCommandGroup {
                             new BetterIndexerCommandWithStop(index).withTimeout(5),
                             new RotateShooterCommand(rot, 70)
                         ),
-                        new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE)
+                        // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                        new CustomShooterCommand(rot, shooter, 70, 49, 0.75, 1.0, 1.5).withTimeout(2)
                     ),
                     new SequentialCommandGroup(
                         new FollowPath(drive, "four ring p1"),
@@ -107,7 +109,8 @@ public class Four extends SequentialCommandGroup {
                         new FollowPath(drive, "four ring p3"),
                         new InstantCommand(() -> drive.stopModules())
                     ),
-                    new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                    // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                    new CustomShooterCommand(rot, shooter, 70, 49.3, 0.75, 1.0, 1.5).withTimeout(2.2),
                     new InstantCommand(() -> i.stopFeed())
                 ),
                 //new WaitCommand(1),
@@ -124,7 +127,7 @@ public class Four extends SequentialCommandGroup {
                         )
                     ),
                     new SequentialCommandGroup(
-                        new FollowPath(drive, "four ring p4"),
+                        new FollowPath(drive, "four ring p4", 0.5),
                         new InstantCommand(() -> drive.stopModules())
                     )
 
@@ -135,7 +138,8 @@ public class Four extends SequentialCommandGroup {
                         new FollowPath(drive, "four ring p5"),
                         new InstantCommand(() -> drive.stopModules())
                     ),
-                    new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                    // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                    new CustomShooterCommand(rot, shooter, 65, 49.7, 0.75, 1.0, 1.5).withTimeout(2.2),
                     new InstantCommand(() -> i.stopFeed())
                 ),
                 new WaitCommand(0.25),

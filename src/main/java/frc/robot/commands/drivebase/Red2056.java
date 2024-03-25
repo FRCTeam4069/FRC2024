@@ -1,11 +1,9 @@
 package frc.robot.commands.drivebase;
 
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -46,123 +44,116 @@ public class Red2056 extends SequentialCommandGroup {
         this.rotShoot = rot;
         addRequirements(drive, intake, shooter, rot, index);
 
-
-
-        var startPose = PathPlannerPath.fromPathFile("2056 p1").flipPath().getTrajectory(new ChassisSpeeds(), new Rotation2d().fromDegrees(180)).getInitialTargetHolonomicPose();
-        drive.setPose(startPose);
-        drive.setRadians(Math.PI);
-
         addCommands(
             new SequentialCommandGroup(
-                // new InstantCommand(() -> drive.setPose(new Pose2d(startPose.getTranslation(), new Rotation2d()))),
-                // new InstantCommand(() -> drive.setPose(startPose)),
-                new RedFollowPath(drive, "2056 p1"),
+                new InstantCommand(() -> drive.setPose(new Pose2d(1.45, 4.50, Rotation2d.fromDegrees(0.0)))),
+                new InstantCommand(() -> drive.setPose(new Pose2d(1.45, 4.50, Rotation2d.fromDegrees(0.0)))),
 
-            //     new SequentialCommandGroup(
-            //         new ParallelCommandGroup(
-            //             new RedRotate(drive, Units.degreesToRadians(34), Units.degreesToRadians(1)),
-            //             new CustomShooterCommand(rot, shooter, 58, 40)
-            //             //new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA)
-            //         ),
-            //         new IndexWithTime(index, 1.2),
-            //         new WaitCommand(0.2)
-            //     ),
+                new SequentialCommandGroup(
+                    new ParallelCommandGroup(
+                        new Rotate(drive, Units.degreesToRadians(-34), Units.degreesToRadians(1)),
+                        new CustomShooterCommand(rot, shooter, 58, 40)
+                        //new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA)
+                    ),
+                    new IndexWithTime(index, 1.2),
+                    new WaitCommand(0.2)
+                ),
+
+                new ParallelCommandGroup(
+                    //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
+                    new AutoLowerIntake(intake),
+                    new InstantCommand(() -> i.setIntakeSpeed(-0.80)),
+                    new SequentialCommandGroup(
+                        // new WaitCommand(0.5),
+                        new ParallelCommandGroup(
+                            //new BetterIndexerCommandWithStop(index).withTimeout(10),
+                            //new InstantCommand(() -> i.driveFeed()),
+                            new RotateShooterCommand(rot, 70)
+                        )
+                        // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE)
+                    ),
+                    new SequentialCommandGroup(
+                        new Rotate(drive, 0),
+                        new InstantCommand(() -> drive.stopModules())
+                    )
+                ),
+
+                new ParallelCommandGroup(
+                    new BetterIndexerCommandWithStop(index).withTimeout(10),
+                    new RotateShooterCommand(rot, 70),
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "red 2056 p1"),
+                        new InstantCommand(() -> drive.stopModules())
+                    )
+                ),
+
+                // new InstantCommand(() -> SmartDashboard.putString("auto location", "WOOO YA BABA THAT'S WHAT I'VE BEEN WAITING FOR THAT'S WHAT IT'S ALL ABOUT")),
+
+                new ParallelCommandGroup(
+                    new Rotate(drive, Units.degreesToRadians(-30.5), Units.degreesToRadians(1)),
+                    // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                    // new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA),
+                    new CustomShooterCommand(rot, shooter, 60, 53, 0.80),
+                    new InstantCommand(() -> i.stopFeed())
+                ),
+
+            //      new InstantCommand(() -> drive.stopModules()),
+                new ParallelCommandGroup(
+                    new InstantCommand(() -> i.stopFeed()),
+                    new IndexWithTime(index, 1.4)
+                ),
+                new WaitCommand(0.2),
+
+                new ParallelCommandGroup(
+                    new Rotate(drive, Units.degreesToRadians(0)),
+                    new InstantCommand(() -> i.stopFeed())
+                ),
+
+                new ParallelCommandGroup(
+                    //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
+                    new SequentialCommandGroup(
+                        new InstantCommand(() -> i.stopFeed()),
+                        new InstantCommand(() -> index.stop()),
+                        new WaitCommand(2.0),
+                        new ParallelDeadlineGroup(
+                            new BetterIndexerCommandWithStop(index).withTimeout(3),
+                            new ParallelCommandGroup(
+                                new RotateShooterCommand(rot, 70),
+                                new InstantCommand(() -> i.setIntakeSpeed(-0.80))
+                            )
+                        )
+                    ),
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "red 2056 p2", new PIDConstants(1.15), 0.5),
+                        new InstantCommand(() -> drive.stopModules())
+                    )
+                ),
+
+                new ParallelCommandGroup(
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "red 2056 p3", new PIDConstants(0.8), new PIDConstants(0.2), 0.6),
+                        new InstantCommand(() -> drive.stopModules())
+                    ),
+                    //new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                    new SequentialCommandGroup(
+                        new WaitCommand(2.2),
+                        new CustomShooterCommand(rot, shooter, 88, 62.1, 0.5, 0.1, 0.2).withTimeout(3)
+                    ),
+                    new InstantCommand(() -> i.stopFeed()),
+                    new IntakeCommand(i, positions.UPPER)
+                ),
+
+                new SequentialCommandGroup(
+                    new WaitCommand(0.2),
+                    // new CustomShooterCommand(rot, shooter, 95, 62.1, 1.0, 0.1, 0.2),
+                    new IndexWithTime(index, 1),
+                    new WaitCommand(1)
+                ),
+
 
             //     new ParallelCommandGroup(
-            //         //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
-            //         new AutoLowerIntake(intake),
-            //         new InstantCommand(() -> i.setIntakeSpeed(-0.80)),
             //         new SequentialCommandGroup(
-            //             // new WaitCommand(0.5),
-            //             new ParallelCommandGroup(
-            //                 //new BetterIndexerCommandWithStop(index).withTimeout(10),
-            //                 //new InstantCommand(() -> i.driveFeed()),
-            //                 new RotateShooterCommand(rot, 70)
-            //             )
-            //             // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE)
-            //         ),
-            //         new SequentialCommandGroup(
-            //             new RedRotate(drive, 0),
-            //             new InstantCommand(() -> drive.stopModules())
-            //         )
-            //     ),
-
-            //     new ParallelCommandGroup(
-            //         new BetterIndexerCommandWithStop(index).withTimeout(10),
-            //         new RotateShooterCommand(rot, 70),
-            //         new SequentialCommandGroup(
-            //             new RedFollowPath(drive, "2056 p1"),
-            //             new InstantCommand(() -> drive.stopModules())
-            //         )
-            //     ),
-
-            //     // new InstantCommand(() -> SmartDashboard.putString("auto location", "WOOO YA BABA THAT'S WHAT I'VE BEEN WAITING FOR THAT'S WHAT IT'S ALL ABOUT")),
-
-            //     new ParallelCommandGroup(
-            //         new RedRotate(drive, Units.degreesToRadians(32), Units.degreesToRadians(1)),
-            //         // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
-            //         // new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA),
-            //         new CustomShooterCommand(rot, shooter, 60, 53, 0.80),
-            //         new InstantCommand(() -> i.stopFeed())
-            //     ),
-
-            // //      new InstantCommand(() -> drive.stopModules()),
-            //     new ParallelCommandGroup(
-            //         new InstantCommand(() -> i.stopFeed()),
-            //         new IndexWithTime(index, 1.4)
-            //     ),
-            //     new WaitCommand(0.2),
-
-            //     new ParallelCommandGroup(
-            //         new RedRotate(drive, Units.degreesToRadians(0)),
-            //         new InstantCommand(() -> i.stopFeed())
-            //     ),
-
-                // new ParallelCommandGroup(
-                //     //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
-                //     new SequentialCommandGroup(
-                //         new InstantCommand(() -> i.stopFeed()),
-                //         new InstantCommand(() -> index.stop()),
-                //         new WaitCommand(2.0),
-                //         new ParallelDeadlineGroup(
-                //             new BetterIndexerCommandWithStop(index).withTimeout(5),
-                //             new ParallelCommandGroup(
-                //                 new RotateShooterCommand(rot, 70),
-                //                 new InstantCommand(() -> i.setIntakeSpeed(-0.80))
-                //             )
-                //         )
-                //     ),
-                //     new SequentialCommandGroup(
-                //         new RedFollowPath(drive, "2056 p2", new PIDConstants(1.18), 0.5),
-                //         new InstantCommand(() -> drive.stopModules())
-                //     )
-                // ),
-
-                // new ParallelCommandGroup(
-                //     new SequentialCommandGroup(
-                //         new RedFollowPath(drive, "2056 p3", new PIDConstants(0.8), new PIDConstants(0.2), 0.6),
-                //         new InstantCommand(() -> drive.stopModules())
-                //     ),
-                //     //new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
-                //     new SequentialCommandGroup(
-                //         new WaitCommand(2.2),
-                //         new CustomShooterCommand(rot, shooter, 88, 62.1, 0.5, 0.1, 0.2).withTimeout(3)
-                //     ),
-                //     new InstantCommand(() -> i.stopFeed()),
-                //     new IntakeCommand(i, positions.UPPER)
-                // ),
-
-                // new SequentialCommandGroup(
-                //     new WaitCommand(0.2),
-                //     // new CustomShooterCommand(rot, shooter, 95, 62.1, 1.0, 0.1, 0.2),
-                //     new IndexWithTime(index, 1),
-                //     new WaitCommand(1)
-                // ),
-
-
-            //     new ParallelCommandGroup(
-            //         new SequentialCommandGroup(
-            //             new RedFollowPath(drive, "four ring p3"),
+            //             new FollowPath(drive, "four ring p3"),
             //             new InstantCommand(() -> drive.stopModules())
             //         ),
             //         new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
@@ -182,7 +173,7 @@ public class Red2056 extends SequentialCommandGroup {
             //             )
             //         ),
             //         new SequentialCommandGroup(
-            //             new RedFollowPath(drive, "four ring p4"),
+            //             new FollowPath(drive, "four ring p4"),
             //             new InstantCommand(() -> drive.stopModules())
             //         )
 
@@ -190,7 +181,7 @@ public class Red2056 extends SequentialCommandGroup {
 
             //     new ParallelCommandGroup(
             //         new SequentialCommandGroup(
-            //             new RedFollowPath(drive, "four ring p5"),
+            //             new FollowPath(drive, "four ring p5"),
             //             new InstantCommand(() -> drive.stopModules())
             //         ),
             //         new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),

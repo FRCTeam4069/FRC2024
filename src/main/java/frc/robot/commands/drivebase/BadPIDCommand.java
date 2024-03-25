@@ -22,9 +22,9 @@ public class BadPIDCommand extends Command {
     public BadPIDCommand(SwerveDrivetrain drive, Pose2d setpoint) {
         this.drive = drive;
         this.setpoint = setpoint;
-        xController = new PIDController(0.079, 0.0, 0.0); //translation
-        yController = new PIDController(0.079, 0.0, 0.0); //translation
-        rotationController = new PIDController(0.07, 0.0, 0.0); //rotation
+        xController = new PIDController(0.80, 0.0, 0.0); //translation
+        yController = new PIDController(0.80, 0.0, 0.0); //translation
+        rotationController = new PIDController(0.09, 0.0, 0.0); //rotation
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
         xController.setTolerance(0.1, 0.1);
@@ -53,7 +53,7 @@ public class BadPIDCommand extends Command {
                 setpoint.getRotation().getRadians());
 
         drive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
-            -1*xFeedback, -1*yFeedback, -1*(rotationFeedback), currentPose.getRotation()));
+            xFeedback, yFeedback, -1*(rotationFeedback), currentPose.getRotation()));
             
     }
 

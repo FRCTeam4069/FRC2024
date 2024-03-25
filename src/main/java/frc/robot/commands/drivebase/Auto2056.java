@@ -51,7 +51,7 @@ public class Auto2056 extends SequentialCommandGroup {
 
                 new SequentialCommandGroup(
                     new ParallelCommandGroup(
-                        new Rotate(drive, Units.degreesToRadians(34), Units.degreesToRadians(1)),
+                        new Rotate(drive, Units.degreesToRadians(34), Units.degreesToRadians(1)).withTimeout(4),
                         new CustomShooterCommand(rot, shooter, 58, 40)
                         //new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA)
                     ),
@@ -90,7 +90,7 @@ public class Auto2056 extends SequentialCommandGroup {
                 // new InstantCommand(() -> SmartDashboard.putString("auto location", "WOOO YA BABA THAT'S WHAT I'VE BEEN WAITING FOR THAT'S WHAT IT'S ALL ABOUT")),
 
                 new ParallelCommandGroup(
-                    new Rotate(drive, Units.degreesToRadians(32), Units.degreesToRadians(1)),
+                    new Rotate(drive, Units.degreesToRadians(32), Units.degreesToRadians(1)).withTimeout(5),
                     // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
                     // new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA),
                     new CustomShooterCommand(rot, shooter, 60, 53, 0.80),
@@ -124,7 +124,7 @@ public class Auto2056 extends SequentialCommandGroup {
                         )
                     ),
                     new SequentialCommandGroup(
-                        new FollowPath(drive, "2056 p2", new PIDConstants(1.15), 0.5),
+                        new FollowPath(drive, "2056 p2", new PIDConstants(1.15), 1.0),
                         new InstantCommand(() -> drive.stopModules())
                     )
                 ),
