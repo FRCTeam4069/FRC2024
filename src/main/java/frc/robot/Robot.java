@@ -39,6 +39,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private SystemCheck systemCheck;
 
   // private PhotonCamera cam;
 
@@ -64,6 +65,7 @@ public class Robot extends TimedRobot {
     // DataLogManager.start();
     // URCL.start();
 
+    systemCheck = new SystemCheck(null, m_robotContainer.shooter, m_robotContainer.artShooter, m_robotContainer.intake, m_robotContainer.indexer, null);
   }
 
   /**
@@ -81,6 +83,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     m_robotContainer.FrontCamera.printNumbers();
+    systemCheck.checkSystem();
 
     // if (m_robotContainer.cam.grabLatestEstimatedPose() != null) {
       // New pose from vision
@@ -188,7 +191,7 @@ public class Robot extends TimedRobot {
     
   }
 
-  private SystemCheck systemCheck;
+  
   //private ShooterTest t;
   @Override
   public void testInit() {
@@ -198,7 +201,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.clearPersistent("Field");
 
-    systemCheck = new SystemCheck(null, m_robotContainer.shooter, m_robotContainer.artShooter, m_robotContainer.intake, m_robotContainer.indexer, null);
+    
 
     //t = new ShooterTest();
    

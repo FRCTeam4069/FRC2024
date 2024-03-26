@@ -52,9 +52,9 @@ public class SetShooterCommand extends Command{
             shooter.driveWithCustomSpeed(velocity, velocity/2);  //35 from wall
         } 
         else if(positions == ShooterPositions.WHITE_LINE){
-            velocity = 60;
-            angle = 45;
-            shooter.driveWithCustomSpeed(velocity, velocity/2);
+            velocity = 40;
+            angle = 42;
+            shooter.driveWithCustomSpeed(velocity, velocity);
         }
         else if(positions == ShooterPositions.SAFE_ZONE){
             velocity = 80;

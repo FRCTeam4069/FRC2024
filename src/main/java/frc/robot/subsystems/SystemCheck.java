@@ -27,10 +27,10 @@ public class SystemCheck {
 
     public void checkSystem(){
         if(shooterRotation.getLeftErrors() + shooterRotation.getRightErrors() + indexer.getErrors() + intake.getArtErrors() + intake.getFeedErrors() == 0){
-            SmartDashboard.putBoolean("Error Present", false);
+            SmartDashboard.putBoolean("System Clear", true);
         }
         else{
-            SmartDashboard.putBoolean("Error Present", true);
+            SmartDashboard.putBoolean("System Clear", false);
 
             SmartDashboard.putBoolean("Left Shooter Motor Fault", shooterRotation.getLeftMotorError());
             SmartDashboard.putBoolean("Left Shooter Sensor Fault", shooterRotation.getLeftSensorError());
