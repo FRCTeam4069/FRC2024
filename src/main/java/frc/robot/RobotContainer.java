@@ -42,7 +42,9 @@ import frc.robot.commands.ShooterVelocityPIDCommand;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
 import frc.robot.commands.drivebase.Auto2056;
+import frc.robot.commands.drivebase.BlueAmpSteal;
 import frc.robot.commands.drivebase.Four;
+import frc.robot.commands.drivebase.FourClose;
 import frc.robot.commands.drivebase.FrontAuto;
 import frc.robot.commands.drivebase.OneAndMurder;
 import frc.robot.commands.drivebase.OneNote;
@@ -194,18 +196,20 @@ public class RobotContainer {
     //autoChooser.addOption("side auto", new SideAuto(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("front auto", new FrontAuto(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("no move auto", new OneNote(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("two ring on angle", new TwoNote(drive, intake, indexer, shooter, artShooter));
+    // autoChooser.addOption("two ring on angle", new TwoNote(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("new pid auto", new testAutov5(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("new two ring on the side auto", new TwoNoteNew(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("BLUE new two ring on the side auto BLUE", new TwoNoteNewBlue(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("test", new straightLineTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("2056 auto", new Auto2056(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("RED 2056", new Red2056(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("pose test", new PoseTest(drive, intake, indexer, shooter, artShooter));
+    // autoChooser.addOption("pose test", new PoseTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("four ring", new Four(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("drive test", new DriveTest(drive));
-    autoChooser.addOption("one and park (cw)", new OneNoteAndPark(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("murdur in blue", new OneAndMurder(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("close four ring", new FourClose(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("steal blue amp", new BlueAmpSteal(drive, intake, indexer, shooter, artShooter));
+    // autoChooser.addOption("drive test", new DriveTest(drive));
+    // autoChooser.addOption("one and park (cw)", new OneNoteAndPark(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("murder in blue", new OneAndMurder(drive, intake, indexer, shooter, artShooter));
     
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
