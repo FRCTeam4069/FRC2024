@@ -42,7 +42,7 @@ public class ShooterController extends SubsystemBase {
         
         slot0Configs.kV = 0.12273;
         slot0Configs.kP = 0.1;
-        slot0Configs.kI = 0;
+        slot0Configs.kI = 0.01;
         slot0Configs.kD = 0.02;
 
         
@@ -143,7 +143,7 @@ public class ShooterController extends SubsystemBase {
         }
         else{
             talon1.setControl(v.withVelocity(leftVel));
-            talon2.setControl(v.withVelocity(-rightVel));
+            talon2.setControl(v.withVelocity(-rightVel * .9));
         }
 
         SmartDashboard.putNumber("Right Shooter Speed", talon2.getVelocity().getValueAsDouble());
