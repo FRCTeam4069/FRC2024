@@ -42,7 +42,7 @@ public class ShooterController extends SubsystemBase {
         
         slot0Configs.kV = 0.12273;
         slot0Configs.kP = 0.155;
-        slot0Configs.kI = 0.13;
+        slot0Configs.kI = 0.1;
         slot0Configs.kD = 0.0272;
 
         
