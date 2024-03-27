@@ -25,7 +25,7 @@ public class SetShooterRotation extends Command {
 
     public void execute(){
             
-            double angle =  190.478 * (Math.pow((d.getAsDouble()* 100 / 2.54), 0.0787374)) - 219.08;
+            double angle =  190.478 * (Math.pow((d.getAsDouble()* 100 / 2.54), 0.0787374)) - 219.09;
             SmartDashboard.putNumber("Set Angle", angle);
             controller.setCustomAngle(angle);
             if(angle > 65){

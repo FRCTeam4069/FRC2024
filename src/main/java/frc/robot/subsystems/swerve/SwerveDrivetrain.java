@@ -452,21 +452,21 @@ public class SwerveDrivetrain extends SubsystemBase {
             var headings = getModuleHeadings();
             var steerHeadings = getModuleSteerHeadings();
 
-            SmartDashboard.putNumber("robot heading", getDegrees());
-            SmartDashboard.putNumber("robot adjusted radians", getNormalizedRads());
-            SmartDashboard.putNumber("robot radians", getRadians());
-            SmartDashboard.putNumber("voltage", RobotController.getBatteryVoltage());
-            SmartDashboard.putNumber("fl get", fl.getDriveSpeed());
+            // SmartDashboard.putNumber("robot heading", getDegrees());
+            // SmartDashboard.putNumber("robot adjusted radians", getNormalizedRads());
+            // SmartDashboard.putNumber("robot radians", getRadians());
+            // SmartDashboard.putNumber("voltage", RobotController.getBatteryVoltage());
+            // SmartDashboard.putNumber("fl get", fl.getDriveSpeed());
 
-            SmartDashboard.putNumber("FL drive pos", fl.getDrivePosition());
-            SmartDashboard.putNumber("FR drive pos", fr.getDrivePosition());
-            SmartDashboard.putNumber("BL drive pos", bl.getDrivePosition());
-            SmartDashboard.putNumber("BR drive pos", br.getDrivePosition());
+            // SmartDashboard.putNumber("FL drive pos", fl.getDrivePosition());
+            // SmartDashboard.putNumber("FR drive pos", fr.getDrivePosition());
+            // SmartDashboard.putNumber("BL drive pos", bl.getDrivePosition());
+            // SmartDashboard.putNumber("BR drive pos", br.getDrivePosition());
 
-            SmartDashboard.putNumber("FL current mps", fl.getDriveVelocity());
-            SmartDashboard.putNumber("FR current mps", fr.getDriveVelocity());
-            SmartDashboard.putNumber("BL current mps", bl.getDriveVelocity());
-            SmartDashboard.putNumber("BR current mps", br.getDriveVelocity());
+            // SmartDashboard.putNumber("FL current mps", fl.getDriveVelocity());
+            // SmartDashboard.putNumber("FR current mps", fr.getDriveVelocity());
+            // SmartDashboard.putNumber("BL current mps", bl.getDriveVelocity());
+            // SmartDashboard.putNumber("BR current mps", br.getDriveVelocity());
 
             // SmartDashboard.putNumber("FL steer heading", steerHeadings[0]);
             // SmartDashboard.putNumber("FR steer heading", steerHeadings[1]);
@@ -478,19 +478,19 @@ public class SwerveDrivetrain extends SubsystemBase {
             // SmartDashboard.putNumber("BL absolute heading", headings[2]);
             // SmartDashboard.putNumber("BR absolute heading", headings[3]);
 
-            SmartDashboard.putNumber("FL desired mps", fl.getDesiredState().speedMetersPerSecond);
-            SmartDashboard.putNumber("FR desired mps", fr.getDesiredState().speedMetersPerSecond);
-            SmartDashboard.putNumber("BL desired mps", bl.getDesiredState().speedMetersPerSecond);
-            SmartDashboard.putNumber("BR desired mps", br.getDesiredState().speedMetersPerSecond);
+            // SmartDashboard.putNumber("FL desired mps", fl.getDesiredState().speedMetersPerSecond);
+            // SmartDashboard.putNumber("FR desired mps", fr.getDesiredState().speedMetersPerSecond);
+            // SmartDashboard.putNumber("BL desired mps", bl.getDesiredState().speedMetersPerSecond);
+            // SmartDashboard.putNumber("BR desired mps", br.getDesiredState().speedMetersPerSecond);
 
-            // SmartDashboard.putNumber("FL desired angle", fl.getDesiredState().angle.getDegrees());
-            // SmartDashboard.putNumber("FR desired angle", fr.getDesiredState().angle.getDegrees());
-            // SmartDashboard.putNumber("BL desired angle", bl.getDesiredState().angle.getDegrees());
-            // SmartDashboard.putNumber("BR desired angle", br.getDesiredState().angle.getDegrees());
+            // // SmartDashboard.putNumber("FL desired angle", fl.getDesiredState().angle.getDegrees());
+            // // SmartDashboard.putNumber("FR desired angle", fr.getDesiredState().angle.getDegrees());
+            // // SmartDashboard.putNumber("BL desired angle", bl.getDesiredState().angle.getDegrees());
+            // // SmartDashboard.putNumber("BR desired angle", br.getDesiredState().angle.getDegrees());
 
-            SmartDashboard.putNumber("x", pose.getX());
-            SmartDashboard.putNumber("y", pose.getY());
-            SmartDashboard.putNumber("degrees", pose.getRotation().getDegrees());
+            // SmartDashboard.putNumber("x", pose.getX());
+            // SmartDashboard.putNumber("y", pose.getY());
+            // SmartDashboard.putNumber("degrees", pose.getRotation().getDegrees());
         } catch (Exception e) {
             SmartDashboard.putString("AAAAAAA", "WHY GOD WHY");
         }
