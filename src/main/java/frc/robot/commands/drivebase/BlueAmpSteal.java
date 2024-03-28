@@ -48,75 +48,145 @@ public class BlueAmpSteal extends SequentialCommandGroup {
                 new InstantCommand(() -> drive.setPose(new Pose2d(1.46, 7.33, Rotation2d.fromDegrees(0.0)))),
                 new InstantCommand(() -> drive.setPose(new Pose2d(1.46, 7.33, Rotation2d.fromDegrees(0.0)))),
 
-                new ParallelCommandGroup(
+                // new ParallelCommandGroup(
+                //     new SequentialCommandGroup(
+                //         new FollowPath(drive, "blue amp steal p1", new PIDConstants(0.65), 0.0)
+                //         // new InstantCommand(() -> drive.stopModules())
+                //     ),
+                //     new ParallelCommandGroup(
+                //         // new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA),
+                //         new CustomShooterCommand(rot, shooter, 20, 70, 0.75, 3.0, 5, true).withTimeout(2),
+                //         new SequentialCommandGroup(
+                //             new WaitCommand(0.9),
+                //             new IndexWithTime(index, 1.0),
+                //             new WaitCommand(0.3)
+                //         ),
+                //         new InstantCommand(() -> SmartDashboard.putString("auto location", "first parallel"))
+                //     )
+                // ),
+
+                new SequentialCommandGroup(
+                    new ParallelDeadlineGroup(
+                        new SequentialCommandGroup(
+                            new FollowPath(drive, "blue amp steal p1", new PIDConstants(0.65), 0.0),
+                            new FollowPath(drive, "blue amp steal p2", new PIDConstants(1.2), 0.5),
+                            new FollowPath(drive, "blue amp steal p3", new PIDConstants(1.2), 0.1),
+                            new InstantCommand(() -> index.setCustomSpeed(0.90))
+                        ),
+                        new SequentialCommandGroup(
+                            new CustomShooterCommand(rot, shooter, 20, 70, 0.75, 3.0, 5, true).withTimeout(2),
+                            new SequentialCommandGroup(
+                                new WaitCommand(0.2),
+                                new IndexWithTime(index, 1.0),
+                                new WaitCommand(0.5)
+                            ),
+                            new IntakeCommand(i, positions.LOWER, -0.80),
+                            new ParallelDeadlineGroup(
+                                new BetterIndexerCommandWithStop(index).withTimeout(7)
+                            ),
+                            new ParallelCommandGroup(
+                                new IntakeCommand(i, positions.UPPER, 0)
+                            )
+                        ),
+                        new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2)
+                    )
+                ),
+                new ParallelDeadlineGroup(
                     new SequentialCommandGroup(
-                        new FollowPath(drive, "blue amp steal p1")
-                        // new InstantCommand(() -> drive.stopModules())
+                        new FollowPath(drive, "blue amp steal p4", new PIDConstants(1.2), 0.1),
+                        new FollowPath(drive, "blue amp steal p5", new PIDConstants(1.2), 0.1),
+                        new InstantCommand(() -> index.setCustomSpeed(0.90))
+
                     ),
                     new ParallelCommandGroup(
-                        // new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA),
-                        new CustomShooterCommand(rot, shooter, 20, 70, 0.75, 3.0, 5, true).withTimeout(2),
                         new SequentialCommandGroup(
-                            new WaitCommand(0.9),
-                            new IndexWithTime(index, 1.0),
-                            new WaitCommand(0.5),
-                            new DisableIndexCommand(index)
+                            new IndexWithTime(index, 1.0, 0.90),
+                            new WaitCommand(0.2),
+                            new BetterIndexerCommandWithStop(index).withTimeout(5)
                         ),
-                        new InstantCommand(() -> SmartDashboard.putString("auto location", "first parallel"))
+                        new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2),
+                        new IntakeCommand(i, positions.LOWER, -0.80)
                     )
+
                 ),
 
-                new ParallelCommandGroup(
-                    //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
-                    new AutoLowerIntake(intake),
-                    new InstantCommand(() -> i.setIntakeSpeed(-0.80)),
-                    // new CustomShooterCommand(rot, shooter, 20, 70, 0.75, 3.0, 2.5).withTimeout(2),
-                    new SequentialCommandGroup(
-                        new WaitCommand(2.0),
-                        new BetterIndexerCommandWithStop(index).withTimeout(5)
-                        // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
-                        // new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA)
-                    ),
-                    new SequentialCommandGroup(
-                        new FollowPath(drive, "blue amp steal p2", new PIDConstants(1.5), 0.1),
-                        new InstantCommand(() -> drive.stopModules())
+                new SequentialCommandGroup(
+                    new ParallelDeadlineGroup(
+                        new SequentialCommandGroup(
+                            new FollowPath(drive, "blue amp steal p6", new PIDConstants(1.1), 0.1),
+                            new FollowPath(drive, "blue amp steal p7", new PIDConstants(1.1), 0.0),
+                            new InstantCommand(() -> index.setCustomSpeed(0.90))
+                        ),
+                        new ParallelCommandGroup(
+                            new SequentialCommandGroup(
+                                new IndexWithTime(index, 1.0, 0.80),
+                                new WaitCommand(0.3),
+                                new BetterIndexerCommandWithStop(index).withTimeout(7)
+                            ),
+                            new IntakeCommand(i, positions.LOWER, -0.80),
+                            new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2)
+                        )
                     )
                 ),
+                new IndexWithTime(index, 1.0, 0.90),
 
-                new ParallelCommandGroup(
-                    new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2),
-                    // new InstantCommand(() -> i.stopFeed()),
-                    new IntakeCommand(i, positions.UPPER, 0),
-                    new SequentialCommandGroup(
-                        new FollowPath(drive, "blue amp steal p3", new PIDConstants(0.7), 0.1),
-                        new InstantCommand(() -> drive.stopModules())
-                    )
-                ),
-                new IndexWithTime(index, 1),
                 new WaitCommand(1),
 
-                new ParallelCommandGroup(
-                    // new InstantCommand(() -> i.stopFeed()),
-                    new IntakeCommand(i, positions.LOWER, -0.80),
-                    new SequentialCommandGroup(
-                        new WaitCommand(1),
-                        new BetterIndexerCommandWithStop(index).withTimeout(5)
 
-                    ),
-                    new SequentialCommandGroup(
-                        new FollowPath(drive, "blue amp steal p4", new PIDConstants(0.7), 0.1),
-                        new InstantCommand(() -> drive.stopModules())
-                    )
-                ),
+                // new ParallelCommandGroup(
+                //     //new AutoSetIntakeState(intake, frc.robot.commands.AutoSetIntakeState.State.ON),
+                //     new AutoLowerIntake(intake),
+                //     new InstantCommand(() -> i.setIntakeSpeed(-0.80)),
+                //     // new CustomShooterCommand(rot, shooter, 20, 70, 0.75, 3.0, 2.5).withTimeout(2),
+                //     new SequentialCommandGroup(
+                //         new WaitCommand(2.0),
+                //         new BetterIndexerCommandWithStop(index).withTimeout(6.5)
+                //         // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
+                //         // new AutoCustomAngle(rot, shooter, ShooterPositions.WALL_AREA)
+                //     ),
+                //     new SequentialCommandGroup(
+                //         new FollowPath(drive, "blue amp steal p2", new PIDConstants(1.5), 0.1),
+                //         new InstantCommand(() -> drive.stopModules())
+                //     )
+                // ),
 
-                new ParallelCommandGroup(
-                    // new InstantCommand(() -> i.stopFeed()),
-                    new IntakeCommand(i, positions.UPPER, 0),
-                    new SequentialCommandGroup(
-                        new FollowPath(drive, "blue amp steal p5", new PIDConstants(0.7), 0.1),
-                        new InstantCommand(() -> drive.stopModules())
-                    )
-                ),
+                // new ParallelCommandGroup(
+                //     new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2),
+                //     // new InstantCommand(() -> i.stopFeed()),
+                //     new IntakeCommand(i, positions.UPPER, 0),
+                //     new SequentialCommandGroup(
+                //         new FollowPath(drive, "blue amp steal p3", new PIDConstants(0.7), 0.1),
+                //         new InstantCommand(() -> drive.stopModules())
+                //     )
+                // ),
+                // new IndexWithTime(index, 1),
+                // new WaitCommand(1),
+
+                // new ParallelCommandGroup(
+                //     // new InstantCommand(() -> i.stopFeed()),
+                //     new IntakeCommand(i, positions.LOWER, -0.80),
+                //     new SequentialCommandGroup(
+                //         new WaitCommand(1),
+                //         new BetterIndexerCommandWithStop(index).withTimeout(5)
+
+                //     ),
+                //     new SequentialCommandGroup(
+                //         new FollowPath(drive, "blue amp steal p4", new PIDConstants(0.7), 0.1),
+                //         new InstantCommand(() -> drive.stopModules())
+                //     )
+                // ),
+
+                // new ParallelCommandGroup(
+                //     // new InstantCommand(() -> i.stopFeed()),
+                //     new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2),
+                //     new IntakeCommand(i, positions.UPPER, 0),
+                //     new SequentialCommandGroup(
+                //         new FollowPath(drive, "blue amp steal p5", new PIDConstants(0.7), 0.1),
+                //         new InstantCommand(() -> drive.stopModules())
+                //     )
+                // ),
+                // new IndexWithTime(index, 1),
+                // new WaitCommand(1),
 
                 //new WaitCommand(1),
                 // new ParallelCommandGroup(

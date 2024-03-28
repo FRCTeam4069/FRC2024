@@ -19,12 +19,14 @@ import frc.robot.commands.CustomShooterCommand;
 import frc.robot.commands.DisableIndexCommand;
 import frc.robot.commands.DisableSubsystems;
 import frc.robot.commands.IndexWithTime;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.RotateShooterCommand;
 import frc.robot.commands.ShooterPositions;
 import frc.robot.subsystems.IndexerController;
 import frc.robot.subsystems.IntakeController;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
+import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 public class FourClose extends SequentialCommandGroup {
@@ -69,7 +71,7 @@ public class FourClose extends SequentialCommandGroup {
                     new SequentialCommandGroup(
                         new WaitCommand(0.5),
                         new ParallelDeadlineGroup(
-                            new BetterIndexerCommandWithStop(index).withTimeout(5),
+                            new BetterIndexerCommandWithStop(index).withTimeout(6.5),
                             new RotateShooterCommand(rot, 70)
                         ),
                         // new AutoShooterCommand(rot, shooter, index, ShooterPositions.SAFE_ZONE),
@@ -96,7 +98,7 @@ public class FourClose extends SequentialCommandGroup {
                     new SequentialCommandGroup(
                         new WaitCommand(0.5),
                         new ParallelDeadlineGroup(
-                            new BetterIndexerCommandWithStop(index).withTimeout(3),
+                            new BetterIndexerCommandWithStop(index).withTimeout(6),
                             new RotateShooterCommand(rot, 70)
                         )
                     ),
@@ -126,7 +128,7 @@ public class FourClose extends SequentialCommandGroup {
                     new SequentialCommandGroup(
                         new WaitCommand(0.5),
                         new ParallelDeadlineGroup(
-                            new BetterIndexerCommandWithStop(index).withTimeout(3),
+                            new BetterIndexerCommandWithStop(index).withTimeout(5),
                             new RotateShooterCommand(rot, 70)
                         )
                     ),
@@ -148,7 +150,19 @@ public class FourClose extends SequentialCommandGroup {
                     new InstantCommand(() -> i.stopFeed())
                 ),
                 new WaitCommand(0.25),
-                new IndexWithTime(index, 2),
+                new IndexWithTime(index, 1.1),
+                new WaitCommand(0.5),
+
+                new ParallelCommandGroup(
+                    // new InstantCommand(() -> i.stopFeed()),
+                    new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2),
+                    new IntakeCommand(i, positions.UPPER, 0),
+                    new SequentialCommandGroup(
+                        new FollowPath(drive, "blue amp steal p5", new PIDConstants(1.2), 0.1),
+                        new InstantCommand(() -> drive.stopModules())
+                    )
+                ),
+
                 new WaitCommand(3),
 
                 new DisableSubsystems(rot, shooter, index, i)

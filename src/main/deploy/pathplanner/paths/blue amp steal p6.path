@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.9,
+        "y": 6.52
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.374645362502838,
+        "y": 6.184427283556586
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.876381873001924,
+        "y": 4.2
+      },
+      "prevControl": {
+        "x": 7.092879380738626,
+        "y": 4.2
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "blue amp steal p6&7"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.88,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "blue amp steal",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

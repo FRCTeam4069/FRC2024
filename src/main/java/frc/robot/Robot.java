@@ -124,6 +124,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     m_robotContainer.led.setPattern(RevBlinkinPatterns.FIRE_LARGE);
+    m_robotContainer.drive.coast();
     //m_robotContainer.led.setColour(Colours.COOL_PATTERN);
   }
 
@@ -141,6 +142,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.drive.setOpenLoopRampRate(0.0);
     m_robotContainer.drive.setSmartCurrentLimit(40);
+    m_robotContainer.drive.brake();
 
     m_robotContainer.led.setPattern(RevBlinkinPatterns.COLOR_WAVES_LAVA_PALLETE);
   }
@@ -170,6 +172,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.drive.setSmartCurrentLimit(40);
 
     m_robotContainer.led.setPattern(RevBlinkinPatterns.COLOR_WAVES_OCEAN_PALLETE);
+
+    m_robotContainer.drive.brake();
 
     
 

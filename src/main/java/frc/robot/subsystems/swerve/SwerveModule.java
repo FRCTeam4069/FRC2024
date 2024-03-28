@@ -214,13 +214,11 @@ public class SwerveModule {
     }
 
     public void coast() {
-        stop();
         drive.setIdleMode(IdleMode.kCoast);
         steer.setIdleMode(IdleMode.kCoast);
     }
 
     public void brake() {
-        stop();
         drive.setIdleMode(IdleMode.kBrake);
         steer.setIdleMode(IdleMode.kBrake);
     }

@@ -581,10 +581,17 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public void coast() {
-        fl.stop();
-        fr.stop();
-        bl.stop();
-        br.stop();
+        fl.coast();
+        fr.coast();
+        bl.coast();
+        br.coast();
+    }
+
+    public void brake() {
+        fl.brake();
+        fr.brake();
+        bl.brake();
+        br.brake();
     }
 
     public void setVoltage(double volts) {

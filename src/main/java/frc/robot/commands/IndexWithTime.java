@@ -9,6 +9,7 @@ public class IndexWithTime extends Command {
     IndexerController indexer;
     double startTime = 0;
     double endTime = 0;
+    double speed = 0.65;
 
     public IndexWithTime(IndexerController c, double time){
         indexer = c;
@@ -16,9 +17,16 @@ public class IndexWithTime extends Command {
         startTime = Timer.getFPGATimestamp();
     }
 
+    public IndexWithTime(IndexerController c, double time, double speed){
+        indexer = c;
+        endTime=time;
+        startTime = Timer.getFPGATimestamp();
+        this.speed = speed;
+    }
+
     @Override
     public void execute(){
-        indexer.feedShooter();
+        indexer.setCustomSpeed(speed);
     }
 
     public void end(){

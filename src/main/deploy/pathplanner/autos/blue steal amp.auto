@@ -22,6 +22,30 @@
           "data": {
             "pathName": "blue amp steal p3"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue amp steal p4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue amp steal p5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue amp steal p6"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue amp steal p7"
+          }
         }
       ]
     }

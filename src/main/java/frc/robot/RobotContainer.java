@@ -45,6 +45,7 @@ import frc.robot.commands.drivebase.Auto2056;
 import frc.robot.commands.drivebase.BlueAmpSteal;
 import frc.robot.commands.drivebase.Four;
 import frc.robot.commands.drivebase.FourClose;
+import frc.robot.commands.drivebase.FourCloseFaster;
 import frc.robot.commands.drivebase.FrontAuto;
 import frc.robot.commands.drivebase.OneAndMurder;
 import frc.robot.commands.drivebase.OneNote;
@@ -206,6 +207,7 @@ public class RobotContainer {
     // autoChooser.addOption("pose test", new PoseTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("four ring", new Four(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("close four ring", new FourClose(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("close fast four ring", new FourCloseFaster(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("steal blue amp", new BlueAmpSteal(drive, intake, indexer, shooter, artShooter));
     // autoChooser.addOption("drive test", new DriveTest(drive));
     // autoChooser.addOption("one and park (cw)", new OneNoteAndPark(drive, intake, indexer, shooter, artShooter));
