@@ -95,6 +95,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog.State;
 
 
 /**
@@ -248,10 +249,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> Math.hypot(poseEstimator.getSpeakerTransform().getX(), poseEstimator.getSpeakerTransform().getY()), shooter)).onTrue(intake.setPosition(positions.UPPER));
-    Controller2.y().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> Math.hypot(poseEstimator.getSpeakerTransform().getX(), poseEstimator.getSpeakerTransform().getY()), shooter)).onTrue(intake.setPosition(positions.UPPER));
+    //Controller2.y().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
     //git hub trial//
     Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
+
+    Controller2.pov(90).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
     //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
     Controller2.a().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WALL_AREA))/*.onTrue(intake.setPosition(positions.UPPER))* */;
     Controller2.b().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
@@ -295,15 +298,16 @@ public class RobotContainer {
     // new Trigger(Controller2.pov(0).onTrue(new InstantCommand( () -> intake.setPosition(positions.UPPER))));
     // new Trigger(Controller2.pov(180).onTrue(new InstantCommand(() -> intake.setPosition(positions.LOWER))));
 
-    
+    //another test
     new Trigger(Controller2.pov(0).onTrue(intake.setPosition(positions.UPPER)));
     new Trigger(Controller2.pov(180).onTrue(intake.setPosition(positions.LOWER)));
     
     Controller2.rightBumper().whileTrue(new FeedIntakeCommand());
     // Controller2.rightBumper().whileTrue(new InstantCommand(() -> intake.driveFeed())).onFalse(new InstantCommand(() -> intake.stopFeed()));
 
-    Controller2.rightTrigger(0.2).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), Controller2.rightTrigger(0.2)));
+    Controller2.rightTrigger(0.2).whileTrue(new DefualtShooter(indexer, () -> shooter.isShooting(), () -> indexer.pastSensor()));
 
+    new Trigger(() -> indexer.pastSensor()).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
     Controller2.leftTrigger(0.2).onTrue(new REverseIndexerCommand(indexer, () -> indexer.pastSensor(), () -> indexer.getPhotoReading()).withTimeout(1));
     // Controller2.leftTrigger(0.2).onTrue(new InstantCommand(() -> indexer.feedShooter())).onFalse(new InstantCommand(() -> indexer.stop()));
     //Controller2.rightBumper().whileTrue(new BetterIndexerCommand(indexer, () -> (Controller2.getHID().getRightTriggerAxis() > 0.2 || Controller2.getHID().getLeftTriggerAxis() > 0.2 || Controller2.getHID().getLeftBumper())));
@@ -312,7 +316,7 @@ public class RobotContainer {
     new Trigger(() -> shooter.atSpeed()).onTrue(led.setPattern(RevBlinkinPatterns.GREEN)).onFalse(led.setPattern(RevBlinkinPatterns.WHITE));
     new Trigger(() -> shooter.atSpeed()).whileTrue(new InstantCommand(() -> Controller2.getHID().setRumble(RumbleType.kBothRumble, 0.1))).onFalse(new InstantCommand(() -> Controller2.getHID().setRumble(RumbleType.kBothRumble, 0)));
     
-    
+    //github test
       
     
 

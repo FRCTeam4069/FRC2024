@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.FaultID;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -158,4 +159,26 @@ public class ShooterRotationController extends SubsystemBase {
     public boolean NotDown(){
         return down;
     }
+
+     public boolean getLeftSensorError(){
+        return left.getFault(FaultID.kSensorFault);
+    }
+    public boolean getLeftMotorError(){
+        return left.getFault(FaultID.kMotorFault);
+    }
+
+    public double getLeftErrors(){
+        return left.getFaults();
+    }   
+    
+    public boolean getRightSensorError(){
+        return right.getFault(FaultID.kSensorFault);
+    }
+    public boolean getRightMotorError(){
+        return right.getFault(FaultID.kMotorFault);
+    }
+
+    public double getRightErrors(){
+        return right.getFaults();
+    }   
 }

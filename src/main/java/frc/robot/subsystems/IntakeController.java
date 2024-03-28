@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.FaultID;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -102,4 +103,26 @@ public class IntakeController extends SubsystemBase {
     public void ResetEncoder(){
         artMotor1.getEncoder().setPosition(UPPER);
     }
+
+    public boolean getArtSensorError(){
+        return artMotor1.getFault(FaultID.kSensorFault);
+    }
+    public boolean getArtMotorError(){
+        return artMotor1.getFault(FaultID.kMotorFault);
+    }
+
+    public double getArtErrors(){
+        return artMotor1.getFaults();
+    }  
+    
+    public boolean getFeedSensorError(){
+        return feedMotor.getFault(FaultID.kSensorFault);
+    }
+    public boolean getFeedMotorError(){
+        return feedMotor.getFault(FaultID.kMotorFault);
+    }
+
+    public double getFeedErrors(){
+        return feedMotor.getFaults();
+    }    
 }

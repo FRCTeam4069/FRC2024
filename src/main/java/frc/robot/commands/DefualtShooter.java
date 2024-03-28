@@ -17,14 +17,14 @@ public class DefualtShooter extends Command {
     }
 
     public void execute(){
-        if(requested.getAsBoolean() && isShooting.getAsBoolean()){
+        if(!requested.getAsBoolean() && isShooting.getAsBoolean()){
             controlelr.feedShooter();
         }
         else{
              controlelr.stop();
         }
         
-    }
+    } 
 
     public void end(boolean interupted){
         controlelr.stop();

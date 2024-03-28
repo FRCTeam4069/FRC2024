@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.FaultID;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -79,5 +80,15 @@ public class IndexerController extends SubsystemBase {
     public double getVelocity() {
         return m1.getEncoder().getVelocity();
     }
-    
+
+    public boolean getSensorError(){
+        return m1.getFault(FaultID.kSensorFault);
+    }
+    public boolean getMotorError(){
+        return m1.getFault(FaultID.kMotorFault);
+    }
+
+    public double getErrors(){
+        return m1.getFaults();
+    }    
 }

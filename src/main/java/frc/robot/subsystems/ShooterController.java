@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.reduxrobotics.sensors.canandcolor.digout.SlotComparison;
+import com.revrobotics.CANSparkBase.FaultID;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -40,9 +41,9 @@ public class ShooterController extends SubsystemBase {
 
         
         slot0Configs.kV = 0.12273;
-        slot0Configs.kP = 0.1;
-        slot0Configs.kI = 0;
-        slot0Configs.kD = 0.02;
+        slot0Configs.kP = 0.155;
+        slot0Configs.kI = 0.1;
+        slot0Configs.kD = 0.0272;
 
         
         slot1Configs.kV = 0.12273;
@@ -109,7 +110,7 @@ public class ShooterController extends SubsystemBase {
 
     public boolean atSpeed(){
         if(talon1.getVelocity().getValueAsDouble() < 5) return false; 
-        else if(MathUtil.isNear(talon1.getVelocity().getValueAsDouble(), targetSpeed, 2)) return true; 
+        else if(MathUtil.isNear(talon1.getVelocity().getValueAsDouble(), targetSpeed, 0.8)) return true; 
         return false;
     }
 
@@ -142,7 +143,7 @@ public class ShooterController extends SubsystemBase {
         }
         else{
             talon1.setControl(v.withVelocity(leftVel));
-            talon2.setControl(v.withVelocity(-rightVel));
+            talon2.setControl(v.withVelocity(-rightVel * .9));
         }
 
         SmartDashboard.putNumber("Right Shooter Speed", talon2.getVelocity().getValueAsDouble());
@@ -172,5 +173,4 @@ public class ShooterController extends SubsystemBase {
         return talon1.getClosedLoopSlot().getValueAsDouble();
         
     }
-   
 }

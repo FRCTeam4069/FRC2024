@@ -27,6 +27,7 @@ import frc.robot.constants.DrivebaseConstants;
 import frc.robot.subsystems.RevBlinkinPatterns;
 import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.ShooterTest;
+import frc.robot.subsystems.SystemCheck;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private SystemCheck systemCheck;
 
   // private PhotonCamera cam;
 
@@ -58,11 +60,12 @@ public class Robot extends TimedRobot {
     // m_robotContainer.notifier.startPeriodic(0.02);
 
     m_robotContainer.poseEstimator.addDashboardWidgets(m_robotContainer.autoTab);
-    
+
     // m_robotContainer.intake.setBrakeState(1);
     // DataLogManager.start();
     // URCL.start();
 
+    systemCheck = new SystemCheck(null, m_robotContainer.shooter, m_robotContainer.artShooter, m_robotContainer.intake, m_robotContainer.indexer, null);
   }
 
   /**
@@ -80,6 +83,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     m_robotContainer.FrontCamera.printNumbers();
+    systemCheck.checkSystem();
 
     // if (m_robotContainer.cam.grabLatestEstimatedPose() != null) {
       // New pose from vision
@@ -190,6 +194,8 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("3", values[3]);
     
   }
+
+  
   //private ShooterTest t;
   @Override
   public void testInit() {
@@ -199,6 +205,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.clearPersistent("Field");
 
+    
+
     //t = new ShooterTest();
    
   }
@@ -207,7 +215,9 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     //SmartDashboard.putNumber("SHOOTER", c.getEncoder());
-    SmartDashboard.putNumber("intake", m_robotContainer.intake.getEncoder());
+    //SmartDashboard.putNumber("intake", m_robotContainer.intake.getEncoder());
+
+    systemCheck.checkSystem();
   }
   
 
