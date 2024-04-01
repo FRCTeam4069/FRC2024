@@ -22,6 +22,10 @@ import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BackIntakeCommand;
@@ -67,6 +71,7 @@ import frc.robot.commands.drivebase.test.testAutov3;
 import frc.robot.commands.drivebase.test.testAutov4;
 import frc.robot.commands.drivebase.test.testAutov5;
 import frc.robot.constants.CameraConstants;
+import frc.robot.subsystems.AmpArm;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerController;
@@ -149,6 +154,8 @@ public class RobotContainer {
 
   private ClimberSubsystem climber = new ClimberSubsystem();
 
+  private AmpArm ampArm = new AmpArm();
+
   private Toggle toggle;
 
 
@@ -169,8 +176,14 @@ public class RobotContainer {
       () -> poseEstimator.getSpeakerTransform(),
       () -> Controller1.getHID().getLeftBumper(),
       () -> (Controller1.getHID().getPOV() == 90),
-      () -> poseEstimator.getRotation2d()
+      () -> poseEstimator.getRotation2d(),
+      () -> Controller1.getHID().getXButton(),
+      () -> Controller1.getHID().getBButton()
     ));
+
+    // ampArm.setDefaultCommand(new RunCommand(() -> ampArm.setAngle(Math.max(Controller3.getHID().getLeftTriggerAxis(), AmpArm.RETRACT)), ampArm));
+    // Controller3.a().onTrue(new InstantCommand(() -> ampArm.setAngle(AmpArm.RETRACT)));
+    // Controller3.b().onTrue(new InstantCommand(() -> ampArm.setAngle(AmpArm.EXTEND)));
 
     //drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
     Controller1.y().onTrue(new InstantCommand(() -> drive.resetGyro()));
@@ -182,8 +195,8 @@ public class RobotContainer {
       .whileTrue(new InstantCommand(() -> Controller1.getHID().setRumble(RumbleType.kBothRumble, 0.1)))
       .onFalse(new InstantCommand(() -> Controller1.getHID().setRumble(RumbleType.kBothRumble, 0)));
 
-    Controller1.x().whileTrue(new Rotate(drive, Units.degreesToRadians(-15.0)));
-    Controller1.b().whileTrue(new Rotate(drive, Units.degreesToRadians(15.0)));
+    // Controller1.x().whileTrue(new Rotate(drive, Units.degreesToRadians(-15.0)));
+    // Controller1.b().whileTrue(new Rotate(drive, Units.degreesToRadians(15.0)));
     // Controller1.rightBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), 1.0, () -> FrontCamera.hasTarget(7, 4)));
     // Controller1.leftBumper().whileTrue(new StrafeUntilCam(drive, () -> FrontCamera.getTX(7, 4), -1.0, () -> FrontCamera.hasTarget(7, 4)));
     //autoChooser = AutoBuilder.buildAutoChooser();
@@ -191,18 +204,20 @@ public class RobotContainer {
     // drive.setDefaultCommand(drive.angleModulesCommand(() -> Controller1.getLeftY(), () -> Controller1.getLeftX()));
 
     
-    autoChooser.setDefaultOption("one", new testAuto(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("onev2", new testAutov2(drive, intake, indexer, shooter, artShooter));
+    // autoChooser.setDefaultOption("one", new testAuto(drive, intake, indexer, shooter, artShooter));
+    // autoChooser.addOption("onev2", new testAutov2(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("onev3", new testAutov3(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("onev4", new testAutov4(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("side auto", new SideAuto(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("front auto", new FrontAuto(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("no move auto", new OneNote(drive, intake, indexer, shooter, artShooter));
+    // autoChooser.addOption("no move auto", new OneNote(drive, intake, indexer, shooter, artShooter));
+    autoChooser.setDefaultOption("no move auto", new OneNote(drive, intake, indexer, shooter, artShooter));
+    // autoChooser.addOption("no move auto", new OneNote(drive, intake, indexer, shooter, artShooter));
     // autoChooser.addOption("two ring on angle", new TwoNote(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("new pid auto", new testAutov5(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("new two ring on the side auto", new TwoNoteNew(drive, intake, indexer, shooter, artShooter));
     //autoChooser.addOption("BLUE new two ring on the side auto BLUE", new TwoNoteNewBlue(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("test", new straightLineTest(drive, intake, indexer, shooter, artShooter));
+    // autoChooser.addOption("test", new straightLineTest(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("2056 auto", new Auto2056(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("RED 2056", new Red2056(drive, intake, indexer, shooter, artShooter));
     // autoChooser.addOption("pose test", new PoseTest(drive, intake, indexer, shooter, artShooter));
@@ -252,7 +267,13 @@ public class RobotContainer {
     Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> Math.hypot(poseEstimator.getSpeakerTransform().getX(), poseEstimator.getSpeakerTransform().getY()), shooter)).onTrue(intake.setPosition(positions.UPPER));
     //Controller2.y().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
     //git hub trial//
-    Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA));
+    Controller2.x().whileTrue(new ParallelCommandGroup(
+      new SetShooterCommand(shooter, artShooter, ShooterPositions.AMP_AREA),
+      new SequentialCommandGroup(
+        new WaitCommand(0.13),
+        ampArm.setAngleCommand(AmpArm.EXTEND)
+      )))
+      .onFalse(ampArm.setAngleCommand(AmpArm.RETRACT));
 
     Controller2.pov(90).whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.WHITE_LINE));
     //Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.SAFE_ZONE)).onTrue(intake.setPosition(positions.UPPER));
@@ -288,9 +309,9 @@ public class RobotContainer {
     //Controller2.rightBumper().whileTrue(new RunCommand(() -> intake.driveFeed())).whileFalse(new InstantCommand(() -> intake.stopFeed()));
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
-    Controller2.start().onTrue(artShooter.changeClimbStatus()).onTrue(climber.setPower(Direction.kForward));
-    Controller2.back().onTrue(climber.setPower(Direction.kReverse)).onTrue(artShooter.setDown())//.onTrue(()-> artShooter.setCustomAngle(15));
-;
+    Controller2.start().onTrue(artShooter.changeClimbStatus()).onTrue(climber.setPower(Direction.kForward)).onTrue(ampArm.setAngleCommand(AmpArm.EXTEND));
+    Controller2.back().onTrue(climber.setPower(Direction.kReverse)).onTrue(artShooter.setDown()).onTrue(ampArm.setAngleCommand(AmpArm.EXTEND));//.onTrue(()-> artShooter.setCustomAngle(15));
+
     Controller2.start().onTrue(led.setPattern(RevBlinkinPatterns.VIOLET));
 
     //Controller2.start().onTrue(led.setColour(Colours.RED));

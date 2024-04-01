@@ -45,7 +45,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
         climber.getEncoder().setPosition(0);
         climber.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        climber.setSoftLimit(SoftLimitDirection.kForward, 133);
+        climber.setSoftLimit(SoftLimitDirection.kForward, 140);
         climber.setIdleMode(IdleMode.kBrake);
 
         climber.enableSoftLimit(SoftLimitDirection.kReverse, true);

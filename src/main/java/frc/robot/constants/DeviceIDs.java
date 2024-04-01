@@ -1,10 +1,11 @@
 package frc.robot.constants;
 
+import frc.robot.commands.drivebase.test.straightLineTest;
+
 public final class DeviceIDs {
     public static final byte INTAKE_ARTICULATE = 7; 
     public static final byte INTAKE_FEED = 10; 
 
-    //TODO: make these exist in hardware and double check others
     public static final byte FEEDER = 12;
 
     public static final byte SHOOTER_ARTICULATE_LEFT = 5;
@@ -29,6 +30,10 @@ public final class DeviceIDs {
     public static final byte ENCODER_BR = 31;
 
     public static final byte CLIMBER = 40;
+
+    // PWM Channels not CAN
+    public static final byte AMPARM_LEFT = 8;
+    public static final byte AMPARM_RIGHT = 9;
 
     // From Ahmed's Constants file
     public static final byte PHOTO_ELECTRIC_SENSOR_PORT = 2;

@@ -69,7 +69,7 @@ public class BlueAmpSteal extends SequentialCommandGroup {
                     new ParallelDeadlineGroup(
                         new SequentialCommandGroup(
                             new FollowPath(drive, "blue amp steal p1", new PIDConstants(0.65), 0.0),
-                            new FollowPath(drive, "blue amp steal p2", new PIDConstants(1.2), 0.5),
+                            new FollowPath(drive, "blue amp steal p2", new PIDConstants(0.8), 0.5),
                             new FollowPath(drive, "blue amp steal p3", new PIDConstants(1.2), 0.1),
                             new InstantCommand(() -> index.setCustomSpeed(0.90))
                         ),

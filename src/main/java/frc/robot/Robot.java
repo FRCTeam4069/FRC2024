@@ -123,12 +123,13 @@ public class Robot extends TimedRobot {
     m_robotContainer.Controller1.getHID().setRumble(RumbleType.kBothRumble, 0.0);
 
     m_robotContainer.led.setPattern(RevBlinkinPatterns.WHITE);
+
+    m_robotContainer.drive.coast();
   }
 
   @Override
   public void disabledPeriodic() {
-    m_robotContainer.led.setPattern(RevBlinkinPatterns.FIRE_LARGE);
-    m_robotContainer.drive.coast();
+    // m_robotContainer.led.setPattern(RevBlinkinPatterns.FIRE_LARGE);
     //m_robotContainer.led.setColour(Colours.COOL_PATTERN);
   }
 

@@ -160,7 +160,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     try {
       allianceColour = DriverStation.getAlliance().get();
     } catch (Exception e) {
-      System.out.println("no alliance colour");
+      // System.out.println("no alliance colour");
     }
 
     if (allianceColour == Alliance.Red) {
