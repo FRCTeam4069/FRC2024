@@ -92,7 +92,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     //private PhotonCamera cam;
     // private PoseEstimatorSubsystem poseEstimator;
-    private Pose3d camPose = new Pose3d();
+    private Pose2d camPose = new Pose2d();
 
     private SwerveDriveOdometry inversedOdo;
 
@@ -420,11 +420,15 @@ public class SwerveDrivetrain extends SubsystemBase {
     }
 
     public void addVisionMeasurement(TimedPose2d timedPose) {
-        var poseMeters = timedPose.getPose();
+        camPose = timedPose.getPose();
         //odometry.addVisionMeasurement(poseMeters, timedPose.getTimestamp());
         // if (poseMeters.getTranslation().getNorm() < 1.0) {
         // }
 
+    }
+
+    public Pose2d getCameraPose() {
+        return camPose;
     }
 
     public void resetPose() {

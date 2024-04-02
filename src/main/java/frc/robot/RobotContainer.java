@@ -43,10 +43,12 @@ import frc.robot.commands.SetShooterRotation;
 import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.ShooterVelocityPIDCommand;
+import frc.robot.commands.Trap;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
 import frc.robot.commands.drivebase.Auto2056;
 import frc.robot.commands.drivebase.BlueAmpSteal;
+import frc.robot.commands.drivebase.BlueStealShoot;
 import frc.robot.commands.drivebase.Four;
 import frc.robot.commands.drivebase.FourClose;
 import frc.robot.commands.drivebase.FourCloseFaster;
@@ -189,6 +191,7 @@ public class RobotContainer {
     Controller1.y().onTrue(new InstantCommand(() -> drive.resetGyro()));
     //Controller1.povUp().onTrue(new InstantCommand(() -> drive.resetPose()));
     Controller1.back().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(1.30, 5.55, Rotation2d.fromDegrees(0.0)))));
+    Controller1.start().whileTrue(new Trap(drive, artShooter, shooter, indexer));
     // Controller1.povUp().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))));
 
     new Trigger(() -> poseEstimator.isAligned())
@@ -225,6 +228,7 @@ public class RobotContainer {
     autoChooser.addOption("close four ring", new FourClose(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("close fast four ring", new FourCloseFaster(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("steal blue amp", new BlueAmpSteal(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("steal shoot blue", new BlueStealShoot(drive, intake, indexer, shooter, artShooter));
     // autoChooser.addOption("drive test", new DriveTest(drive));
     // autoChooser.addOption("one and park (cw)", new OneNoteAndPark(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("murder in blue", new OneAndMurder(drive, intake, indexer, shooter, artShooter));
@@ -356,7 +360,7 @@ public class RobotContainer {
 
 
   /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
+   * Use this to pass the autonomous command to the maisrc/main/java/frc/robot/commands/drivebase/BadPIDCommand.javan {@link Robot} class.
    *
    * @return the command to run in autonomous
    */

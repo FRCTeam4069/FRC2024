@@ -24,6 +24,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
@@ -69,6 +71,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
   private OriginPosition originPosition = kBlueAllianceWallRightSide;
 
+  private final StructPublisher<Pose2d> posePublisher;
+
   // private final ArrayList<Double> xValues = new ArrayList<Double>();
   // private final ArrayList<Double> yValues = new ArrayList<Double>();
 
@@ -88,6 +92,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
     allNotifier.setName("runAll");
     allNotifier.startPeriodic(0.02);
+
+    posePublisher = NetworkTableInstance.getDefault()
+        .getStructTopic("CameraPose", Pose2d.struct).publish();
 
   }
 
@@ -147,6 +154,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     //   dashboardPose = flipAlliance(dashboardPose);
     // }
     field2d.setRobotPose(dashboardPose);
+
+    posePublisher.accept(dashboardPose);
 
     poseConsumer.accept(new TimedPose2d(getCurrentPose(), Timer.getFPGATimestamp()));
   }
