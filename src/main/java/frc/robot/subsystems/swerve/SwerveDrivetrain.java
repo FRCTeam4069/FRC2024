@@ -453,8 +453,8 @@ public class SwerveDrivetrain extends SubsystemBase {
         posePublisher.set(pose);
 
         try {
-            var headings = getModuleHeadings();
-            var steerHeadings = getModuleSteerHeadings();
+            // var headings = getModuleHeadings();
+            // var steerHeadings = getModuleSteerHeadings();
 
             // SmartDashboard.putNumber("robot heading", getDegrees());
             // SmartDashboard.putNumber("robot adjusted radians", getNormalizedRads());

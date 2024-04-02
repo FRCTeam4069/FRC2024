@@ -67,8 +67,8 @@ public class SwerveModule {
 
         drive.getEncoder().setPositionConversionFactor(DrivebaseConstants.driveConversionFactor);
         drive.getEncoder().setVelocityConversionFactor(DrivebaseConstants.driveConversionFactor);
-        drive.setSmartCurrentLimit(30);
-        drive.setOpenLoopRampRate(0.005);
+        drive.setSmartCurrentLimit(40);
+        drive.setOpenLoopRampRate(0.0);
         steer.getEncoder().setPositionConversionFactor(DrivebaseConstants.steerConversionFactor);
         steer.getEncoder().setVelocityConversionFactor(DrivebaseConstants.steerConversionFactor);
         steer.setSmartCurrentLimit(30);

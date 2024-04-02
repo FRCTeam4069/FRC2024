@@ -16,8 +16,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 //import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -40,6 +42,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
   private SystemCheck systemCheck;
+  private PowerDistribution pdh = new PowerDistribution(20, ModuleType.kRev);
 
   // private PhotonCamera cam;
 
@@ -53,13 +56,16 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    m_robotContainer.powerDistributionHub.clearStickyFaults();
+    // m_robotContainer.powerDistributionHub.clearStickyFaults();
     
     DriverStation.silenceJoystickConnectionWarning(true);
 
     // m_robotContainer.notifier.startPeriodic(0.02);
 
     m_robotContainer.poseEstimator.addDashboardWidgets(m_robotContainer.autoTab);
+
+    // pdh.setSwitchableChannel(true);
+    // System.out.println("channel: " + pdh.getSwitchableChannel());
 
     // m_robotContainer.intake.setBrakeState(1);
     // DataLogManager.start();
@@ -82,8 +88,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_robotContainer.FrontCamera.printNumbers();
-    systemCheck.checkSystem();
+    // m_robotContainer.FrontCamera.printNumbers();
+    // systemCheck.checkSystem();
 
     // if (m_robotContainer.cam.grabLatestEstimatedPose() != null) {
       // New pose from vision

@@ -27,9 +27,9 @@ public class CameraPIDCommand extends Command {
         rotationController = new PIDController(6.0, 0.0, 0.1); //rotation
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
-        xController.setTolerance(0.005, 0.01);
-        yController.setTolerance(0.005, 0.01);
-        rotationController.setTolerance(Units.degreesToRadians(0.5), Units.degreesToRadians(0.5));
+        xController.setTolerance(0.005, 0.08);
+        yController.setTolerance(0.005, 0.08);
+        rotationController.setTolerance(Units.degreesToRadians(1.5), Units.degreesToRadians(2.0));
 
     }
 

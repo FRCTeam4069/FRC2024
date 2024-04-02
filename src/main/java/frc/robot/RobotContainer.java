@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,6 +44,7 @@ import frc.robot.commands.SetShooterRotation;
 import frc.robot.commands.ShooterPositions;
 import frc.robot.commands.ShooterRotationCommand;
 import frc.robot.commands.ShooterVelocityPIDCommand;
+import frc.robot.commands.SimpleIndexerCommand;
 import frc.robot.commands.Trap;
 import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
@@ -129,7 +131,7 @@ public class RobotContainer {
 
   public final ShuffleboardTab autoTab = Shuffleboard.getTab("auto");
 
-  public final PowerDistribution powerDistributionHub = new PowerDistribution();
+  // public final PowerDistribution powerDistributionHub = new PowerDistribution();
 
   public static final IndexerController indexer = new IndexerController();
   public static final IntakeController intake = new IntakeController();
@@ -166,6 +168,7 @@ public class RobotContainer {
     // var camX = FrontCamera.getXDistanceToApriltag(7, 4);
     // var camY = FrontCamera.getYDistanceToApriltag(4, 7);
     // var angle = Math.atan2(camY, camX);
+    // powerDistributionHub = new PowerDistribution(20, ModuleType.kRev);
 
     toggle = new Toggle(() -> Controller1.getHID().getStartButton(), () -> Controller1.getHID().getBackButton());
     drive.setDefaultCommand(new FieldCentricDrive(
@@ -293,7 +296,11 @@ public class RobotContainer {
     Controller1.rightTrigger(0.2).onTrue(intake.setPosition(positions.LOWER));
 
     // Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
-    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller1.getRightTriggerAxis()));
+
+    /* Index while intaking */
+    // Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller1.getRightTriggerAxis()));
+    Controller2.rightBumper().whileTrue(new SimpleIndexerCommand(indexer));
+
     //Controller2.x().whileTrue(new FeedIntakeCommand());
     Controller2.x().whileTrue(led.setPattern(RevBlinkinPatterns.SHOT_BLUE));
     Controller2.x().onFalse(led.setPattern(RevBlinkinPatterns.SHOT_RED));

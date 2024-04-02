@@ -17,8 +17,9 @@ public class Trap extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 new CameraPIDCommand(drive, FieldConstants.blueTrap),
                 new InstantCommand(() -> drive.stopModules()),
-                new CustomShooterCommand(shooterRotation, shooter, 40, 42, 1.0, 0.5, 1.0),
-                new IndexWithTime(indexer, 1.0),
+                new CustomShooterCommand(shooterRotation, shooter, 30, 40.25, 1.0, 0.5, 0.5),
+                new WaitCommand(0.5),
+                new IndexWithTime(indexer, 1.0, 0.8),
                 new WaitCommand(0.5),
                 new InstantCommand(() -> {
                     shooterRotation.stop();

@@ -207,8 +207,9 @@ public class FourCloseFaster extends SequentialCommandGroup {
                     ),
                     new SequentialCommandGroup(
                         new IntakeCommand(i, positions.UPPER, 0),
-                        new WaitCommand(2.5),
-                        new IntakeCommand(i, positions.LOWER, -0.80)
+                        new WaitCommand(1.2),
+                        new IntakeCommand(i, positions.LOWER, -0.80),
+                        new BetterIndexerCommandWithStop(index)
                         
                     ),
                     new SequentialCommandGroup(
