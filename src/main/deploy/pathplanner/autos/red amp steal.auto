@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red amp steal p1 and 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red amp steal p3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red amp steal p4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red steal shoot p5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red steal shoot p6"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

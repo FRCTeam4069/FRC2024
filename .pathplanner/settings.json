@@ -3,8 +3,10 @@
   "robotLength": 0.82,
   "holonomicMode": true,
   "pathFolders": [
+    "red amp steal",
     "blue amp steal",
-    "close four ring"
+    "close four ring",
+    "red close four ring"
   ],
   "autoFolders": [
     "New Folder"

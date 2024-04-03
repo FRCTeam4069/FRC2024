@@ -22,14 +22,28 @@ public class BadPIDCommand extends Command {
     public BadPIDCommand(SwerveDrivetrain drive, Pose2d setpoint) {
         this.drive = drive;
         this.setpoint = setpoint;
-        xController = new PIDController(0.80, 0.0, 0.0); //translation
-        yController = new PIDController(0.80, 0.0, 0.0); //translation
-        rotationController = new PIDController(0.09, 0.0, 0.0); //rotation
+        xController = new PIDController(6.00, 0.0, 0.05); //translation
+        yController = new PIDController(6.00, 0.0, 0.05); //translation
+        rotationController = new PIDController(6.00, 0.0, 0.1); //rotation
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
         xController.setTolerance(0.1, 0.1);
         yController.setTolerance(0.1, 0.1);
-        rotationController.setTolerance(Units.degreesToRadians(20));
+        rotationController.setTolerance(Units.degreesToRadians(5));
+
+    }
+
+    public BadPIDCommand(SwerveDrivetrain drive, Pose2d setpoint, double positionTolerance, double angleTolerance) {
+        this.drive = drive;
+        this.setpoint = setpoint;
+        xController = new PIDController(6.00, 0.0, 0.05); //translation
+        yController = new PIDController(6.00, 0.0, 0.05); //translation
+        rotationController = new PIDController(6.00, 0.0, 0.1); //rotation
+        rotationController.enableContinuousInput(-Math.PI, Math.PI);
+
+        xController.setTolerance(positionTolerance, 0.1);
+        yController.setTolerance(positionTolerance, 0.1);
+        rotationController.setTolerance(Units.degreesToRadians(angleTolerance));
 
     }
 

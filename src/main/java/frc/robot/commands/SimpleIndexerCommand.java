@@ -13,7 +13,7 @@ public class SimpleIndexerCommand extends Command {
 
     @Override
     public void initialize() {
-        lastReading = indexer.getPhotoReading();
+        // lastReading = indexer.getPhotoReading();
     }
 
     @Override
@@ -23,7 +23,12 @@ public class SimpleIndexerCommand extends Command {
             ringInside = true;
         }
 
-        indexer.feedShooter();
+        if (ringInside) {
+            indexer.stop();
+        } else {
+            indexer.feedShooter();
+        }
+
 
         lastReading = currentReading;
 
@@ -31,7 +36,7 @@ public class SimpleIndexerCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return ringInside;
+        return false;
     }
 
     @Override

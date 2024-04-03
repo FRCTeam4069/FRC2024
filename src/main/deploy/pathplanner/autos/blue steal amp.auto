@@ -46,6 +46,12 @@
           "data": {
             "pathName": "blue amp steal p7"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue amp steal p8"
+          }
         }
       ]
     }

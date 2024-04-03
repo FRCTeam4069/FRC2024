@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red close four ring p1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red close four ring p2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red close four ring p3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red close four ring p4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red close four ring p5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "red close four ring p6"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

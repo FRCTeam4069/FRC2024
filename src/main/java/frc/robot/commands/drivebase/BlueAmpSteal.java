@@ -68,9 +68,9 @@ public class BlueAmpSteal extends SequentialCommandGroup {
                 new SequentialCommandGroup(
                     new ParallelDeadlineGroup(
                         new SequentialCommandGroup(
-                            new FollowPath(drive, "blue amp steal p1", new PIDConstants(0.65), 0.0),
-                            new FollowPath(drive, "blue amp steal p2", new PIDConstants(0.8), 0.5),
-                            new FollowPath(drive, "blue amp steal p3", new PIDConstants(1.2), 0.1),
+                            new FollowPath(drive, "blue amp steal p1 and 2", new PIDConstants(4.5), new PIDConstants(1.0), 0.0),
+                            // new FollowPath(drive, "blue amp steal p2", new PIDConstants(1.2), 0.5),
+                            new FollowPath(drive, "blue amp steal p3", new PIDConstants(1.8), 0.1),
                             new InstantCommand(() -> index.setCustomSpeed(0.90))
                         ),
                         new SequentialCommandGroup(
@@ -83,19 +83,17 @@ public class BlueAmpSteal extends SequentialCommandGroup {
                             new IntakeCommand(i, positions.LOWER, -0.80),
                             new ParallelDeadlineGroup(
                                 new BetterIndexerCommandWithStop(index).withTimeout(7)
-                            ),
-                            new ParallelCommandGroup(
-                                new IntakeCommand(i, positions.UPPER, 0)
                             )
                         ),
                         new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2)
                     )
                 ),
-                new ParallelDeadlineGroup(
+                new ParallelCommandGroup(
                     new SequentialCommandGroup(
-                        new FollowPath(drive, "blue amp steal p4", new PIDConstants(1.2), 0.1),
-                        new FollowPath(drive, "blue amp steal p5", new PIDConstants(1.2), 0.1),
-                        new InstantCommand(() -> index.setCustomSpeed(0.90))
+                        new FollowPath(drive, "blue amp steal p4", new PIDConstants(2.9), 0.1),
+                        new FollowPath(drive, "blue amp steal p5", new PIDConstants(2.9), new PIDConstants(3.0), 0.1),
+                        new InstantCommand(() -> drive.stopModules())
+                        // new InstantCommand(() -> index.setCustomSpeed(0.90))
 
                     ),
                     new ParallelCommandGroup(
@@ -110,10 +108,19 @@ public class BlueAmpSteal extends SequentialCommandGroup {
 
                 ),
 
+                // new ParallelDeadlineGroup(
+                    // new SequentialCommandGroup(
+                    //     new CustomShooterCommand(rot, shooter, 88, 62.1, 0.5, 0.3, 0.5).withTimeout(3),
+                    //     new IndexWithTime(index, 1.0, 0.90),
+                    //     new WaitCommand(0.2)
+                    // ),
+
+                // ),
+
                 new SequentialCommandGroup(
                     new ParallelDeadlineGroup(
                         new SequentialCommandGroup(
-                            new FollowPath(drive, "blue amp steal p6", new PIDConstants(1.1), 0.1),
+                            new FollowPath(drive, "blue amp steal p6", new PIDConstants(1.8), 0.1),
                             new FollowPath(drive, "blue amp steal p7", new PIDConstants(1.1), 0.0),
                             new InstantCommand(() -> index.setCustomSpeed(0.90))
                         ),
@@ -124,11 +131,32 @@ public class BlueAmpSteal extends SequentialCommandGroup {
                                 new BetterIndexerCommandWithStop(index).withTimeout(7)
                             ),
                             new IntakeCommand(i, positions.LOWER, -0.80),
+                            // new CustomShooterCommand(rot, shooter, 88, 62.1, 0.5, 0.1, 0.2).withTimeout(3)
+                            // new CustomShooterCommand(rot, shooter, 20, 70, 0.75, 3.0, 2.5, false).withTimeout(2)
                             new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2)
                         )
                     )
                 ),
-                new IndexWithTime(index, 1.0, 0.90),
+
+                new SequentialCommandGroup(
+                    new ParallelDeadlineGroup(
+                        new SequentialCommandGroup(
+                            new FollowPath(drive, "blue amp steal p8", new PIDConstants(5.0), 0.0),
+                            new InstantCommand(() -> index.setCustomSpeed(0.90))
+                        ),
+                        new ParallelCommandGroup(
+                            new SequentialCommandGroup(
+                                new IndexWithTime(index, 1.0, 0.80),
+                                new WaitCommand(0.3),
+                                new BetterIndexerCommandWithStop(index).withTimeout(7)
+                            ),
+                            new IntakeCommand(i, positions.LOWER, -0.80),
+                            // new CustomShooterCommand(rot, shooter, 88, 62.1, 0.5, 0.1, 0.2).withTimeout(3)
+                            // new CustomShooterCommand(rot, shooter, 20, 70, 0.75, 3.0, 2.5, false).withTimeout(2)
+                            new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2)
+                        )
+                    )
+                ),
 
                 new WaitCommand(1),
 

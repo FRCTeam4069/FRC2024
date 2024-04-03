@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.84,
+        "y": 5.35
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.249064384635675,
+        "y": 4.986738268541943
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.410189648590719,
+        "y": 4.68
+      },
+      "prevControl": {
+        "x": 6.200479021848965,
+        "y": 4.565413494275985
+      },
+      "nextControl": {
+        "x": 4.619900275332473,
+        "y": 4.7945865057240145
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.701684249222861,
+        "y": 5.55
+      },
+      "prevControl": {
+        "x": 4.019672042410612,
+        "y": 5.556105677545887
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.88,
+    "maxAcceleration": 1.95,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "red amp steal",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

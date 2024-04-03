@@ -83,9 +83,6 @@ public class BlueStealShoot extends SequentialCommandGroup {
                             new IntakeCommand(i, positions.LOWER, -0.80),
                             new ParallelDeadlineGroup(
                                 new BetterIndexerCommandWithStop(index).withTimeout(7)
-                            ),
-                            new ParallelCommandGroup(
-                                new IntakeCommand(i, positions.UPPER, 0)
                             )
                         ),
                         new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2)
@@ -106,7 +103,10 @@ public class BlueStealShoot extends SequentialCommandGroup {
                             new BetterIndexerCommandWithStop(index).withTimeout(5)
                         ),
                         // new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2),
-                        new CustomShooterCommand(rot, shooter, 88, 62.1, 0.5, 0.1, 0.2).withTimeout(3),
+                        new SequentialCommandGroup(
+                            new WaitCommand(0.3),
+                            new CustomShooterCommand(rot, shooter, 88, 67.0, 1.0, 0.5, 0.7).withTimeout(3)
+                        ),
                         new IntakeCommand(i, positions.LOWER, -0.80)
                     )
 
@@ -114,7 +114,7 @@ public class BlueStealShoot extends SequentialCommandGroup {
 
                 // new ParallelDeadlineGroup(
                     new SequentialCommandGroup(
-                        new CustomShooterCommand(rot, shooter, 88, 62.1, 0.5, 0.3, 0.5).withTimeout(3),
+                        new CustomShooterCommand(rot, shooter, 88, 67.0, 1.0, 0.5, 0.7).withTimeout(3),
                         new IndexWithTime(index, 1.0, 0.90),
                         new WaitCommand(0.2)
                     ),

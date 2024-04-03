@@ -50,6 +50,7 @@ import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
 import frc.robot.commands.drivebase.Auto2056;
 import frc.robot.commands.drivebase.BlueAmpSteal;
+import frc.robot.commands.drivebase.BlueSourceDumpAndDash;
 import frc.robot.commands.drivebase.BlueStealShoot;
 import frc.robot.commands.drivebase.Four;
 import frc.robot.commands.drivebase.FourClose;
@@ -59,7 +60,12 @@ import frc.robot.commands.drivebase.OneAndMurder;
 import frc.robot.commands.drivebase.OneNote;
 import frc.robot.commands.drivebase.OneNoteAndPark;
 import frc.robot.commands.drivebase.Red2056;
+import frc.robot.commands.drivebase.RedAmpSteal;
+import frc.robot.commands.drivebase.RedFourCloseFaster;
+import frc.robot.commands.drivebase.RedSourceDumpAndDash;
+import frc.robot.commands.drivebase.RedStealShoot;
 import frc.robot.commands.drivebase.Rotate;
+import frc.robot.commands.drivebase.ShooterTestAuto;
 import frc.robot.commands.drivebase.SideAuto;
 import frc.robot.commands.drivebase.StrafeUntilCam;
 import frc.robot.commands.drivebase.Toggle;
@@ -227,14 +233,21 @@ public class RobotContainer {
     autoChooser.addOption("2056 auto", new Auto2056(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("RED 2056", new Red2056(drive, intake, indexer, shooter, artShooter));
     // autoChooser.addOption("pose test", new PoseTest(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("four ring", new Four(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("close four ring", new FourClose(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("close fast four ring", new FourCloseFaster(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("steal blue amp", new BlueAmpSteal(drive, intake, indexer, shooter, artShooter));
-    autoChooser.addOption("steal shoot blue", new BlueStealShoot(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("bad four ring", new Four(drive, intake, indexer, shooter, artShooter));
+    // autoChooser.addOption("blue close four ring", new FourClose(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("blue close fast four ring", new FourCloseFaster(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("blue steal no shoot", new BlueAmpSteal(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("red steal no shoot", new RedAmpSteal(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("blue steal shoot", new BlueStealShoot(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("red steal shoot", new RedStealShoot(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("red close fast four ring", new RedFourCloseFaster(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("blue source dump and dash", new BlueSourceDumpAndDash(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("red source dump and dash", new RedSourceDumpAndDash(drive, intake, indexer, shooter, artShooter));
     // autoChooser.addOption("drive test", new DriveTest(drive));
     // autoChooser.addOption("one and park (cw)", new OneNoteAndPark(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("murder in blue", new OneAndMurder(drive, intake, indexer, shooter, artShooter));
+
+    autoChooser.addOption("shooter test", new ShooterTestAuto(drive, intake, indexer, shooter, artShooter));
     
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -298,8 +311,8 @@ public class RobotContainer {
     // Controller2.x().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
 
     /* Index while intaking */
-    // Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller1.getRightTriggerAxis()));
-    Controller2.rightBumper().whileTrue(new SimpleIndexerCommand(indexer));
+    Controller2.rightBumper().whileTrue(new DefualtIndexerCommand(() -> shooter.isShooting(), () -> Controller2.getRightTriggerAxis(), () -> Controller1.getRightTriggerAxis()));
+    // Controller2.rightBumper().whileTrue(new SimpleIndexerCommand(indexer));
 
     //Controller2.x().whileTrue(new FeedIntakeCommand());
     Controller2.x().whileTrue(led.setPattern(RevBlinkinPatterns.SHOT_BLUE));

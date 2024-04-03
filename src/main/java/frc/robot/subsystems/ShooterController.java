@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import javax.swing.text.StyleContext.SmallAttributeSet;
 
+import org.opencv.core.Mat;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -129,10 +131,10 @@ public class ShooterController extends SubsystemBase {
         return talon1.getVelocity().getValueAsDouble() > 3;
     }
 
-    public double getFasterVelocity(){
-        return talon2.getVelocity().getValueAsDouble();
+    public double getLeftVelocity(){
+        return talon1.getVelocity().getValueAsDouble();
     }
-    public double getSlowerVelocity(){
+    public double getRightVelocity(){
         return talon2.getVelocity().getValueAsDouble();
     }
 
@@ -171,6 +173,31 @@ public class ShooterController extends SubsystemBase {
             talon1.setControl(v.withVelocity(leftVel));
             talon2.setControl(v.withVelocity(-leftVel));
         }
+    }
+
+    public void angleShoot(double leftVelocity, double rightVelocity) {
+        driveWithCustomSpeed(leftVelocity, rightVelocity);
+
+        // if (leftVelocity > rightVelocity && Math.min(leftVelocity, rightVelocity) < 30.0) {
+        //     v.Slot = 0;
+        //     talon1.setControl(v.withVelocity(leftVelocity));
+        //     v.Slot = 1;
+        //     talon2.setControl(v.withVelocity(rightVelocity));
+        // } else if (leftVelocity < rightVelocity && Math.min(leftVelocity, rightVelocity) < 30.0){
+        //     v.Slot = 1;
+        //     talon1.setControl(v.withVelocity(leftVelocity));
+        //     v.Slot = 0;
+        //     talon2.setControl(v.withVelocity(rightVelocity));
+        // } else if (Math.max(leftVelocity, rightVelocity) < 30.0) {
+        //     v.Slot = 1;
+        //     talon1.setControl(v.withVelocity(leftVelocity));
+        //     talon2.setControl(v.withVelocity(rightVelocity));
+        // } else {
+        //     v.Slot = 0;
+        //     talon1.setControl(v.withVelocity(leftVelocity));
+        //     talon2.setControl(v.withVelocity(rightVelocity));
+        // }
+
     }
     
     public double getConfig(){
