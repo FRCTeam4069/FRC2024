@@ -180,6 +180,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     // Call this method periodically when needed to aim shooter
   }
 
+  public Transform2d getSpeakerTransformWithAlliance(Alliance alliance) {
+    if (alliance == Alliance.Red) {
+      // Find the transform from robot to speaker when red
+      return poseEstimator.getEstimatedPosition().minus(FieldConstants.poseRedSpeaker);
+    }
+    return poseEstimator.getEstimatedPosition().minus(FieldConstants.poseBlueSpeaker);
+    // Call this method periodically when needed to aim shooter
+  }
+
   public Rotation2d getAngleFromSpeaker() {
     var relativePose = getSpeakerTransform();
     var desiredAngle = Math.atan2(relativePose.getY(), relativePose.getX());

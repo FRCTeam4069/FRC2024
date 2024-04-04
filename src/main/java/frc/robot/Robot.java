@@ -62,7 +62,13 @@ public class Robot extends TimedRobot {
 
     // m_robotContainer.notifier.startPeriodic(0.02);
 
+
     m_robotContainer.poseEstimator.addDashboardWidgets(m_robotContainer.autoTab);
+
+    m_robotContainer.autoTab.addNumber("teleop drive speaker x", () -> m_robotContainer.poseEstimator.getSpeakerTransformWithAlliance(m_robotContainer.allianceChooser.getSelected()).getX());
+    m_robotContainer.autoTab.addNumber("teleop drive speaker y", () -> m_robotContainer.poseEstimator.getSpeakerTransformWithAlliance(m_robotContainer.allianceChooser.getSelected()).getY());
+    m_robotContainer.autoTab.addNumber("teleop drive speaker deg", () -> m_robotContainer.poseEstimator.getSpeakerTransformWithAlliance(m_robotContainer.allianceChooser.getSelected()).getRotation().getDegrees());
+
 
     // pdh.setSwitchableChannel(true);
     // System.out.println("channel: " + pdh.getSwitchableChannel());

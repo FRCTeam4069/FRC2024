@@ -68,7 +68,7 @@ public class SetShooterCommand extends Command{
         }
         else if(positions == ShooterPositions.AMP_AREA){
             // velocity = 10;
-            velocity = 9.0;
+            velocity = 10.0;
             angle = 25;
             shooter.driveWithSlowSpeed(velocity, velocity/2);
         }

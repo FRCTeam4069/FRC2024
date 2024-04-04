@@ -17,6 +17,7 @@ import com.revrobotics.REVLibError;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -168,6 +169,7 @@ public class RobotContainer {
 
   private Toggle toggle;
 
+  public final SendableChooser<Alliance> allianceChooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -184,7 +186,7 @@ public class RobotContainer {
       () -> Controller1.getRightX(),
       () -> Controller1.getHID().getRightBumper(),
       () -> Controller1.getHID().getAButton(),
-      () -> poseEstimator.getSpeakerTransform(),
+      () -> poseEstimator.getSpeakerTransformWithAlliance(allianceChooser.getSelected()),
       () -> Controller1.getHID().getLeftBumper(),
       () -> (Controller1.getHID().getPOV() == 90),
       () -> poseEstimator.getRotation2d(),
@@ -251,6 +253,10 @@ public class RobotContainer {
     
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    allianceChooser.setDefaultOption("blue", Alliance.Blue);
+    allianceChooser.addOption("red", Alliance.Red);
+    SmartDashboard.putData("Alliance Chooser", allianceChooser);
 
     //drive.setDefaultCommand(drive.zeroModules());
     //Controller1.a().onTrue(drive.sysIdDriveTestQuasistatic());
@@ -358,8 +364,8 @@ public class RobotContainer {
     //Controller2.rightBumper().whileTrue(new BetterIndexerCommand(indexer, () -> (Controller2.getHID().getRightTriggerAxis() > 0.2 || Controller2.getHID().getLeftTriggerAxis() > 0.2 || Controller2.getHID().getLeftBumper())));
 
     new Trigger(() -> indexer.getPhotoReading()).onFalse(led.setPattern(RevBlinkinPatterns.WHITE)).onTrue(led.setPattern(RevBlinkinPatterns.ORANGE));
-    new Trigger(() -> shooter.atSpeed()).onTrue(led.setPattern(RevBlinkinPatterns.GREEN)).onFalse(led.setPattern(RevBlinkinPatterns.WHITE));
-    new Trigger(() -> shooter.atSpeed()).whileTrue(new InstantCommand(() -> Controller2.getHID().setRumble(RumbleType.kBothRumble, 0.1))).onFalse(new InstantCommand(() -> Controller2.getHID().setRumble(RumbleType.kBothRumble, 0)));
+    new Trigger(() -> shooter.atSpeed(2.0)).onTrue(led.setPattern(RevBlinkinPatterns.GREEN)).onFalse(led.setPattern(RevBlinkinPatterns.WHITE));
+    new Trigger(() -> shooter.atSpeed(2.0)).whileTrue(new InstantCommand(() -> Controller2.getHID().setRumble(RumbleType.kBothRumble, 0.1))).onFalse(new InstantCommand(() -> Controller2.getHID().setRumble(RumbleType.kBothRumble, 0)));
     
     //github test
       

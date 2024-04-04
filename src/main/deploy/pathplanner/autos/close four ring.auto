@@ -26,19 +26,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "faster close four ring p3"
+            "pathName": "close four ring p3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "faster close four ring p4"
+            "pathName": "close four ring p4"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "close four ring p5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "close four ring p6"
           }
         }
       ]
