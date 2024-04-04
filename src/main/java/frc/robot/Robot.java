@@ -136,7 +136,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.led.setPattern(RevBlinkinPatterns.WHITE);
 
-    m_robotContainer.drive.coast();
+    // m_robotContainer.drive.coast();
   }
 
   @Override

@@ -91,7 +91,7 @@ public class BlueStealShoot extends SequentialCommandGroup {
                 new ParallelCommandGroup(
                     new SequentialCommandGroup(
                         new FollowPath(drive, "blue amp steal p4", new PIDConstants(2.9), 0.1),
-                        new FollowPath(drive, "blue steal shoot p5", new PIDConstants(2.9), new PIDConstants(3.0), 0.1),
+                        new FollowPath(drive, "blue steal shoot p5", new PIDConstants(2.9), new PIDConstants(3.0), 0.5),
                         new InstantCommand(() -> drive.stopModules())
                         // new InstantCommand(() -> index.setCustomSpeed(0.90))
 
@@ -104,7 +104,7 @@ public class BlueStealShoot extends SequentialCommandGroup {
                         ),
                         // new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2),
                         new SequentialCommandGroup(
-                            new WaitCommand(0.3),
+                            new WaitCommand(0.01),
                             new CustomShooterCommand(rot, shooter, 88, 67.0, 1.0, 0.5, 0.7).withTimeout(3)
                         ),
                         new IntakeCommand(i, positions.LOWER, -0.80)
@@ -113,11 +113,12 @@ public class BlueStealShoot extends SequentialCommandGroup {
                 ),
 
                 // new ParallelDeadlineGroup(
-                    new SequentialCommandGroup(
-                        new CustomShooterCommand(rot, shooter, 88, 67.0, 1.0, 0.5, 0.7).withTimeout(3),
-                        new IndexWithTime(index, 1.0, 0.90),
-                        new WaitCommand(0.2)
-                    ),
+                new SequentialCommandGroup(
+                    new CustomShooterCommand(rot, shooter, 88, 67.0, 1.0, 0.5, 0.7).withTimeout(3.5),
+                    new WaitCommand(0.3),
+                    new IndexWithTime(index, 1.0, 0.90),
+                    new WaitCommand(0.2)
+                ),
 
                 // ),
 

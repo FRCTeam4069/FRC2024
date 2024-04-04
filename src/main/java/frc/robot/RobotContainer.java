@@ -82,6 +82,7 @@ import frc.robot.commands.drivebase.test.testAutov3;
 import frc.robot.commands.drivebase.test.testAutov4;
 import frc.robot.commands.drivebase.test.testAutov5;
 import frc.robot.constants.CameraConstants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.AmpArm;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -239,6 +240,7 @@ public class RobotContainer {
     // autoChooser.addOption("blue close four ring", new FourClose(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("blue close fast four ring", new FourCloseFaster(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("blue steal no shoot", new BlueAmpSteal(drive, intake, indexer, shooter, artShooter));
+    // .finallyDo(new InstantCommand(() -> drive.setPose(new Pose2d(FieldConstants.fieldLengthMeters-drive.getPose().getX(), drive.getPose().getY(), drive.getRotation2d()))))
     autoChooser.addOption("red steal no shoot", new RedAmpSteal(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("blue steal shoot", new BlueStealShoot(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("red steal shoot", new RedStealShoot(drive, intake, indexer, shooter, artShooter));
@@ -290,7 +292,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> Math.hypot(poseEstimator.getSpeakerTransform().getX(), poseEstimator.getSpeakerTransform().getY()), shooter)).onTrue(intake.setPosition(positions.UPPER));
+    Controller2.y().whileTrue(new SetShooterRotation(artShooter, () -> Math.hypot(poseEstimator.getSpeakerTransformWithAlliance(allianceChooser.getSelected()).getX(), poseEstimator.getSpeakerTransformWithAlliance(allianceChooser.getSelected()).getY()), shooter)).onTrue(intake.setPosition(positions.UPPER));
     //Controller2.y().whileTrue(new SetShooterCommand(shooter, artShooter, ShooterPositions.AUTO_FEED));
     //git hub trial//
     Controller2.x().whileTrue(new ParallelCommandGroup(
@@ -340,7 +342,7 @@ public class RobotContainer {
     Controller2.leftBumper().whileTrue(new BackIntakeCommand(intake));
     //Controller2.start().whileTrue(new ClimberCommand(climber, () -> Controller2.getLeftY(), artShooter));
     Controller2.start().onTrue(artShooter.changeClimbStatus()).onTrue(climber.setPower(Direction.kForward)).onTrue(ampArm.setAngleCommand(AmpArm.EXTEND));
-    Controller2.back().onTrue(climber.setPower(Direction.kReverse)).onTrue(artShooter.setDown()).onTrue(ampArm.setAngleCommand(AmpArm.EXTEND));//.onTrue(()-> artShooter.setCustomAngle(15));
+    Controller2.back().onTrue(climber.setPower(Direction.kReverse)).onTrue(ampArm.setAngleCommand(AmpArm.EXTEND)).onTrue(new SequentialCommandGroup(new WaitCommand(0.5), artShooter.setDown()));//.onTrue(()-> artShooter.setCustomAngle(15));
 
     Controller2.start().onTrue(led.setPattern(RevBlinkinPatterns.VIOLET));
 
