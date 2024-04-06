@@ -29,13 +29,13 @@ import frc.robot.subsystems.ShooterRotationController;
 import frc.robot.subsystems.IntakeController.positions;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
-public class RedStealShoot extends SequentialCommandGroup {
+public class RedAmpStealTwoRing extends SequentialCommandGroup {
     private SwerveDrivetrain drive;
     private IntakeController intake;
     private IndexerController indexer;
     private ShooterController shooter;
     private ShooterRotationController rotShoot;
-    public RedStealShoot(SwerveDrivetrain drive, IntakeController i, IndexerController index, ShooterController shooter, ShooterRotationController rot) {
+    public RedAmpStealTwoRing(SwerveDrivetrain drive, IntakeController i, IndexerController index, ShooterController shooter, ShooterRotationController rot) {
         this.drive = drive;
         intake = i;
         indexer = index;
@@ -90,8 +90,8 @@ public class RedStealShoot extends SequentialCommandGroup {
                 ),
                 new ParallelCommandGroup(
                     new SequentialCommandGroup(
-                        new FollowPath(drive, "red amp steal p4", new PIDConstants(2.9), 0.1),
-                        new FollowPath(drive, "red steal shoot p5", new PIDConstants(2.9), new PIDConstants(3.0), 0.1),
+                        new FollowPath(drive, "red amp steal further p4", new PIDConstants(2.9), 0.1),
+                        new FollowPath(drive, "red amp steal further p5", new PIDConstants(2.9), new PIDConstants(3.0), 0.1),
                         new InstantCommand(() -> drive.stopModules())
                         // new InstantCommand(() -> index.setCustomSpeed(0.90))
 
@@ -102,46 +102,20 @@ public class RedStealShoot extends SequentialCommandGroup {
                             new WaitCommand(0.2),
                             new BetterIndexerCommandWithStop(index).withTimeout(5)
                         ),
-                        // new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2),
-                        new SequentialCommandGroup(
-                            new WaitCommand(0.3),
-                            new CustomShooterCommand(rot, shooter, 88, 64.0, 1.0, 0.5, 0.7).withTimeout(3)
-                        ),
+                        new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2),
                         new IntakeCommand(i, positions.LOWER, -0.80)
                     )
 
                 ),
 
-                // new ParallelDeadlineGroup(
-                    new SequentialCommandGroup(
-                        new CustomShooterCommand(rot, shooter, 88, 64.5, 1.0, 0.5, 0.7).withTimeout(3),
-                        new IndexWithTime(index, 1.0, 0.90),
-                        new WaitCommand(0.2)
-                    ),
-
-                // ),
-
                 new SequentialCommandGroup(
-                    new ParallelDeadlineGroup(
-                        new SequentialCommandGroup(
-                            new FollowPath(drive, "red steal shoot p6", new PIDConstants(1.8), 0.1),
-                            // new FollowPath(drive, "blue steal shoot p7", new PIDConstants(1.1), 0.0),
-                            new InstantCommand(() -> index.setCustomSpeed(0.90))
-                        ),
-                        new ParallelCommandGroup(
-                            new SequentialCommandGroup(
-                                new IndexWithTime(index, 1.0, 0.80),
-                                new WaitCommand(0.3),
-                                new BetterIndexerCommandWithStop(index).withTimeout(7)
-                            ),
-                            new IntakeCommand(i, positions.LOWER, -0.80)
-                            // new CustomShooterCommand(rot, shooter, 88, 62.1, 0.5, 0.1, 0.2).withTimeout(3)
-                            // new CustomShooterCommand(rot, shooter, 20, 70, 0.75, 3.0, 2.5, false).withTimeout(2)
-                            // new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2)
-                        )
-                    )
+                    new IntakeCommand(i, positions.UPPER, 0.0),
+                    new CustomShooterCommand(rot, shooter, 80, 70, 0.75, 3.0, 2.5, false).withTimeout(2),
+                    new IndexWithTime(index, 1.0, 0.80),
+                    new WaitCommand(0.3)
                 ),
-                // new IndexWithTime(index, 1.0, 0.90),
+
+                new WaitCommand(1),
 
                 new DisableSubsystems(rot, shooter, index, i)
 

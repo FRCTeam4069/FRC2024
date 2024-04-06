@@ -8,7 +8,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "blue amp steal p1 and 2"
+            "pathName": "blue amp steal p1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue amp steal p2"
           }
         },
         {
@@ -20,19 +26,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "blue amp steal p4"
+            "pathName": "blue amp steal further p4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "blue steal shoot p5"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "blue steal shoot p6"
+            "pathName": "blue amp steal further p5"
           }
         }
       ]

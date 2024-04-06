@@ -49,6 +49,7 @@ public class ShooterTestAuto extends SequentialCommandGroup {
                 new InstantCommand(() -> drive.setPose(new Pose2d(3.70, 5.55, Rotation2d.fromDegrees(0.0)))),
                 new InstantCommand(() -> drive.setPose(new Pose2d(3.70, 5.55, Rotation2d.fromDegrees(0.0)))),
 
+                // new BadPIDCommand(drive, null)
                 new AngleShooterCommand(rot, shooter, 8, 75.0, 10.0, 0.5, 0.7).withTimeout(3),
                 // new WaitCommand(0.02),
                 new IndexWithTime(index, 1.0, 0.8),

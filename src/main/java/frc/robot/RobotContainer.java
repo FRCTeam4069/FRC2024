@@ -51,6 +51,7 @@ import frc.robot.commands.defaultArtCommand;
 import frc.robot.commands.unIndexCOmmand;
 import frc.robot.commands.drivebase.Auto2056;
 import frc.robot.commands.drivebase.BlueAmpSteal;
+import frc.robot.commands.drivebase.BlueAmpStealTwoRing;
 import frc.robot.commands.drivebase.BlueSourceDumpAndDash;
 import frc.robot.commands.drivebase.BlueStealShoot;
 import frc.robot.commands.drivebase.Four;
@@ -62,6 +63,7 @@ import frc.robot.commands.drivebase.OneNote;
 import frc.robot.commands.drivebase.OneNoteAndPark;
 import frc.robot.commands.drivebase.Red2056;
 import frc.robot.commands.drivebase.RedAmpSteal;
+import frc.robot.commands.drivebase.RedAmpStealTwoRing;
 import frc.robot.commands.drivebase.RedFourCloseFaster;
 import frc.robot.commands.drivebase.RedSourceDumpAndDash;
 import frc.robot.commands.drivebase.RedStealShoot;
@@ -240,6 +242,8 @@ public class RobotContainer {
     // autoChooser.addOption("blue close four ring", new FourClose(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("blue close fast four ring", new FourCloseFaster(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("blue steal no shoot", new BlueAmpSteal(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("blue steal no shoot two ring", new BlueAmpStealTwoRing(drive, intake, indexer, shooter, artShooter));
+    autoChooser.addOption("red steal no shoot two ring", new RedAmpStealTwoRing(drive, intake, indexer, shooter, artShooter));
     // .finallyDo(new InstantCommand(() -> drive.setPose(new Pose2d(FieldConstants.fieldLengthMeters-drive.getPose().getX(), drive.getPose().getY(), drive.getRotation2d()))))
     autoChooser.addOption("red steal no shoot", new RedAmpSteal(drive, intake, indexer, shooter, artShooter));
     autoChooser.addOption("blue steal shoot", new BlueStealShoot(drive, intake, indexer, shooter, artShooter));
