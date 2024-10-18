@@ -9,7 +9,7 @@ import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.reduxrobotics.sensors.canandcolor.digout.SlotComparison;
+//import com.reduxrobotics.sensors.canandcolor.digout.SlotComparison;
 import com.revrobotics.CANSparkBase.FaultID;
 
 import edu.wpi.first.math.MathUtil;

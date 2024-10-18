@@ -54,6 +54,8 @@ public class CameraIsAsCameraDoes extends SubsystemBase {
         return lastgoodY;
     }
 
+
+
     /**
      * 
      * @param a

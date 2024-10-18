@@ -22,7 +22,7 @@
 // import java.util.function.Supplier;
 
 // /** Custom PathPlanner version of SwerveControllerCommand */
-// public class followTrajectoryCommand extends CommandBase {
+// public class followTrajectoryCommand extends Command {
 //   private final Timer timer = new Timer();
 //   private final Timer timer2 = new Timer();
 //   private static final swerveSubsystem swerve = RobotContainer.swerveSubsystem;

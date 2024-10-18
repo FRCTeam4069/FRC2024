@@ -45,9 +45,9 @@ public class FieldCentricDrive extends Command {
     private BooleanSupplier speakerAlign;
     private BooleanSupplier spinSupplier;
     private Supplier<Rotation2d> rotationSupplier;
-    private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(20.0);
-    private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(20.0);
-    private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(20.0);
+    private SlewRateLimiter xSlewRateLimiter = new SlewRateLimiter(80.0);
+    private SlewRateLimiter ySlewRateLimiter = new SlewRateLimiter(80.0);
+    private SlewRateLimiter wSlewRateLimiter = new SlewRateLimiter(80.0);
     private BooleanSupplier redSource;
     private BooleanSupplier blueSource;
     private static double controllerDeadband = 0.05;

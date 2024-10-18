@@ -98,6 +98,7 @@ import frc.robot.subsystems.IntakeController.positions;
 //import frc.robot.subsystems.LEDController.Colours;
 import frc.robot.subsystems.ShooterController;
 import frc.robot.subsystems.ShooterRotationController;
+import frc.robot.subsystems.Limelight.CALM;
 import frc.robot.subsystems.Limelight.CameraIsAsCameraDoes;
 import frc.robot.subsystems.Limelight.PhotonRunnable;
 import frc.robot.subsystems.Limelight.PoseEstimatorSubsystem;
@@ -136,9 +137,9 @@ public class RobotContainer {
   public static final LEDController led = new LEDController();
   
   // public static final CameraHelper frontCamera = new CameraHelper(CameraConstants.fCamName, CameraConstants.aprilTagFieldLayout, CameraConstants.robotToFrontCam);
-  public static final CameraIsAsCameraDoes  FrontCamera = new CameraIsAsCameraDoes("limelight-front");
+  //public static final CameraIsAsCameraDoes  FrontCamera = new CameraIsAsCameraDoes("limelight-front");
   // public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(null, null);
-
+  public static final CALM calm = new CALM("Right_Front", "Right_Side","Left_Front" , "Left_Side");
   public final ShuffleboardTab autoTab = Shuffleboard.getTab("auto");
 
   // public final PowerDistribution powerDistributionHub = new PowerDistribution();
@@ -154,11 +155,11 @@ public class RobotContainer {
 
   public static final SwerveDrivetrain drive = new SwerveDrivetrain();
 
-  public final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getRotation2d, drive::getModulePositions, drive::addVisionMeasurement);
+  public static final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(drive::getRotation2d, drive::getModulePositions, drive::addVisionMeasurement);
 
   public final SendableChooser<Command> autoChooser = new SendableChooser<>();
   
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+  // Replace with CommandPS4Controller or CommandJoystick if needd
   public static final CommandXboxController Controller1 =
       new CommandXboxController(0);
   public static final CommandXboxController Controller2 = 
